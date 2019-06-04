@@ -69,11 +69,12 @@ Limits number of orders to a selected number in a time range (intraday). It's go
 Usage:
 
     input string start_time = "000000"; // Start time in hhmmss format
+    input int max_trades = 2; // Max trades per day
 
     TimeRangeCooldownController* cooldown;
     int OnInit()
     {
-        cooldown = new TimeRangeCooldownController(_Symbol, (ENUM_TIMEFRAMES)_Period);
+        cooldown = new TimeRangeCooldownController(_Symbol, (ENUM_TIMEFRAMES)_Period, max_trades);
         string error;
         if (!cooldown.Init(start_time, string &error)
         {

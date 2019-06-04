@@ -42,13 +42,17 @@ class TimeRangeCooldownController : public ICooldownController
    ENUM_TIMEFRAMES _timeframe;
    datetime _lastDate;
    int _startTime;
+   int _trades;
+   int _maxPositions;
 public:
-   TimeRangeCooldownController(string symbol, ENUM_TIMEFRAMES timeframe)
+   TimeRangeCooldownController(string symbol, ENUM_TIMEFRAMES timeframe, int maxPositions)
    {
       _symbol = symbol;
       _timeframe = timeframe;
       _lastDate = 0;
       _startTime = 0;
+      _trades = 0;
+      _maxPositions = maxPositions;
    }
 
    bool Init(const string startTime, string &error)
@@ -62,7 +66,10 @@ public:
    virtual bool IsCooldownPeriod(const int period)
    {
       datetime currentDate = iTime(_symbol, _timeframe, period);
-      return (currentDate - _lastDate) < DT_DAY;
+      bool newRange = (currentDate - _lastDate) > DT_DAY;
+      if (newRange)
+         _trades = 0;
+      return !newRange && _trades >= _maxPositions;
    }
 
    virtual void RegisterTrading(const int period)
