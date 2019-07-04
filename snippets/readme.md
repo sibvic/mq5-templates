@@ -100,3 +100,59 @@ Usage:
             cooldown.RegisterTrading(pos);
         }
     }
+
+## TradingTime
+
+Trading time.
+
+## InstrumentInfo
+
+Provides information about instrument.
+
+## TradesIterator
+
+Iterates trades.
+
+## TradeCalculator
+
+Trading calculator.
+
+## Condition
+
+Conditions.
+
+## MoneyManagement
+
+Money management.
+
+## OrdersIterator
+
+Iterates orders.
+
+## TradingCommands
+
+Trading commands.
+
+## TrailingController
+
+Trailing logic.
+
+## MarketOrderBuilder
+
+Market order builder.
+
+## PositionCap
+
+Position cap.
+
+## TradeController
+
+Trade controller.
+
+## Stream
+
+Streams.
+
+## BreakevenController
+
+Breakeven controller.
