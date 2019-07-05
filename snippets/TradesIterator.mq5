@@ -1,4 +1,5 @@
 // Trades iterator v 1.1
+#ifndef TradesIterator_IMP
 enum CompareType
 {
    CompareLessThan
@@ -131,3 +132,5 @@ private:
       return true;
    }
 };
+#define TradesIterator_IMP
+#endif

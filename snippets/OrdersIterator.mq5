@@ -1,4 +1,6 @@
-// Orders iterator v 1.8
+// Orders iterator v 1.9
+#ifndef OrdersIterator_IMP
+
 class OrdersIterator
 {
    bool _useMagicNumber;
@@ -74,6 +76,9 @@ public:
    ENUM_ORDER_TYPE GetType() { return (ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE); }
    string GetSymbol() { return OrderGetString(ORDER_SYMBOL); }
    ulong GetTicket() { return OrderGetTicket(_lastIndex); }
+   double GetOpenPrice() { return OrderGetDouble(ORDER_PRICE_OPEN); }
+   double GetStopLoss() { return OrderGetDouble(ORDER_SL); }
+   double GetTakeProfit() { return OrderGetDouble(ORDER_TP); }
 
    int Count()
    {
@@ -156,3 +161,5 @@ private:
       return false;
    }
 };
+#define OrdersIterator_IMP
+#endif

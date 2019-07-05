@@ -1,14 +1,14 @@
-// Trade calculator v.1.3
-class TradeCalculator
+// Trading calculator v.1.3
+class TradingCalculator
 {
    InstrumentInfo *_symbolInfo;
 public:
-   TradeCalculator(const string symbol)
+   TradingCalculator(const string symbol)
    {
       _symbolInfo = new InstrumentInfo(symbol);
    }
 
-   ~TradeCalculator()
+   ~TradingCalculator()
    {
       delete _symbolInfo;
    }
@@ -114,6 +114,11 @@ public:
             return IsContractLotsValid(lots, error);
       }
       return true;
+   }
+
+   double NormilizeLots(double lots)
+   {
+      return LimitLots(RoundLots(lots));
    }
 
 private:

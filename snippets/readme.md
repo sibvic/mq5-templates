@@ -113,7 +113,7 @@ Provides information about instrument.
 
 Iterates trades.
 
-## TradeCalculator
+## TradingCalculator
 
 Trading calculator.
 
@@ -156,3 +156,11 @@ Streams.
 ## BreakevenController
 
 Breakeven controller.
+
+## TradingMonitor
+
+Monitors trades and orders (creation, deletion, change).
+
+## ClosedTradesIterator
+
+Iterates closed trades.

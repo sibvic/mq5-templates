@@ -1,4 +1,4 @@
-// Symbol info v.1.1
+// Symbol info v.1.2
 class InstrumentInfo
 {
    string _symbol;
@@ -31,6 +31,7 @@ public:
    string GetSymbol() { return _symbol; }
    double GetBid() { return SymbolInfoDouble(_symbol, SYMBOL_BID); }
    double GetAsk() { return SymbolInfoDouble(_symbol, SYMBOL_ASK); }
+   double GetMinVolume() { return SymbolInfoDouble(_symbol, SYMBOL_VOLUME_MIN); }
 
    double RoundRate(const double rate)
    {

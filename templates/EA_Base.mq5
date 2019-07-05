@@ -57,7 +57,7 @@ enum TrailingType
 };
 
 input string GeneralSection = ""; // == General ==
-input string symbols = "EURUSD,EURJPY,USDJPY,GBPUSD,GBPJPY,EURGBP,AUDUSD,NZDUSD"; // Symbols
+input string symbols = ""; // Symbols to trade. Separated by ","
 input bool allow_trading = true; // Allow trading
 input bool BTCAccount = false; // Is BTC Account?
 input EntryType entry_type = EntryOnClose; // Entry type
@@ -228,7 +228,15 @@ int OnInit()
 {
    string error;
    string sym_arr[];
-   split(sym_arr, symbols, ",");
+   if (symbols != "")
+   {
+      split(sym_arr, symbols, ",");
+   }
+   else
+   {
+      ArrayResize(symbols, 1);
+      symbols[0] = _Symbol;
+   }
    int sym_count = ArraySize(sym_arr);
    for (int i = 0; i < sym_count; i++)
    {
