@@ -7,7 +7,6 @@ public:
    VwmaOnStream(IStream *source, IStream *volumeSource, const int length)
       :AOnStream(source)
    {
-      _source = source;
       _volumeSource = volumeSource;
       _length = length;
    }

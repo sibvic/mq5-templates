@@ -7,7 +7,6 @@ public:
    RmaOnStream(IStream *source, const int length)
       :AOnStream(source)
    {
-      _source = source;
       _alpha = 2.0 / (1.0 + length);
    }
 

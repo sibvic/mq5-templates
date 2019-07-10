@@ -23,7 +23,7 @@ public:
       double hma = 0;
       for (int k = 0; k < Half_length && (period - k) >= 0; k++)
       {
-         if (!_source.GetValues(period - k, 1, price))
+         if (!_source.GetValues(period + k, 1, price))
             return false;
 
          double weight = Half_length - k;
@@ -36,7 +36,7 @@ public:
       hma = 0;
       for (int k = 0; k < _length && (period - k) >= 0; k++)
       {
-         if (!_source.GetValues(period - k, 1, price))
+         if (!_source.GetValues(period + k, 1, price))
             return false;
 
          double weight = _length - k;

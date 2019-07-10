@@ -1,16 +1,13 @@
 // StdMAStream v1.0
 
-class StdMAStream : public IStream
+class StdMAStream : public ABaseStream
 {
    int _maHandle;
-   string _symbol;
-   ENUM_TIMEFRAMES _timeframe;
 public:
    StdMAStream(string symbol, ENUM_TIMEFRAMES timeframe, const int length, const ENUM_MA_METHOD method, int priceOrHandle)
+      :ABaseStream(symbol, timeframe)
    {
-      _symbol = symbol;
-      _timeframe = timeframe;
-      _maHandle = iMA(_symbol, timeframe, length, 0, method, priceOrHandle);
+      _maHandle = iMA(_symbol, _timeframe, length, 0, method, priceOrHandle);
    }
    ~StdMAStream()
    {

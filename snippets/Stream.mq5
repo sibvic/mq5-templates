@@ -37,35 +37,6 @@ public:
    }
 };
 
-class AStream : public IStream
-{
-protected:
-   InstrumentInfo *_symbolInfo;
-   ENUM_TIMEFRAMES _timeframe;
-   double _shift;
-
-   AStream(InstrumentInfo *symbolInfo, const ENUM_TIMEFRAMES timeframe)
-   {
-      _shift = 0.0;
-      _symbolInfo = symbolInfo;
-      _timeframe = timeframe;
-   }
-
-   ~AStream()
-   {
-   }
-public:
-   void SetShift(const double shift)
-   {
-      _shift = shift;
-   }
-
-   virtual int Size()
-   {
-      return iBars(_symbolInfo.GetSymbol(), _timeframe);
-   }
-};
-
 class PriceStream : public AStream
 {
    ENUM_APPLIED_PRICE _price;
@@ -106,25 +77,6 @@ public:
                break;
          }
          val[i] += _shift * _symbolInfo.GetPipSize();
-      }
-      return true;
-   }
-};
-
-class VolumeStream : public AStream
-{
-public:
-   VolumeStream(InstrumentInfo *symbolInfo, const ENUM_TIMEFRAMES timeframe)
-      :AStream(symbolInfo, timeframe)
-   {
-   }
-
-   virtual bool GetValues(const int period, const int count, double &val[])
-   {
-      string symbol = _symbolInfo.GetSymbol();
-      for (int i = 0; i < count; ++i)
-      {
-         val[i] = (double)iVolume(symbol, _timeframe, period + i);
       }
       return true;
    }
