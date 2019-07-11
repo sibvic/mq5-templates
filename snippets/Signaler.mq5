@@ -1,4 +1,4 @@
-//Signaler v 1.6
+//Signaler v 2.0
 input string AlertsSection = ""; // == Alerts ==
 input bool     Popup_Alert              = true; // Popup message
 input bool     Notification_Alert       = false; // Push notification
@@ -17,56 +17,15 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib.dl
 //void AdvancedAlert(string key, string text, string instrument, string timeframe);
 //#import
 
-#define ENTER_BUY_SIGNAL 1
-#define ENTER_SELL_SIGNAL -1
-#define EXIT_BUY_SIGNAL 2
-#define EXIT_SELL_SIGNAL -2
-
 class Signaler
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
-   datetime _lastDatetime;
 public:
    Signaler(const string symbol, ENUM_TIMEFRAMES timeframe)
    {
       _symbol = symbol;
       _timeframe = timeframe;
-   }
-
-   void SendNotifications(const int direction)
-   {
-      if (direction == 0 || MQLInfoInteger(MQL_TESTER))
-         return;
-
-      datetime currentTime = iTime(_symbol, _timeframe, 0);
-      if (_lastDatetime == currentTime)
-         return;
-
-      _lastDatetime = currentTime;
-      string tf = GetTimeframe();
-      string alert_Subject;
-      string alert_Body;
-      switch (direction)
-      {
-         case ENTER_BUY_SIGNAL:
-            alert_Subject = "Buy signal on " + _symbol + "/" + tf;
-            alert_Body = "Buy signal on " + _symbol + "/" + tf;
-            break;
-         case ENTER_SELL_SIGNAL:
-            alert_Subject = "Sell signal on " + _symbol + "/" + tf;
-            alert_Body = "Sell signal on " + _symbol + "/" + tf;
-            break;
-         case EXIT_BUY_SIGNAL:
-            alert_Subject = "Exit buy signal on " + _symbol + "/" + tf;
-            alert_Body = "Exit buy signal on " + _symbol + "/" + tf;
-            break;
-         case EXIT_SELL_SIGNAL:
-            alert_Subject = "Exit sell signal on " + _symbol + "/" + tf;
-            alert_Body = "Exit sell signal on " + _symbol + "/" + tf;
-            break;
-      }
-      SendNotifications(alert_Subject, alert_Body, _symbol, tf);
    }
 
    void SendNotifications(const string subject, const string message, const string symbol, const string timeframe)
@@ -85,11 +44,10 @@ public:
 
    void SendNotifications(const string message)
    {
-      SendNotifications("Alert", message, _symbol, GetTimeframe());
+      SendNotifications("Alert", message, _symbol, GetTimeframeStr());
    }
 
-private:
-   string GetTimeframe()
+   string GetTimeframeStr()
    {
       switch (_timeframe)
       {
