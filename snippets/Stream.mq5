@@ -37,51 +37,6 @@ public:
    }
 };
 
-class PriceStream : public AStream
-{
-   ENUM_APPLIED_PRICE _price;
-public:
-   PriceStream(InstrumentInfo *symbolInfo, const ENUM_TIMEFRAMES timeframe, const ENUM_APPLIED_PRICE price)
-      :AStream(symbolInfo, timeframe)
-   {
-      _price = price;
-   }
-
-   virtual bool GetValues(const int period, const int count, double &val[])
-   {
-      string symbol = _symbolInfo.GetSymbol();
-      for (int i = 0; i < count; ++i)
-      {
-         switch (_price)
-         {
-            case PRICE_CLOSE:
-               val[i] = iClose(symbol, _timeframe, period + i);
-               break;
-            case PRICE_OPEN:
-               val[i] = iOpen(symbol, _timeframe, period + i);
-               break;
-            case PRICE_HIGH:
-               val[i] = iHigh(symbol, _timeframe, period + i);
-               break;
-            case PRICE_LOW:
-               val[i] = iLow(symbol, _timeframe, period + i);
-               break;
-            case PRICE_MEDIAN:
-               val[i] = (iHigh(symbol, _timeframe, period + i) + iLow(symbol, _timeframe, period + i)) / 2.0;
-               break;
-            case PRICE_TYPICAL:
-               val[i] = (iHigh(symbol, _timeframe, period + i) + iLow(symbol, _timeframe, period + i) + iClose(symbol, _timeframe, period + i)) / 3.0;
-               break;
-            case PRICE_WEIGHTED:
-               val[i] = (iHigh(symbol, _timeframe, period + i) + iLow(symbol, _timeframe, period + i) + iClose(symbol, _timeframe, period + i) * 2) / 4.0;
-               break;
-         }
-         val[i] += _shift * _symbolInfo.GetPipSize();
-      }
-      return true;
-   }
-};
-
 class LowestPriceStream : public AStream
 {
    int _periods;

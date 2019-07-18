@@ -8,6 +8,14 @@ Stream interface.
 
 Base stream implementation.
 
+## PriceStream
+
+Price stream.
+
+## CustomStream
+
+Custom filled stream.
+
 ## StdMAStream
 
 Standard moving averages.
