@@ -1,7 +1,7 @@
-// AveragesStreamFactory v1.0
+// AveragesStreamFactory v1.1
 enum MATypes
 {
-   //ma_sma,     // Simple moving average - SMA
+   ma_sma,     // Simple moving average - SMA
    //ma_ema,     // Exponential moving average - EMA
    //ma_dsema,   // Double smoothed exponential moving average - DSEMA
    //ma_dema,    // Double exponential moving average - DEMA
@@ -31,6 +31,8 @@ public:
    {
       switch (method)
       {
+         case ma_sma:
+            return new SMAOnStream(source, period);
          case ma_tema:
             return new TemaOnStream(source, period);
          case ma_vwma:

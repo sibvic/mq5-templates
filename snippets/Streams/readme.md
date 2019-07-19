@@ -28,6 +28,10 @@ Abstract class for streams based on another stream.
 
 Factory for creating averages stream.
 
+## SMAOnStream
+
+Simple moving average.
+
 ## RmaOnStream
 
 RMA on stream averages.
