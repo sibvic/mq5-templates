@@ -3,6 +3,10 @@
 #property version   "1.0"
 #property strict
 
+#property indicator_separate_window
+#property indicator_buffers 3
+#property indicator_plots 3
+
 string IndicatorName;
 string IndicatorObjPrefix;
 
