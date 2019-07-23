@@ -46,5 +46,9 @@ int OnCalculate(const int rates_total,
                 const long &volume[],
                 const int &spread[])
 {
+   for (int pos = prev_calculated; pos < rates_total; ++pos)
+   {
+      
+   }
    return rates_total;
 }
