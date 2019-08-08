@@ -1,10 +1,11 @@
-// Trades monitor v.1.0
+// Trades monitor v.1.1
 
 #ifndef TradingMonitor_IMP
-#include "TradesIterator.mq5"
-#include "OrdersIterator.mq5"
-#include "ClosedTradesIterator.mq5"
-#include "Actions/IAction.mq5"
+#include <../TradesIterator.mq5>
+#include <../OrdersIterator.mq5>
+#include <../ClosedTradesIterator.mq5>
+#include <../Actions/IAction.mq5>
+#include <ITicketTarget.mq5>
 
 #define TRADING_MONITOR_ORDER 0
 #define TRADING_MONITOR_TRADE 1
@@ -21,6 +22,8 @@ class TradingMonitor
    int active_total;
    IAction* _onClosedTrade;
    IAction* _onNewTrade;
+   IAction* _onTradeChanged;
+   ITicketTarget* _ticketTarget;
    bool _firstStart;
 public:
    TradingMonitor()
@@ -28,6 +31,8 @@ public:
       active_total = 0;
       _onClosedTrade = NULL;
       _onNewTrade = NULL;
+      _onTradeChanged = NULL;
+      _ticketTarget = NULL;
       _firstStart = true;
    }
 
@@ -37,15 +42,18 @@ public:
          _onClosedTrade.Release();
       if (_onNewTrade != NULL)
          _onNewTrade.Release();
+      if (_onTradeChanged != NULL)
+         _onTradeChanged.Release();
    }
 
-   void SetOnClosedTrade(IAction* action)
+   void SetOnClosedTrade(IAction* action, ITicketTarget* ticketTarget)
    {
       if (_onClosedTrade != NULL)
          _onClosedTrade.Release();
       _onClosedTrade = action;
       if (_onClosedTrade != NULL)
          _onClosedTrade.AddRef();
+      _ticketTarget = ticketTarget;
    }
 
    void SetOnNewTrade(IAction* action)
@@ -55,6 +63,15 @@ public:
       _onNewTrade = action;
       if (_onNewTrade != NULL)
          _onNewTrade.AddRef();
+   }
+
+   void SetOnTradeChanged(IAction* action)
+   {
+      if (_onTradeChanged != NULL)
+         _onTradeChanged.Release();
+      _onTradeChanged = action;
+      if (_onTradeChanged != NULL)
+         _onTradeChanged.AddRef();
    }
 
    void DoWork()
@@ -106,9 +123,10 @@ public:
             if (it.GetStopLoss() != active_stoploss[index] ||
                   it.GetTakeProfit() != active_takeprofit[index])
             {
-               // already active order was changed
+               if (_onTradeChanged != NULL)
+                  // ignore result of DoAction
+                  _onTradeChanged.DoAction();
                changed = true;
-               //messageChangedOrder(index);
             }
          }
       }
@@ -122,8 +140,11 @@ public:
          {
             changed = true;
             if (_onClosedTrade != NULL)
+            {
+               _ticketTarget.SetTicket(ticket);
                // ignore result of DoAction
                _onClosedTrade.DoAction();
+            }
          }
       }
 
@@ -169,7 +190,7 @@ private:
       ClosedTradesIterator closedTrades;
       while (closedTrades.Next())
       {
-         active_ticket[active_total] = trades.GetTicket();
+         active_ticket[active_total] = closedTrades.GetTicket();
          active_order_type[active_total] = TRADING_MONITOR_CLOSED_TRADE;
          ++active_total;
       }

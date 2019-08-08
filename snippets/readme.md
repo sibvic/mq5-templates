@@ -157,10 +157,6 @@ Streams.
 
 Breakeven controller.
 
-## TradingMonitor
-
-Monitors trades and orders (creation, deletion, change).
-
 ## ClosedTradesIterator
 
 Iterates closed trades.

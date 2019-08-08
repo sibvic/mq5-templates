@@ -1,5 +1,4 @@
-// Market order builder
-// v.1.2
+// Market order builder v1.2
 class MarketOrderBuilder
 {
    OrderSide _orderSide;
