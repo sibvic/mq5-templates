@@ -1,4 +1,7 @@
 // ABaseStream v1.0
+#ifndef ABaseStream_IMP
+#define ABaseStream_IMP
+#include <IStream.mq5>
 class ABaseStream : public IStream
 {
 protected:
@@ -40,3 +43,4 @@ public:
          delete &this;
    }
 };
+#endif

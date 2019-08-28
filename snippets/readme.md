@@ -160,3 +160,7 @@ Breakeven controller.
 ## ClosedTradesIterator
 
 Iterates closed trades.
+
+## AlertSignal
+
+Draws an arrow on condition.

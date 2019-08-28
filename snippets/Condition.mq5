@@ -1,9 +1,4 @@
 // Conditions v.1.1
-interface ICondition
-{
-public:
-   virtual bool IsPass(const int period) = 0;
-};
 
 class DisabledCondition : public ICondition
 {

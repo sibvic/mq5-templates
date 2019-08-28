@@ -1,4 +1,4 @@
-//Signaler v 2.0
+//Signaler v 2.1
 input string AlertsSection = ""; // == Alerts ==
 input bool     Popup_Alert              = true; // Popup message
 input bool     Notification_Alert       = false; // Push notification
@@ -21,6 +21,7 @@ class Signaler
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
+   string _prefix;
 public:
    Signaler(const string symbol, ENUM_TIMEFRAMES timeframe)
    {
@@ -28,8 +29,17 @@ public:
       _timeframe = timeframe;
    }
 
-   void SendNotifications(const string subject, const string message, const string symbol, const string timeframe)
+   void SendNotifications(const string subject, string message, string symbol, string timeframe)
    {
+      if (message == NULL)
+         message = subject;
+      if (_prefix != "" && _prefix != NULL)
+         message = _prefix + message;
+      if (symbol == NULL)
+         symbol = _symbol;
+      if (timeframe == NULL)
+         timeframe = GetTimeframeStr();
+
       if (Popup_Alert)
          Alert(message);
       if (Email_Alert)
@@ -45,6 +55,21 @@ public:
    void SendNotifications(const string message)
    {
       SendNotifications("Alert", message, _symbol, GetTimeframeStr());
+   }
+
+   void SetMessagePrefix(string prefix)
+   {
+      _prefix = prefix;
+   }
+
+   string GetSymbol()
+   {
+      return _symbol;
+   }
+
+   ENUM_TIMEFRAMES GetTimeframe()
+   {
+      return _timeframe;
    }
 
    string GetTimeframeStr()
