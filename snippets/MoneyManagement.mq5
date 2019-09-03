@@ -1,4 +1,4 @@
-// Money management strategy v.1.1
+// Money management strategy v.1.2
 interface IMoneyManagementStrategy
 {
 public:
@@ -8,7 +8,7 @@ public:
 class AMoneyManagementStrategy : public IMoneyManagementStrategy
 {
 protected:
-   TradeCalculator *_calculator;
+   TradingCalculator *_calculator;
    PositionSizeType _lotsType;
    double _lots;
    StopLimitType _stopLossType;
@@ -16,7 +16,7 @@ protected:
    StopLimitType _takeProfitType;
    double _takeProfit;
 
-   AMoneyManagementStrategy(TradeCalculator *calculator, PositionSizeType lotsType, double lots
+   AMoneyManagementStrategy(TradingCalculator *calculator, PositionSizeType lotsType, double lots
       , StopLimitType stopLossType, double stopLoss, StopLimitType takeProfitType, double takeProfit)
    {
       _calculator = calculator;
@@ -29,11 +29,13 @@ protected:
    }
 };
 
+#include <Streams/IStream.mq5>
+
 class StopLossStreamLongMoneyManagementStrategy : public AMoneyManagementStrategy
 {
    IStream *_stopLossStream;
 public:
-   StopLossStreamLongMoneyManagementStrategy(TradeCalculator *calculator, PositionSizeType lotsType, double lots
+   StopLossStreamLongMoneyManagementStrategy(TradingCalculator *calculator, PositionSizeType lotsType, double lots
       , IStream *stopLoss, StopLimitType takeProfitType, double takeProfit)
       : AMoneyManagementStrategy(calculator, lotsType, lots, 0, 0, takeProfitType, takeProfit)
    {
@@ -69,7 +71,7 @@ class StopLossStreamShortMoneyManagementStrategy : public AMoneyManagementStrate
 {
    IStream *_stopLossStream;
 public:
-   StopLossStreamShortMoneyManagementStrategy(TradeCalculator *calculator, PositionSizeType lotsType, double lots
+   StopLossStreamShortMoneyManagementStrategy(TradingCalculator *calculator, PositionSizeType lotsType, double lots
       , IStream *stopLoss, StopLimitType takeProfitType, double takeProfit)
       : AMoneyManagementStrategy(calculator, lotsType, lots, 0, 0, takeProfitType, takeProfit)
    {
@@ -104,7 +106,7 @@ public:
 class LongMoneyManagementStrategy : public AMoneyManagementStrategy
 {
 public:
-   LongMoneyManagementStrategy(TradeCalculator *calculator, PositionSizeType lotsType, double lots
+   LongMoneyManagementStrategy(TradingCalculator *calculator, PositionSizeType lotsType, double lots
       , StopLimitType stopLossType, double stopLoss, StopLimitType takeProfitType, double takeProfit)
       : AMoneyManagementStrategy(calculator, lotsType, lots, stopLossType, stopLoss, takeProfitType, takeProfit)
    {
@@ -132,7 +134,7 @@ public:
 class ShortMoneyManagementStrategy : public AMoneyManagementStrategy
 {
 public:
-   ShortMoneyManagementStrategy(TradeCalculator *calculator, PositionSizeType lotsType, double lots
+   ShortMoneyManagementStrategy(TradingCalculator *calculator, PositionSizeType lotsType, double lots
       , StopLimitType stopLossType, double stopLoss, StopLimitType takeProfitType, double takeProfit)
       : AMoneyManagementStrategy(calculator, lotsType, lots, stopLossType, stopLoss, takeProfitType, takeProfit)
    {

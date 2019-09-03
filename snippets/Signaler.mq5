@@ -101,7 +101,3 @@ public:
       return "M1";
    }
 };
-
-void OnInit()
-{
-}

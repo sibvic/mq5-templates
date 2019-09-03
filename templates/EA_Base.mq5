@@ -123,21 +123,21 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib.dl
 //void AdvancedAlert(string key, string text, string instrument, string timeframe);
 //#import
 
-#include "Stream.mq5"
-#include "TradingTime.mq5"
-#include "InstrumentInfo.mq5"
-#include "TradesIterator.mq5"
-#include "TradeCalculator.mq5"
-#include "Condition.mq5"
-#include "MoneyManagement.mq5"
-#include "OrdersIterator.mq5"
-#include "TradingCommands.mq5"
-#include "TrailingController.mq5"
-#include "NetStopLoss.mq5"
-#include "MarketOrderBuilder.mq5"
-#include "PositionCap.mq5"
-#include "TradeController.mq5"
-#include "Cooldown.mq5"
+#include <Stream.mq5>
+#include <TradingTime.mq5>
+#include <InstrumentInfo.mq5>
+#include <TradesIterator.mq5>
+#include <TradingCalculator.mq5>
+#include <Condition.mq5>
+#include <MoneyManagement.mq5>
+#include <OrdersIterator.mq5>
+#include <TradingCommands.mq5>
+#include <TrailingController.mq5>
+#include <NetStopLoss.mq5>
+#include <MarketOrderBuilder.mq5>
+#include <PositionCap.mq5>
+#include <TradeController.mq5>
+#include <Cooldown.mq5>
 
 TradeController* controllers[];
 
@@ -162,7 +162,7 @@ TradeController* CreateController(const string symbol, ENUM_TIMEFRAMES tf, strin
       return NULL;
    }
 
-   TradeCalculator *tradeCalculator = new TradeCalculator(symbol);
+   TradingCalculator *tradeCalculator = new TradingCalculator(symbol);
    Signaler *signaler = new Signaler(symbol, tf);
    TradeController* tradeController = new TradeController(signaler, tradeCalculator, tf, entry_type, allow_trading);
    tradeController.SetTradingTime(tradingTime)
@@ -234,8 +234,8 @@ int OnInit()
    }
    else
    {
-      ArrayResize(symbols, 1);
-      symbols[0] = _Symbol;
+      ArrayResize(sym_arr, 1);
+      sym_arr[0] = _Symbol;
    }
    int sym_count = ArraySize(sym_arr);
    for (int i = 0; i < sym_count; i++)

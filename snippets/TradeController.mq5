@@ -1,6 +1,8 @@
-// Trade controller v.1.19
+// Trade controller v.1.20
 
 #include <Trade\Trade.mqh>
+#include <BreakevenController.mq5>
+#include <ICooldownController.mq5>
 
 class TradeController
 {   
@@ -12,7 +14,7 @@ class TradeController
    TradingTime *_tradingTime;
    BreakevenController *_breakeven[];
    INetStopLossStrategy *_netStopLoss;
-   TradeCalculator *_calculator;
+   TradingCalculator *_calculator;
    TrailingLogic *_trailing;
    ICondition *_longCondition;
    ICondition *_shortCondition;
@@ -27,7 +29,7 @@ class TradeController
    int _magicNumber;
    ICooldownController* _cooldownController;
 public:
-   TradeController(Signaler *signaler, TradeCalculator *calculator, ENUM_TIMEFRAMES timeframe, EntryType entryType, bool allowTrading)
+   TradeController(Signaler *signaler, TradingCalculator *calculator, ENUM_TIMEFRAMES timeframe, EntryType entryType, bool allowTrading)
    {
       _closeOnOpposite = false;
       _positionCap = NULL;

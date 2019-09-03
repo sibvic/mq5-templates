@@ -55,3 +55,7 @@ Volume stream.
 ## IndicatorOutputStream
 
 Stream drawn on the chart.
+
+## StreamPack
+
+Stream pack.

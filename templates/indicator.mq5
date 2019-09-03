@@ -23,7 +23,7 @@ void OnInit()
    IndicatorSetString(INDICATOR_SHORTNAME, IndicatorName);
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
 
-   SetIndexBuffer(id + 0, p_arr, show_pivot ? INDICATOR_DATA : INDICATOR_CALCULATIONS);
+   SetIndexBuffer(id + 0, p_arr, INDICATOR_DATA);
    PlotIndexSetInteger(id + 0, PLOT_LINE_STYLE, STYLE_SOLID);
    PlotIndexSetInteger(id + 0, PLOT_DRAW_TYPE, DRAW_LINE);
    PlotIndexSetInteger(id + 0, PLOT_LINE_WIDTH, 1);

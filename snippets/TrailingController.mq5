@@ -1,4 +1,4 @@
-// Trailing controller v.1.5
+// Trailing controller v.1.6
 enum TrailingControllerType
 {
    TrailingControllerTypeStandard,
@@ -13,6 +13,8 @@ public:
    virtual TrailingControllerType GetType() = 0;
 };
 
+#include <Signaler.mq5>
+
 class CustomLevelController : public ITrailingController
 {
    Signaler *_signaler;
@@ -20,9 +22,9 @@ class CustomLevelController : public ITrailingController
    bool _finished;
    double _stop;
    double _trigger;
-   TradeCalculator *_tradeCalculator;
+   TradingCalculator *_tradeCalculator;
 public:
-   CustomLevelController(TradeCalculator *tradeCalculator, Signaler *signaler = NULL)
+   CustomLevelController(TradingCalculator *tradeCalculator, Signaler *signaler = NULL)
    {
       _tradeCalculator = tradeCalculator;
       _finished = true;
@@ -119,9 +121,9 @@ class TrailingController : public ITrailingController
    bool _finished;
    double _stop;
    double _trailingStep;
-   TradeCalculator *_tradeCalculator;
+   TradingCalculator *_tradeCalculator;
 public:
-   TrailingController(TradeCalculator *tradeCalculator, Signaler *signaler = NULL)
+   TrailingController(TradingCalculator *tradeCalculator, Signaler *signaler = NULL)
    {
       _tradeCalculator = tradeCalculator;
       _finished = true;
@@ -224,13 +226,13 @@ public:
 class TrailingLogic
 {
    ITrailingController *_trailing[];
-   TradeCalculator *_calculator;
+   TradingCalculator *_calculator;
    TrailingType _trailingType;
    double _trailingStep;
    double _atrTrailingMultiplier;
    ENUM_TIMEFRAMES _timeframe;
 public:
-   TrailingLogic(TradeCalculator *calculator, TrailingType trailing, 
+   TrailingLogic(TradingCalculator *calculator, TrailingType trailing, 
       double trailingStep, double atrTrailingMultiplier, ENUM_TIMEFRAMES timeframe)
    {
       _calculator = calculator;

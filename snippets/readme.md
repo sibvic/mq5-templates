@@ -164,3 +164,11 @@ Iterates closed trades.
 ## AlertSignal
 
 Draws an arrow on condition.
+
+## NetStopLoss
+
+Net stop loss logic.
+
+## NetTakeProfit
+
+Net take profit logic.

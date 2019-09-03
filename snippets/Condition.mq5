@@ -1,11 +1,5 @@
 // Conditions v.1.1
 
-class DisabledCondition : public ICondition
-{
-public:
-   virtual bool IsPass(const int period) { return false; }
-};
-
 class EntryLongCondition : public ICondition
 {
    InstrumentInfo *_symbolInfo;
