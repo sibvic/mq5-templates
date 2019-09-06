@@ -4,15 +4,19 @@
 
 [Lint utility for indicators/strategies](https://github.com/sibvic/fxlint)
 
+[Injection of includes into MQL4/5](https://github.com/sibvic/MQ4Inject)
+
 ### Templates
 
 [FXTS2](https://github.com/sibvic/fxts2-templates) 
 
 [PineScript/TradingView](https://github.com/sibvic/pinescript-templates) 
 
+[MT4/MQL4](https://github.com/sibvic/mq4-templates) 
+
 [MT5/MQL5](https://github.com/sibvic/mq5-templates) 
 
-[NT8/Ninja Trader 8](https://github.com/sibvic/nt8-templates) 
+[NT8/Ninja Trader 8](https://github.com/sibvic/nt8-templates)
 
 ### Code Snippets for Visual Studio Code
 
@@ -27,3 +31,5 @@
 ## Donations gratefully accepted.
 
 * [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/sibvic)
+
+Or support us on [Patreon](https://www.patreon.com/profitrobots)
