@@ -172,3 +172,7 @@ Net stop loss logic.
 ## NetTakeProfit
 
 Net take profit logic.
+
+## Routines
+
+Usefull functions.
