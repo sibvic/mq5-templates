@@ -1,4 +1,8 @@
-// Market order builder v1.2
+// Market order builder v1.3
+#include <enums/OrderSide.mq5>
+
+#ifndef MarketOrderBuilder_IMP
+#define MarketOrderBuilder_IMP
 class MarketOrderBuilder
 {
    OrderSide _orderSide;
@@ -10,15 +14,28 @@ class MarketOrderBuilder
    double _limit;
    int _magicNumber;
    string _comment;
+   bool _btcAccount;
 public:
-   MarketOrderBuilder *SetComment(const string comment) { _comment = comment; return &this; }
-   MarketOrderBuilder *SetSide(const OrderSide orderSide) { _orderSide = orderSide; return &this; }
-   MarketOrderBuilder *SetInstrument(const string instrument) { _instrument = instrument; return &this; }
-   MarketOrderBuilder *SetAmount(const double amount) { _amount = amount; return &this; }
-   MarketOrderBuilder *SetSlippage(const int slippage) { _slippage = slippage; return &this; }
-   MarketOrderBuilder *SetStopLoss(const double stop) { _stop = stop; return &this; }
-   MarketOrderBuilder *SetTakeProfit(const double limit) { _limit = limit; return &this; }
-   MarketOrderBuilder *SetMagicNumber(const int magicNumber) { _magicNumber = magicNumber; return &this; }
+   MarketOrderBuilder()
+   {
+      _btcAccount = false;
+      _amount = 0;
+      _rate = 0;
+      _slippage = 0;
+      _stop = 0;
+      _limit = 0;
+      _magicNumber = 0;
+   }
+
+   MarketOrderBuilder* SetComment(const string comment) { _comment = comment; return &this; }
+   MarketOrderBuilder* SetSide(const OrderSide orderSide) { _orderSide = orderSide; return &this; }
+   MarketOrderBuilder* SetInstrument(const string instrument) { _instrument = instrument; return &this; }
+   MarketOrderBuilder* SetAmount(const double amount) { _amount = amount; return &this; }
+   MarketOrderBuilder* SetSlippage(const int slippage) { _slippage = slippage; return &this; }
+   MarketOrderBuilder* SetStopLoss(const double stop) { _stop = stop; return &this; }
+   MarketOrderBuilder* SetTakeProfit(const double limit) { _limit = limit; return &this; }
+   MarketOrderBuilder* SetMagicNumber(const int magicNumber) { _magicNumber = magicNumber; return &this; }
+   MarketOrderBuilder* SetBTCAccount(const bool isBtcAccount) { _btcAccount = isBtcAccount; return &this; }
    
    ulong Execute(string &error)
    {
@@ -62,7 +79,7 @@ public:
       request.magic = _magicNumber;
       if (_comment != "")
          request.comment = _comment;
-      if (BTCAccount)
+      if (_btcAccount)
          request.type_filling = SYMBOL_FILLING_FOK;
       MqlTradeResult result;
       ZeroMemory(result);
@@ -110,3 +127,4 @@ public:
       return result.order;
    }
 };
+#endif
