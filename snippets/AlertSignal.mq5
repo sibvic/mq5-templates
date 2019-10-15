@@ -1,4 +1,4 @@
-// Alert signal v1.0
+// Alert signal v1.1
 // More templates and snippets on https://github.com/sibvic/mq4-templates
 
 #ifndef AlertSignal_IMP
@@ -28,7 +28,8 @@ public:
    {
       if (_price != NULL)
          _price.Release();
-      delete _condition;
+      if (_condition != NULL)
+         _condition.Release();
    }
 
    int RegisterStreams(int id, string name, int code, color clr, IStream* price)

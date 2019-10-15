@@ -1,9 +1,11 @@
 //Signaler v 3.0
 
+#ifdef ADVANCED_ALERTS
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
 #import "AdvancedNotificationsLib.dll"
 void AdvancedAlert(string key, string text, string instrument, string timeframe);
 #import
+#endif
 
 class Signaler
 {
@@ -62,8 +64,10 @@ public:
          PlaySound(_soundFile);
       if (_notificationAlert)
          SendNotification(message);
+#ifdef ADVANCED_ALERTS
       if (_advancedAlert && _advancedKey != "")
          AdvancedAlert(_advancedKey, message, symbol, timeframe);
+#endif
    }
 
    void SendNotifications(const string message)
