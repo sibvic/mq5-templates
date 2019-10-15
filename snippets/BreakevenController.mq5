@@ -1,4 +1,4 @@
-// Breakeven controller v. 1.3
+// Breakeven controller v. 1.4
 class BreakevenController
 {
    ulong _order;
@@ -39,7 +39,7 @@ public:
          if (SymbolInfoDouble(symbol, SYMBOL_ASK) >= _trigger)
          {
             string error;
-            bool res = TradingCommands::MoveStop(_order, _target, error);
+            bool res = TradingCommands::MoveSL(_order, _target, error);
             if (!res)
             {
                return;
@@ -52,7 +52,7 @@ public:
          if (SymbolInfoDouble(symbol, SYMBOL_BID) < _trigger) 
          {
             string error;
-            bool res = TradingCommands::MoveStop(_order, _target, error);
+            bool res = TradingCommands::MoveSL(_order, _target, error);
             if (!res)
             {
                return;

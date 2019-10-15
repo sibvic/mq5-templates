@@ -1,32 +1,46 @@
-//Signaler v 2.1
-input string AlertsSection = ""; // == Alerts ==
-input bool     Popup_Alert              = true; // Popup message
-input bool     Notification_Alert       = false; // Push notification
-input bool     Email_Alert              = false; // Email
-input bool     Play_Sound               = false; // Play sound on alert
-input string   Sound_File               = ""; // Sound file
-input bool     Advanced_Alert           = false; // Advanced alert
-input string   Advanced_Key             = ""; // Advanced alert key
-input string   Comment5                 = "- DISABLED IN THIS VERSION -";
-input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
-input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
-input string   Comment4                 = "- Install AdvancedNotificationsLib.dll and cpprest141_2_10.dll -";
+//Signaler v 3.0
 
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
-//#import "AdvancedNotificationsLib.dll"
-//void AdvancedAlert(string key, string text, string instrument, string timeframe);
-//#import
+#import "AdvancedNotificationsLib.dll"
+void AdvancedAlert(string key, string text, string instrument, string timeframe);
+#import
 
 class Signaler
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
    string _prefix;
+   bool _popupAlert;
+   bool _emailAlert;
+   bool _playSound;
+   string _soundFile;
+   bool _notificationAlert;
+   bool _advancedAlert;
+   string _advancedKey;
 public:
    Signaler(const string symbol, ENUM_TIMEFRAMES timeframe)
    {
       _symbol = symbol;
       _timeframe = timeframe;
+      _popupAlert = false;
+      _emailAlert = false;
+      _playSound = false;
+      _notificationAlert = false;
+      _advancedAlert = false;
+   }
+
+   void SetPopupAlert(bool isEnabled) { _popupAlert = isEnabled; }
+   void SetEmailAlert(bool isEnabled) { _emailAlert = isEnabled; }
+   void SetPlaySound(bool isEnabled, string fileName) 
+   { 
+      _playSound = isEnabled;
+      _soundFile = fileName;
+   }
+   void SetNotificationAlert(bool isEnabled) { _notificationAlert = isEnabled; }
+   void SetAdvancedAlert(bool isEnabled, string key)
+   {
+      _advancedAlert = isEnabled;
+      _advancedKey = key;
    }
 
    void SendNotifications(const string subject, string message, string symbol, string timeframe)
@@ -40,16 +54,16 @@ public:
       if (timeframe == NULL)
          timeframe = GetTimeframeStr();
 
-      if (Popup_Alert)
+      if (_popupAlert)
          Alert(message);
-      if (Email_Alert)
+      if (_emailAlert)
          SendMail(subject, message);
-      if (Play_Sound)
-         PlaySound(Sound_File);
-      if (Notification_Alert)
+      if (_playSound)
+         PlaySound(_soundFile);
+      if (_notificationAlert)
          SendNotification(message);
-      //if (Advanced_Alert && Advanced_Key != "")
-      //   AdvancedAlert(Advanced_Key, message, symbol, timeframe);
+      if (_advancedAlert && _advancedKey != "")
+         AdvancedAlert(_advancedKey, message, symbol, timeframe);
    }
 
    void SendNotifications(const string message)

@@ -1,9 +1,8 @@
-// Trades iterator v 1.1
+// Trades iterator v 1.2
+
+#include <enums/CompareType.mq5>
+
 #ifndef TradesIterator_IMP
-enum CompareType
-{
-   CompareLessThan
-};
 
 class TradesIterator
 {
@@ -18,14 +17,22 @@ class TradesIterator
    bool _useProfit;
    double _profit;
    CompareType _profitCompare;
+   string _comment;
 public:
    TradesIterator()
    {
+      _comment = NULL;
       _useMagicNumber = false;
       _useSide = false;
       _lastIndex = INT_MIN;
       _useSymbol = false;
       _useProfit = false;
+   }
+
+   TradesIterator* WhenComment(string comment)
+   {
+      _comment = comment;
+      return &this;
    }
 
    void WhenSymbol(const string symbol)
@@ -54,10 +61,13 @@ public:
    }
    
    ulong GetTicket() { return PositionGetTicket(_lastIndex); }
+   double GetLots() { return PositionGetDouble(POSITION_VOLUME); }
    double GetOpenPrice() { return PositionGetDouble(POSITION_PRICE_OPEN); }
    double GetStopLoss() { return PositionGetDouble(POSITION_SL); }
    double GetTakeProfit() { return PositionGetDouble(POSITION_TP); }
    ENUM_POSITION_TYPE GetPositionType() { return (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE); }
+   bool IsBuyOrder() { return GetPositionType() == POSITION_TYPE_BUY; }
+   string GetSymbol() { return PositionGetSymbol(_lastIndex); }
 
    int Count()
    {
@@ -104,6 +114,19 @@ public:
       return false;
    }
 
+   ulong First()
+   {
+      for (int i = PositionsTotal() - 1; i >= 0; i--)
+      {
+         ulong ticket = PositionGetTicket(i);
+         if (PositionSelectByTicket(ticket) && PassFilter(i))
+         {
+            return ticket;
+         }
+      }
+      return 0;
+   }
+
 private:
    bool PassFilter(const int index)
    {
@@ -127,6 +150,11 @@ private:
          if (_isBuySide && positionType != POSITION_TYPE_BUY)
             return false;
          if (!_isBuySide && positionType != POSITION_TYPE_SELL)
+            return false;
+      }
+      if (_comment != NULL)
+      {
+         if (_comment != PositionGetString(POSITION_COMMENT))
             return false;
       }
       return true;

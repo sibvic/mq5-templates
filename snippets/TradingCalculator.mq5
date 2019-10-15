@@ -1,8 +1,19 @@
 // Trading calculator v.1.3
+
+#include <enums/PositionSizeType.mq5>
+
+#ifndef TradingCalculator_IMP
+#define TradingCalculator_IMP
+
 class TradingCalculator
 {
    InstrumentInfo *_symbolInfo;
 public:
+   static TradingCalculator* Create(string symbol)
+   {
+      return new TradingCalculator(symbol);
+   }
+
    TradingCalculator(const string symbol)
    {
       _symbolInfo = new InstrumentInfo(symbol);
@@ -184,3 +195,5 @@ private:
       return (money / (unitCost / tickSize)) / amount;
    }
 };
+
+#endif

@@ -1,11 +1,11 @@
-// Condition base v1.0
+// Base condition v1.0
 
 #ifndef ABaseCondition_IMP
 #define ABaseCondition_IMP
 
-#include <ICondition.mq5>
+#include <ACondition.mq5>
 #include <../InstrumentInfo.mq5>
-class ABaseCondition : public ICondition
+class ABaseCondition : public ACondition
 {
 protected:
    ENUM_TIMEFRAMES _timeframe;
@@ -23,5 +23,6 @@ public:
       delete _instrument;
    }
 };
+
 
 #endif

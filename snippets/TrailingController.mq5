@@ -1,4 +1,4 @@
-// Trailing controller v.1.6
+// Trailing controller v.1.7
 enum TrailingControllerType
 {
    TrailingControllerTypeStandard,
@@ -80,7 +80,7 @@ public:
                _signaler.SendNotifications(message);
             }
             string error;
-            if (!TradingCommands::MoveStop(_order, _stop, error))
+            if (!TradingCommands::MoveSL(_order, _stop, error))
             {
                Print(error);
                return;
@@ -98,7 +98,7 @@ public:
                _signaler.SendNotifications(message);
             }
             string error;
-            if (!TradingCommands::MoveStop(_order, _stop, error))
+            if (!TradingCommands::MoveSL(_order, _stop, error))
             {
                Print(error);
                return;
@@ -185,7 +185,7 @@ public:
                _signaler.SendNotifications(message);
             }
             string error;
-            if (!TradingCommands::MoveStop(_order, newStop, error))
+            if (!TradingCommands::MoveSL(_order, newStop, error))
             {
                Print(error);
                _finished = true;
@@ -207,7 +207,7 @@ public:
                _signaler.SendNotifications(message);
             }
             string error;
-            if (!TradingCommands::MoveStop(_order, newStop, error))
+            if (!TradingCommands::MoveSL(_order, newStop, error))
             {
                Print(error);
                _finished = true;

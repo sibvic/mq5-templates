@@ -176,3 +176,7 @@ Net take profit logic.
 ## Routines
 
 Usefull functions.
+
+## Order
+
+Order entity.

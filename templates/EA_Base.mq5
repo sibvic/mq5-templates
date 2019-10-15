@@ -1,16 +1,16 @@
+// EA base template v1.1
+
 #property version   "1.00"
 #property description "ProfitRobots templates: https://github.com/sibvic/mq5-templates"
 #property strict
 
+#include <enums/OrderSide.mq5>
+
+#ifndef tradeManager_INSTANCE
+#define tradeManager_INSTANCE
 #include <Trade\Trade.mqh>
-
-enum OrderSide
-{
-   BuySide,
-   SellSide
-};
-
 CTrade tradeManager;
+#endif
 
 enum EntryType
 {
@@ -34,14 +34,7 @@ enum StopLimitType
    StopLimitRiskReward // Set in % of stop loss
 };
 
-enum PositionSizeType
-{
-   PositionSizeAmount, // $
-   PositionSizeContract, // In contracts
-   PositionSizeEquity, // % of equity
-   PositionSizeRisk, // Risk in % of equity
-   PositionSizeMoneyPerPip // $ per pip
-};
+#include <enums/PositionSizeType.mq5>
 
 enum PositionDirection
 {

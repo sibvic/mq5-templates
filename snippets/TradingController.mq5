@@ -1,10 +1,10 @@
-// Trade controller v.1.20
+// Trade controller v.2.0
 
 #include <Trade\Trade.mqh>
 #include <BreakevenController.mq5>
 #include <ICooldownController.mq5>
 
-class TradeController
+class TradingController
 {   
    ENUM_TIMEFRAMES _timeframe;
    datetime _lastbartime;
@@ -29,7 +29,7 @@ class TradeController
    int _magicNumber;
    ICooldownController* _cooldownController;
 public:
-   TradeController(Signaler *signaler, TradingCalculator *calculator, ENUM_TIMEFRAMES timeframe, EntryType entryType, bool allowTrading)
+   TradingController(Signaler *signaler, TradingCalculator *calculator, ENUM_TIMEFRAMES timeframe, EntryType entryType, bool allowTrading)
    {
       _closeOnOpposite = false;
       _positionCap = NULL;
@@ -49,7 +49,7 @@ public:
       _magicNumber = 0;
    }
 
-   ~TradeController()
+   ~TradingController()
    {
       int i_count = ArraySize(_breakeven);
       for (int i = 0; i < i_count; ++i)
@@ -69,19 +69,19 @@ public:
       delete _cooldownController;
    }
 
-   TradeController* SetCooldown(ICooldownController* controller) { _cooldownController = controller; return &this; }
-   TradeController* SetSlippage(int slippage) { _slippage = slippage; return &this; }
-   TradeController* SetBreakevenType(StopLimitType breakevenType, double breakevenValue) { _breakevenType = breakevenType; _breakevenValue = breakevenValue; return &this; }
-   TradeController* SetCloseOnOpposite(bool closeOnOpposite) { _closeOnOpposite = closeOnOpposite; return &this; }
-   TradeController* SetPositionCap(IPositionCapStrategy* positionCap) { _positionCap = positionCap; return &this; }
-   TradeController *SetLongCondition(ICondition *condition) { _longCondition = condition; return &this; }
-   TradeController *SetShortCondition(ICondition *condition) { _shortCondition = condition; return &this; }
-   TradeController *SetTradingTime(TradingTime *tradingTime) { _tradingTime = tradingTime; return &this; }
-   TradeController *SetTrailing(TrailingLogic *trailing) { _trailing = trailing; return &this; }
-   TradeController *SetNetStopLossStrategy(INetStopLossStrategy *strategy) { _netStopLoss = strategy; return &this; }
-   TradeController *SetLongMoneyManagementStrategy(IMoneyManagementStrategy *moneyManagementStrategy) { _longMoneyManagementStrategy = moneyManagementStrategy; return &this; }
-   TradeController *SetShortMoneyManagementStrategy(IMoneyManagementStrategy *moneyManagementStrategy) { _shortMoneyManagementStrategy = moneyManagementStrategy; return &this; }
-   TradeController* SetMagicNumber(int magicNumber) { _magicNumber = magicNumber; return &this; }
+   TradingController* SetCooldown(ICooldownController* controller) { _cooldownController = controller; return &this; }
+   TradingController* SetSlippage(int slippage) { _slippage = slippage; return &this; }
+   TradingController* SetBreakevenType(StopLimitType breakevenType, double breakevenValue) { _breakevenType = breakevenType; _breakevenValue = breakevenValue; return &this; }
+   TradingController* SetCloseOnOpposite(bool closeOnOpposite) { _closeOnOpposite = closeOnOpposite; return &this; }
+   TradingController* SetPositionCap(IPositionCapStrategy* positionCap) { _positionCap = positionCap; return &this; }
+   TradingController* SetLongCondition(ICondition *condition) { _longCondition = condition; return &this; }
+   TradingController* SetShortCondition(ICondition *condition) { _shortCondition = condition; return &this; }
+   TradingController* SetTradingTime(TradingTime *tradingTime) { _tradingTime = tradingTime; return &this; }
+   TradingController* SetTrailing(TrailingLogic *trailing) { _trailing = trailing; return &this; }
+   TradingController* SetNetStopLossStrategy(INetStopLossStrategy *strategy) { _netStopLoss = strategy; return &this; }
+   TradingController* SetLongMoneyManagementStrategy(IMoneyManagementStrategy *moneyManagementStrategy) { _longMoneyManagementStrategy = moneyManagementStrategy; return &this; }
+   TradingController* SetShortMoneyManagementStrategy(IMoneyManagementStrategy *moneyManagementStrategy) { _shortMoneyManagementStrategy = moneyManagementStrategy; return &this; }
+   TradingController* SetMagicNumber(int magicNumber) { _magicNumber = magicNumber; return &this; }
 
    void DoTrading()
    {

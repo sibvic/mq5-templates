@@ -4,6 +4,14 @@
 
 Condition interface.
 
-## ABaseCondition
+## ACondition
 
 Condition base.
+
+## DisabledCondition
+
+Disabled condition. Always returns false.
+
+## ProfitInRangeCondition
+
+Returns true when profit of the order in the specified range.

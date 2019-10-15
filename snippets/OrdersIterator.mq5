@@ -1,4 +1,8 @@
 // Orders iterator v 1.9
+
+#include <enums/CompareType.mq5>
+#include <enums/OrderSide.mq5>
+
 #ifndef OrdersIterator_IMP
 
 class OrdersIterator

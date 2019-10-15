@@ -1,4 +1,4 @@
-// Arrows indicator v1.0
+// Arrows indicator v1.1
 
 #property copyright ""
 #property link      ""
@@ -12,7 +12,7 @@ input color up_color = Green; // Up color
 input color down_color = Red; // Down color
 
 #include <Signaler.mq5>
-#include <Conditions/ABaseCondition.mq5>
+#include <Conditions/ACondition.mq5>
 #include <Streams/PriceStream.mq5>
 #include <AlertSignal.mq5>
 
@@ -20,11 +20,11 @@ AlertSignal* up;
 AlertSignal* down;
 Signaler* mainSignaler;
 
-class UpAlertCondition : public ABaseCondition
+class UpAlertCondition : public ACondition
 {
 public:
    UpAlertCondition(const string symbol, ENUM_TIMEFRAMES timeframe)
-      :ABaseCondition(symbol, timeframe)
+      :ACondition(symbol, timeframe)
    {
 
    }
@@ -35,11 +35,11 @@ public:
    }
 };
 
-class DownAlertCondition : public ABaseCondition
+class DownAlertCondition : public ACondition
 {
 public:
    DownAlertCondition(const string symbol, ENUM_TIMEFRAMES timeframe)
-      :ABaseCondition(symbol, timeframe)
+      :ACondition(symbol, timeframe)
    {
 
    }

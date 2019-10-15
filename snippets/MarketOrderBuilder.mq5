@@ -1,4 +1,4 @@
-// Market order builder v1.3
+// Market order builder v1.4
 #include <enums/OrderSide.mq5>
 
 #ifndef MarketOrderBuilder_IMP
@@ -54,12 +54,14 @@ public:
                error = "Only short are allowed";
                return 0;
             }
+            break;
          case SYMBOL_TRADE_MODE_LONGONLY:
             if (_orderSide == SellSide)
             {
                error = "Only long are allowed";
                return 0;
             }
+            break;
       }
       ENUM_ORDER_TYPE orderType = _orderSide == BuySide ? ORDER_TYPE_BUY : ORDER_TYPE_SELL;
       int digits = (int)SymbolInfoInteger(_instrument, SYMBOL_DIGITS);
@@ -122,6 +124,11 @@ public:
                   error = "Invalid stops in the request";
                }
             }
+            return 0;
+         case TRADE_RETCODE_DONE:
+            break;
+         default:
+            error = "Unknown error: " + IntegerToString(result.retcode);
             return 0;
       }
       return result.order;

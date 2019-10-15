@@ -1,4 +1,4 @@
-// Net stop loss v 1.0
+// Net stop loss v 1.1
 interface INetStopLossStrategy
 {
 public:
@@ -71,7 +71,7 @@ private:
          if (it1.GetStopLoss() != stopLoss)
          {
             string error = "";
-            if (!TradingCommands::MoveStop(it1.GetTicket(), stopLoss, error))
+            if (!TradingCommands::MoveSL(it1.GetTicket(), stopLoss, error))
             {
                if (error != "")
                   Print(error);

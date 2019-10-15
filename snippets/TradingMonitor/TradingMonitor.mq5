@@ -1,4 +1,4 @@
-// Trades monitor v.1.1
+// Trades monitor v.1.2
 
 #ifndef TradingMonitor_IMP
 #include <../TradesIterator.mq5>
@@ -24,7 +24,6 @@ class TradingMonitor
    IAction* _onNewTrade;
    IAction* _onTradeChanged;
    ITicketTarget* _ticketTarget;
-   bool _firstStart;
 public:
    TradingMonitor()
    {
@@ -33,7 +32,6 @@ public:
       _onNewTrade = NULL;
       _onTradeChanged = NULL;
       _ticketTarget = NULL;
-      _firstStart = true;
    }
 
    ~TradingMonitor()
@@ -76,12 +74,6 @@ public:
 
    void DoWork()
    {
-      if (_firstStart)
-      {
-         updateActiveOrders();
-         _firstStart = false;
-         return;
-      }
       bool changed = false;
       OrdersIterator orders;
       while (orders.Next())
