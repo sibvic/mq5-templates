@@ -1,4 +1,4 @@
-//Signaler v 3.0
+//Signaler v 4.0
 
 #ifdef ADVANCED_ALERTS
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
