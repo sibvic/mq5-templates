@@ -109,7 +109,7 @@ input string   Advanced_Key             = ""; // Advanced alert key
 input string   Comment5                 = "- DISABLED IN THIS VERSION -";
 input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
 input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
-input string   Comment4                 = "- Install AdvancedNotificationsLib.dll and cpprest141_2_10.dll -";
+input string   Comment4                 = "- Install AdvancedNotificationsLib using ProfitRobots installer -";
 
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
 //#import "AdvancedNotificationsLib.dll"

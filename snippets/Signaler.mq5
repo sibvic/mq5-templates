@@ -45,10 +45,11 @@ public:
       _advancedKey = key;
    }
 
-   void SendNotifications(const string subject, string message, string symbol, string timeframe)
+   void SendNotifications(string message, string subject = NULL, string symbol = NULL, string timeframe = NULL)
    {
-      if (message == NULL)
-         message = subject;
+      if (subject == NULL)
+         subject = message;
+
       if (_prefix != "" && _prefix != NULL)
          message = _prefix + message;
       if (symbol == NULL)
@@ -68,11 +69,6 @@ public:
       if (_advancedAlert && _advancedKey != "")
          AdvancedAlert(_advancedKey, message, symbol, timeframe);
 #endif
-   }
-
-   void SendNotifications(const string message)
-   {
-      SendNotifications("Alert", message, _symbol, GetTimeframeStr());
    }
 
    void SetMessagePrefix(string prefix)
