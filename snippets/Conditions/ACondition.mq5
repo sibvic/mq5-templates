@@ -1,29 +1,28 @@
-// Condition base v1.0
+// Base condition v1.0
 
-#ifndef ACondition_IMP
-#define ACondition_IMP
+#ifndef ABaseCondition_IMP
+#define ABaseCondition_IMP
 
-#include <ICondition.mq5>
-class ACondition : public ICondition
+#include <AConditionBase.mq5>
+#include <../InstrumentInfo.mq5>
+class ACondition : public AConditionBase
 {
-   int _references;
+protected:
+   ENUM_TIMEFRAMES _timeframe;
+   InstrumentInfo* _instrument;
+   string _symbol;
 public:
-   ACondition()
+   ACondition(const string symbol, ENUM_TIMEFRAMES timeframe)
    {
-      _references = 1;
+      _instrument = new InstrumentInfo(symbol);
+      _timeframe = timeframe;
+      _symbol = symbol;
    }
-   
-   virtual void AddRef()
+   ~ACondition()
    {
-      ++_references;
-   }
-
-   virtual void Release()
-   {
-      --_references;
-      if (_references == 0)
-         delete &this;
+      delete _instrument;
    }
 };
+
 
 #endif
