@@ -1,4 +1,4 @@
-// Grid builder v1.0
+// Grid builder v1.1
 
 #include <ICellFactory.mq5>
 
@@ -20,7 +20,7 @@ class GridBuilder
    ICellFactory* _cellFactory;
 public:
    GridBuilder(int x, int y, int headerHeight, int cellHeight, bool verticalMode, ICellFactory* cellFactory)
-      :_xIterator(x, -cell_width), _yIterator(y, cellHeight)
+      :_xIterator(x, cell_width), _yIterator(y, cellHeight)
    {
       _cellHeight = cellHeight;
       _headerHeight = headerHeight;
@@ -43,18 +43,19 @@ public:
 
       if (_verticalMode)
       {
+         int x = _xIterator.GetNext();
          Iterator yIterator(_originalY, _cellHeight);
          Row *row = grid.AddRow();
          row.Add(new EmptyCell());
          for (int i = 0; i < _symbolsCount; i++)
          {
             string id = IndicatorObjPrefix + _symbols[i] + "_Name";
-            row.Add(new LabelCell(id, _symbols[i], _originalX + cell_width, yIterator.GetNext()));
+            row.Add(new LabelCell(id, _symbols[i], x, yIterator.GetNext()));
          }
       }
       else
       {
-         Iterator xIterator(_originalX - cell_width, -cell_width);
+         Iterator xIterator(_originalX + cell_width, cell_width);
          Row *row = grid.AddRow();
          row.Add(new EmptyCell());
          for (int i = 0; i < _symbolsCount; i++)
@@ -84,7 +85,7 @@ public:
          int y = _yIterator.GetNext();
          Row *row = grid.AddRow();
          row.Add(new LabelCell(IndicatorObjPrefix + label + "_Label", label, _originalX, y));
-         Iterator xIterator(_originalX - cell_width, -cell_width);
+         Iterator xIterator(_originalX + cell_width, cell_width);
          for (int i = 0; i < _symbolsCount; i++)
          {
             string id = IndicatorObjPrefix + _symbols[i] + "_" + label;
