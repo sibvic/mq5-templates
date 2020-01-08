@@ -25,15 +25,7 @@ enum TradingDirection
    BothSides // Both
 };
 
-enum StopLimitType
-{
-   StopLimitDoNotUse, // Do not use
-   StopLimitPercent, // Set in %
-   StopLimitPips, // Set in Pips
-   StopLimitDollar, // Set in $
-   StopLimitRiskReward // Set in % of stop loss
-};
-
+#include <enums/StopLimitType.mq5>
 #include <enums/PositionSizeType.mq5>
 
 enum PositionDirection
