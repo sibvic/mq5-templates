@@ -46,7 +46,11 @@ int OnCalculate(const int rates_total,
                 const long &volume[],
                 const int &spread[])
 {
-   for (int pos = prev_calculated; pos < rates_total; ++pos)
+   if (prev_calculated <= 0 || prev_calculated > rates_total)
+   {
+      ArrayInitialize(Filt, EMPTY_VALUE);
+   }
+   for (int pos = MathMax(0, prev_calculated); pos < rates_total; ++pos)
    {
       
    }
