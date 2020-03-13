@@ -4,6 +4,8 @@
 #property description "ProfitRobots templates: https://github.com/sibvic/mq5-templates"
 #property strict
 
+#define ACT_ON_SWITCH_CONDITION
+
 #include <enums/OrderSide.mq5>
 
 #ifndef tradeManager_INSTANCE
@@ -46,7 +48,7 @@ input string symbols = ""; // Symbols to trade. Separated by ","
 input bool allow_trading = true; // Allow trading
 input bool BTCAccount = false; // Is BTC Account?
 input EntryType entry_type = EntryOnClose; // Entry type
-input TradingDirection trading_direction = BothSides; // What trades should be taken
+input TradingDirection trading_side = BothSides; // What trades should be taken
 input double lot_size            = 0.1; // Position size
 input PositionSizeType lot_type = PositionSizeContract; // Position size type
 input int slippage_points           = 3; // Slippage, in points
@@ -108,12 +110,16 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib us
 //void AdvancedAlert(string key, string text, string instrument, string timeframe);
 //#import
 
-#include <Stream.mq5>
-#include <TradingTime.mq5>
+#include <Conditions/TradingTimeCondition.mq5>
+#include <Conditions/DisabledCondition.mq5>
+#include <Conditions/AndCondition.mq5>
+#include <Conditions/ACondition.mq5>
+#ifdef ACT_ON_SWITCH_CONDITION
+#include <Conditions/ActOnSwitchCondition.mq5>
+#endif
 #include <InstrumentInfo.mq5>
 #include <TradesIterator.mq5>
 #include <TradingCalculator.mq5>
-#include <Condition.mq5>
 #include <MoneyManagement.mq5>
 #include <OrdersIterator.mq5>
 #include <TradingCommands.mq5>
@@ -121,12 +127,77 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib us
 #include <NetStopLoss.mq5>
 #include <MarketOrderBuilder.mq5>
 #include <PositionCap.mq5>
-#include <TradeController.mq5>
-#include <Cooldown.mq5>
+#include <TradingController.mq5>
 
-TradeController* controllers[];
+class EntryLongCondition : public ACondition
+{
+public:
+   EntryLongCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+      :ACondition(symbol, timeframe)
+   {
+   }
 
-TradeController* CreateController(const string symbol, ENUM_TIMEFRAMES tf, string &error)
+   virtual bool IsPass(const int period, const datetime date)
+   {
+      // TODO: implement
+      return false;
+   }
+};
+
+class EntryShortCondition : public ACondition
+{
+public:
+   EntryShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+      :ACondition(symbol, timeframe)
+   {
+   }
+
+   virtual bool IsPass(const int period, const datetime date)
+   {
+      // TODO: implement
+      return false;
+   }
+};
+
+ICondition* CreateLongCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+{
+   if (trading_side == ShortSideOnly)
+   {
+      return (ICondition *)new DisabledCondition();
+   }
+
+   AndCondition* condition = new AndCondition();
+   condition.Add(new EntryLongCondition(symbol, timeframe), false);
+   #ifdef ACT_ON_SWITCH_CONDITION
+      ActOnSwitchCondition* switchCondition = new ActOnSwitchCondition(symbol, timeframe, (ICondition*) condition);
+      condition.Release();
+      return switchCondition;
+   #else 
+      return (ICondition*) condition;
+   #endif
+}
+
+ICondition* CreateShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+{
+   if (trading_side == LongSideOnly)
+   {
+      return (ICondition *)new DisabledCondition();
+   }
+
+   AndCondition* condition = new AndCondition();
+   condition.Add(new EntryShortCondition(symbol, timeframe), false);
+   #ifdef ACT_ON_SWITCH_CONDITION
+      ActOnSwitchCondition* switchCondition = new ActOnSwitchCondition(symbol, timeframe, (ICondition*) condition);
+      condition.Release();
+      return switchCondition;
+   #else 
+      return (ICondition*) condition;
+   #endif
+}
+
+TradingController* controllers[];
+
+TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES tf, string &error)
 {
    TradingTime *tradingTime = new TradingTime();
    if (!tradingTime.Init(StartTime, EndTime, error))
@@ -139,20 +210,12 @@ TradeController* CreateController(const string symbol, ENUM_TIMEFRAMES tf, strin
       delete tradingTime;
       return NULL;
    }
-   TimeRangeCooldownController* cooldown = new TimeRangeCooldownController(symbol, PERIOD_M1, max_positions);
-   if (!cooldown.Init(StartTime, error))
-   {
-      delete tradingTime;
-      delete cooldown;
-      return NULL;
-   }
-
+   
    TradingCalculator *tradeCalculator = new TradingCalculator(symbol);
    Signaler *signaler = new Signaler(symbol, tf);
-   TradeController* tradeController = new TradeController(signaler, tradeCalculator, tf, entry_type, allow_trading);
-   tradeController.SetTradingTime(tradingTime)
+   TradingController* tradingController = new TradingController(signaler, tradeCalculator, tf, entry_type, allow_trading);
+   tradingController.SetTradingTime(tradingTime)
       .SetCloseOnOpposite(close_on_opposite)
-      .SetCooldown(cooldown)
       .SetSlippage(slippage_points)
       .SetMagicNumber(magic_number)
       .SetBreakevenType(breakeven_type, breakeven_value)
@@ -161,30 +224,30 @@ TradeController* CreateController(const string symbol, ENUM_TIMEFRAMES tf, strin
    IPositionCapStrategy* positionCap = use_position_cap 
       ? (IPositionCapStrategy*)new PositionCapStrategy(max_positions)
       : (IPositionCapStrategy*)new NoPositionCapStrategy();
-   tradeController.SetPositionCap(positionCap);
+   tradingController.SetPositionCap(positionCap);
 
-   ICondition *longCondition = trading_direction != ShortSideOnly ? (ICondition *)new EntryLongCondition(tradeCalculator.GetSymbolInfo(), tf) : (ICondition *)new DisabledCondition();
-   ICondition *shortCondition = trading_direction != LongSideOnly ? (ICondition *)new EntryShortCondition(tradeCalculator.GetSymbolInfo(), tf) : (ICondition *)new DisabledCondition();
+   ICondition *longCondition = CreateLongCondition(symbol, tf);
+   ICondition *shortCondition = CreateShortCondition(symbol, tf);
    IMoneyManagementStrategy *longMoneyManagement = new LongMoneyManagementStrategy(tradeCalculator
       , lot_type, lot_size, stop_loss_type, stop_loss_value, take_profit_type, take_profit_value);
    IMoneyManagementStrategy *shortMoneyManagement = new ShortMoneyManagementStrategy(tradeCalculator
       , lot_type, lot_size, stop_loss_type, stop_loss_value, take_profit_type, take_profit_value);
    if (LogicType == DirectLogic)
    {
-      tradeController.SetLongCondition(longCondition);
-      tradeController.SetShortCondition(shortCondition);
-      tradeController.SetLongMoneyManagementStrategy(longMoneyManagement);
-      tradeController.SetShortMoneyManagementStrategy(shortMoneyManagement);
+      tradingController.SetLongCondition(longCondition);
+      tradingController.SetShortCondition(shortCondition);
+      tradingController.SetLongMoneyManagementStrategy(longMoneyManagement);
+      tradingController.SetShortMoneyManagementStrategy(shortMoneyManagement);
    }
    else
    {
-      tradeController.SetLongCondition(shortCondition);
-      tradeController.SetShortCondition(longCondition);
-      tradeController.SetLongMoneyManagementStrategy(shortMoneyManagement);
-      tradeController.SetShortMoneyManagementStrategy(longMoneyManagement);
+      tradingController.SetLongCondition(shortCondition);
+      tradingController.SetShortCondition(longCondition);
+      tradingController.SetLongMoneyManagementStrategy(shortMoneyManagement);
+      tradingController.SetShortMoneyManagementStrategy(longMoneyManagement);
    }
    
-   return tradeController;
+   return tradingController;
 }
 
 void split(string& arr[], string str, string sym) 
@@ -226,7 +289,7 @@ int OnInit()
    for (int i = 0; i < sym_count; i++)
    {
       string symbol = sym_arr[i];
-      TradeController* controller = CreateController(symbol, (ENUM_TIMEFRAMES)_Period, error);
+      TradingController* controller = CreateController(symbol, (ENUM_TIMEFRAMES)_Period, error);
       if (controller == NULL)
       {
          Print(error);

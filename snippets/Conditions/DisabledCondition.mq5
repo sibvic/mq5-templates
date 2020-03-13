@@ -1,11 +1,11 @@
 // Disabled condition v1.0
-#include <ICondition.mq5>
+#include <AConditionBase.mq5>
 
 #ifndef DisabledCondition_IMP
 #define DisabledCondition_IMP
-class DisabledCondition : public ICondition
+class DisabledCondition : public AConditionBase
 {
 public:
-   virtual bool IsPass(const int period) { return false; }
+   virtual bool IsPass(const int period, const datetime date) { return false; }
 };
 #endif

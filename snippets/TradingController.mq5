@@ -2,7 +2,6 @@
 
 #include <Trade\Trade.mqh>
 #include <BreakevenController.mq5>
-#include <ICooldownController.mq5>
 
 class TradingController
 {   
@@ -27,7 +26,6 @@ class TradingController
    StopLimitType _breakevenType;
    double _breakevenValue;
    int _magicNumber;
-   ICooldownController* _cooldownController;
 public:
    TradingController(Signaler *signaler, TradingCalculator *calculator, ENUM_TIMEFRAMES timeframe, EntryType entryType, bool allowTrading)
    {
@@ -45,7 +43,6 @@ public:
       _calculator = calculator;
       _tradingTime = NULL;
       _trailing = NULL;
-      _cooldownController = NULL;
       _magicNumber = 0;
    }
 
@@ -66,10 +63,8 @@ public:
       delete _signaler;
       delete _tradingTime;
       delete _netStopLoss;
-      delete _cooldownController;
    }
 
-   TradingController* SetCooldown(ICooldownController* controller) { _cooldownController = controller; return &this; }
    TradingController* SetSlippage(int slippage) { _slippage = slippage; return &this; }
    TradingController* SetBreakevenType(StopLimitType breakevenType, double breakevenValue) { _breakevenType = breakevenType; _breakevenValue = breakevenValue; return &this; }
    TradingController* SetCloseOnOpposite(bool closeOnOpposite) { _closeOnOpposite = closeOnOpposite; return &this; }
@@ -93,38 +88,38 @@ public:
       }
       _trailing.DoLogic();
 
-      if (IsExitBuyCondition() && _allowTrading)
-      {
-         switch (LogicType)
-         {
-            case DirectLogic:
-               {
-                  if (CloseTrades(POSITION_TYPE_BUY))
-                     _signaler.SendNotifications(EXIT_BUY_SIGNAL);
-                  break;
-               }
-            case ReversalLogic:
-               {
-                  if (CloseTrades(POSITION_TYPE_SELL))
-                     _signaler.SendNotifications(EXIT_SELL_SIGNAL);
-                  break;
-               }
-         }
-      }
-      if (IsExitSellCondition() && _allowTrading)
-      {
-         switch (LogicType)
-         {
-            case DirectLogic:
-               if (CloseTrades(POSITION_TYPE_SELL))
-                  _signaler.SendNotifications(EXIT_SELL_SIGNAL);
-               break;
-            case ReversalLogic:
-               if (CloseTrades(POSITION_TYPE_BUY))
-                  _signaler.SendNotifications(EXIT_BUY_SIGNAL);
-               break;
-         }
-      }
+      // if (IsExitBuyCondition() && _allowTrading)
+      // {
+      //    switch (LogicType)
+      //    {
+      //       case DirectLogic:
+      //          {
+      //             if (CloseTrades(POSITION_TYPE_BUY))
+      //                _signaler.SendNotifications(EXIT_BUY_SIGNAL);
+      //             break;
+      //          }
+      //       case ReversalLogic:
+      //          {
+      //             if (CloseTrades(POSITION_TYPE_SELL))
+      //                _signaler.SendNotifications(EXIT_SELL_SIGNAL);
+      //             break;
+      //          }
+      //    }
+      // }
+      // if (IsExitSellCondition() && _allowTrading)
+      // {
+      //    switch (LogicType)
+      //    {
+      //       case DirectLogic:
+      //          if (CloseTrades(POSITION_TYPE_SELL))
+      //             _signaler.SendNotifications(EXIT_SELL_SIGNAL);
+      //          break;
+      //       case ReversalLogic:
+      //          if (CloseTrades(POSITION_TYPE_BUY))
+      //             _signaler.SendNotifications(EXIT_BUY_SIGNAL);
+      //          break;
+      //    }
+      // }
       
       string symbol = _calculator.GetSymbolInfo().GetSymbol();
       datetime current_time = iTime(symbol, _timeframe, 0);
@@ -151,27 +146,24 @@ public:
          _lastEntry = current_time;
          shift = 1;
       }
-      if (_cooldownController.IsCooldownPeriod(shift))
-         return;
-      if (_longCondition.IsPass(shift))
+      datetime entryTyme = iTime(symbol, _timeframe, shift);
+      if (_longCondition.IsPass(shift, entryTyme))
       {
          if (_allowTrading)
          {
             if (!_positionCap.IsLimitHit())
                GoLong(_longMoneyManagementStrategy, shift);
          }
-         _signaler.SendNotifications(ENTER_BUY_SIGNAL);
-         _cooldownController.RegisterTrading(shift);
+         //_signaler.SendNotifications(ENTER_BUY_SIGNAL);
       }
-      if (_shortCondition.IsPass(shift))
+      if (_shortCondition.IsPass(shift, entryTyme))
       {
          if (_allowTrading)
          {
             if (!_positionCap.IsLimitHit())
                GoShort(_shortMoneyManagementStrategy, shift);
          }
-         _signaler.SendNotifications(ENTER_SELL_SIGNAL);
-         _cooldownController.RegisterTrading(shift);
+         //_signaler.SendNotifications(ENTER_SELL_SIGNAL);
       }
    }
 private:

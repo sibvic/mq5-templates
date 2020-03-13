@@ -1,4 +1,9 @@
-// Trading time v.1.1
+// Trading time condition v1.0
+
+#include <ICondition.mq5>
+
+#ifndef TradingTimeCondition_IMP
+#define TradingTimeCondition_IMP
 
 class TradingTime
 {
@@ -119,3 +124,32 @@ private:
       return (hours * 60 + minutes) * 60 + seconds;
    }
 };
+
+class TradingTimeCondition : public ICondition
+{
+   TradingTime *_tradingTime;
+   ENUM_TIMEFRAMES _timeframe;
+public:
+   TradingTimeCondition(ENUM_TIMEFRAMES timeframe)
+   {
+      _timeframe = timeframe;
+      _tradingTime = new TradingTime();
+   }
+
+   ~TradingTimeCondition()
+   {
+      delete _tradingTime;
+   }
+
+   bool Init(const string startTime, const string endTime, string &error)
+   {
+      return _tradingTime.Init(startTime, endTime, error);
+   }
+
+   virtual bool IsPass(const int period)
+   {
+      datetime time = iTime(_Symbol, _timeframe, period);
+      return _tradingTime.IsTradingTime(time);
+   }
+};
+#endif
