@@ -250,35 +250,13 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES tf, str
    return tradingController;
 }
 
-void split(string& arr[], string str, string sym) 
-{
-   ArrayResize(arr, 0);
-   int len = StringLen(str);
-   for (int i=0; i < len;)
-   {
-      int pos = StringFind(str, sym, i);
-      if (pos == -1)
-         pos = len;
-
-      string item = StringSubstr(str, i, pos-i);
-      StringTrimLeft(item);
-      StringTrimRight(item);
-
-      int size = ArraySize(arr);
-      ArrayResize(arr, size+1);
-      arr[size] = item;
-
-      i = pos+1;
-   }
-}
-
 int OnInit()
 {
    string error;
    string sym_arr[];
    if (symbols != "")
    {
-      split(sym_arr, symbols, ",");
+      StringSplit(symbols, ',', sym_arr);
    }
    else
    {
