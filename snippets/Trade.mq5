@@ -1,4 +1,4 @@
-// Trade v1.0
+// Trade v1.1
 
 #ifndef Trade_IMP
 #define Trade_IMP
@@ -10,6 +10,7 @@ public:
    virtual void Release() = 0;
 
    virtual bool Select() = 0;
+   virtual ulong GetTicket() = 0;
 };
 
 class TradeByTicketId : public ITrade
@@ -38,6 +39,11 @@ public:
    virtual bool Select()
    {
       return PositionSelectByTicket(_ticket);
+   }
+
+   virtual ulong GetTicket()
+   {
+      return _ticket;
    }
 };
 

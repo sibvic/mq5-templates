@@ -19,3 +19,7 @@ Returns true when profit of the order in the specified range.
 ## TradingTimeCondition
 
 Trading time condition.
+
+## NotCondition
+
+Inverts another condition.

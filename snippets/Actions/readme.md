@@ -17,3 +17,11 @@ Implements reference counting for the IAction.
 ## TrailingPipsAction
 
 Keeps stop loss distance to the orders to the defined amount of pips.
+
+## CloseTradeAction
+
+Closes trade.
+
+## CreateHiddenTPSLControllerAction
+
+Creates hidden take profit and stop loss controller.

@@ -1,4 +1,4 @@
-// Action on condition logic v1.0
+// Action on condition logic v2.0
 
 #include <ActionOnConditionController.mq5>
 
@@ -18,12 +18,12 @@ public:
       }
    }
 
-   void DoLogic(const int period)
+   void DoLogic(const int period, const datetime date)
    {
       int count = ArraySize(_controllers);
       for (int i = 0; i < count; ++i)
       {
-         _controllers[i].DoLogic(period);
+         _controllers[i].DoLogic(period, date);
       }
    }
 

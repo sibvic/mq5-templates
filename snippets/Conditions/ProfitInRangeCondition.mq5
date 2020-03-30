@@ -1,13 +1,13 @@
-// Profit in range condition v1.0
+// Profit in range condition v2.0
 
-#include <ACondition.mq5>
+#include <AConditionBase.mq5>
 #include <../Trade.mq5>
 #include <../InstrumentInfo.mq5>
 
 #ifndef ProfitInRangeCondition_IMP
 #define ProfitInRangeCondition_IMP
 
-class ProfitInRangeCondition : public ACondition
+class ProfitInRangeCondition : public AConditionBase
 {
    ITrade* _trade;
    InstrumentInfo* _instrument;
@@ -30,7 +30,7 @@ public:
          delete _instrument;
    }
 
-   virtual bool IsPass(const int period)
+   virtual bool IsPass(const int period, const datetime date)
    {
       if (!_trade.Select())
          return true;

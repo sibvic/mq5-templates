@@ -1,4 +1,4 @@
-// Action on condition v1.0
+// Action on condition v2.0
 
 #include <../conditions/ICondition.mq5>
 #include <../actions/IAction.mq5>
@@ -44,12 +44,12 @@ public:
       return true;
    }
 
-   void DoLogic(const int period)
+   void DoLogic(const int period, const datetime date)
    {
       if (_finished)
          return;
 
-      if ( _condition.IsPass(period))
+      if ( _condition.IsPass(period, date))
       {
          if (_action.DoAction())
             _finished = true;
