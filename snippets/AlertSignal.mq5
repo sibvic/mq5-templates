@@ -46,9 +46,9 @@ public:
       return id + 1;
    }
 
-   void Update(int period)
+   void Update(int period, datetime date)
    {
-      if (!_condition.IsPass(period))
+      if (!_condition.IsPass(period, date))
       {
          _signals[period] = EMPTY_VALUE;
          return;

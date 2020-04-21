@@ -29,7 +29,7 @@ public:
 
    }
 
-   bool IsPass(const int period)
+   bool IsPass(const int period, const datetime date)
    {
       return false;
    }
@@ -44,7 +44,7 @@ public:
 
    }
 
-   bool IsPass(const int period)
+   bool IsPass(const int period, const datetime date)
    {
       return false;
    }
