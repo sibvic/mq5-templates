@@ -18,6 +18,20 @@ public:
       _ticksize = NormalizeDouble(SymbolInfoDouble(symbol, SYMBOL_TRADE_TICK_SIZE), _digit);
    }
 
+   // Return < 0 when lot1 < lot2, > 0 when lot1 > lot2 and 0 owtherwise
+   int CompareLots(double lot1, double lot2)
+   {
+      double lotStep = SymbolInfoDouble(_symbol, SYMBOL_VOLUME_STEP);
+      if (lotStep == 0)
+      {
+         return lot1 < lot2 ? -1 : (lot1 > lot2 ? 1 : 0);
+      }
+      int lotSteps1 = (int)floor(lot1 / lotStep + 0.5);
+      int lotSteps2 = (int)floor(lot2 / lotStep + 0.5);
+      int res = lotSteps1 - lotSteps2;
+      return res;
+   }
+
    static double GetPipSize(const string symbol)
    {
       double point = SymbolInfoDouble(symbol, SYMBOL_POINT);
@@ -29,6 +43,8 @@ public:
    double GetPipSize() { return _pipSize; }
    int GetDigits() { return _digit; }
    string GetSymbol() { return _symbol; }
+   static double GetBid(const string symbol) { return SymbolInfoDouble(symbol, SYMBOL_BID); }
+   static double GetAsk(const string symbol) { return SymbolInfoDouble(symbol, SYMBOL_ASK); }
    double GetBid() { return SymbolInfoDouble(_symbol, SYMBOL_BID); }
    double GetAsk() { return SymbolInfoDouble(_symbol, SYMBOL_ASK); }
    double GetMinVolume() { return SymbolInfoDouble(_symbol, SYMBOL_VOLUME_MIN); }

@@ -15,9 +15,13 @@ class MarketOrderBuilder
    int _magicNumber;
    string _comment;
    bool _btcAccount;
+   bool _ecnBroker;
+   ActionOnConditionLogic* _actions;
 public:
-   MarketOrderBuilder()
+   MarketOrderBuilder(ActionOnConditionLogic* actions)
    {
+      _ecnBroker = false;
+      _actions = actions;
       _btcAccount = false;
       _amount = 0;
       _rate = 0;
@@ -27,6 +31,8 @@ public:
       _magicNumber = 0;
    }
 
+   // Sets ECN broker flag
+   MarketOrderBuilder* SetECNBroker(bool isEcn) { _ecnBroker = isEcn; return &this; }
    MarketOrderBuilder* SetComment(const string comment) { _comment = comment; return &this; }
    MarketOrderBuilder* SetSide(const OrderSide orderSide) { _orderSide = orderSide; return &this; }
    MarketOrderBuilder* SetInstrument(const string instrument) { _instrument = instrument; return &this; }

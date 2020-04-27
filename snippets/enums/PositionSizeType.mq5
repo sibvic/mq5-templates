@@ -9,7 +9,8 @@ enum PositionSizeType
    PositionSizeContract, // In contracts
    PositionSizeEquity, // % of equity
    PositionSizeRisk, // Risk in % of equity
-   PositionSizeMoneyPerPip // $ per pip
+   PositionSizeMoneyPerPip, // $ per pip
+   PositionSizeRiskCurrency // Risk in $
 };
 
 #endif

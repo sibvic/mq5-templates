@@ -1,4 +1,4 @@
-// Condition base v1.0
+// Condition base v2.0
 
 #ifndef ACondition_IMP
 #define ACondition_IMP
@@ -23,6 +23,11 @@ public:
       --_references;
       if (_references == 0)
          delete &this;
+   }
+   
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      return "";
    }
 };
 

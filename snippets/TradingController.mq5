@@ -2,284 +2,366 @@
 
 #include <Trade\Trade.mqh>
 #include <BreakevenController.mq5>
+#include <Logic/ActionOnConditionLogic.mq5>
+#include <ICloseOnOppositeStrategy.mq5>
+#include <IEntryStrategy.mq5>
+#include <Actions/AOrderAction.mq5>
 
 class TradingController
-{   
-   ENUM_TIMEFRAMES _timeframe;
-   datetime _lastbartime;
-   datetime _lastEntry;
-   EntryType _entryType;
+{
+   ENUM_TIMEFRAMES _entryTimeframe;
+   ENUM_TIMEFRAMES _exitTimeframe;
+   datetime _lastActionTime;
+   double _lastLot;
+   ActionOnConditionLogic* actions;
    Signaler *_signaler;
-   TradingTime *_tradingTime;
-   BreakevenController *_breakeven[];
-   INetStopLossStrategy *_netStopLoss;
+   datetime _lastLimitPositionMessage;
+   datetime _lastEntryTime;
+   datetime _lastExitTime;
    TradingCalculator *_calculator;
-   TrailingLogic *_trailing;
-   ICondition *_longCondition;
-   ICondition *_shortCondition;
-   IMoneyManagementStrategy *_longMoneyManagementStrategy;
-   IMoneyManagementStrategy *_shortMoneyManagementStrategy;
-   IPositionCapStrategy* _positionCap;
-   bool _allowTrading;
-   bool _closeOnOpposite;
-   int _slippage;
-   StopLimitType _breakevenType;
-   double _breakevenValue;
-   int _magicNumber;
+   ICondition* _longCondition;
+   ICondition* _shortCondition;
+   ICondition* _longFilterCondition;
+   ICondition* _shortFilterCondition;
+   ICondition* _exitLongCondition;
+   ICondition* _exitShortCondition;
+   #ifdef MARTINGALE_FEATURE
+   IMartingaleStrategy *_shortMartingale;
+   IMartingaleStrategy *_longMartingale;
+   #endif
+   IMoneyManagementStrategy *_longMoneyManagement[];
+   IMoneyManagementStrategy *_shortMoneyManagement[];
+   ICloseOnOppositeStrategy *_closeOnOpposite;
+   #ifdef POSITION_CAP_FEATURE
+   IPositionCapStrategy *_longPositionCap;
+   IPositionCapStrategy *_shortPositionCap;
+   #endif
+   IEntryStrategy *_entryStrategy;
+   string _algorithmId;
+   ActionOnConditionLogic* _actions;
+   AOrderAction* _orderHandlers[];
+   TradingMode _entryLogic;
+   TradingMode _exitLogic;
+   bool _ecnBroker;
+   int _logFile;
 public:
-   TradingController(Signaler *signaler, TradingCalculator *calculator, ENUM_TIMEFRAMES timeframe, EntryType entryType, bool allowTrading)
+   TradingController(TradingCalculator *calculator, 
+                     ENUM_TIMEFRAMES entryTimeframe, 
+                     ENUM_TIMEFRAMES exitTimeframe, 
+                     Signaler *signaler, 
+                     const string algorithmId = "")
    {
-      _closeOnOpposite = false;
-      _positionCap = NULL;
-      _allowTrading = allowTrading;
+      _lastLimitPositionMessage = 0;
+      _ecnBroker = false;
+      _entryLogic = TradingModeOnBarClose;
+      _exitLogic = TradingModeLive;
+      _actions = NULL;
+      _algorithmId = algorithmId;
+      #ifdef POSITION_CAP_FEATURE
+      _longPositionCap = NULL;
+      _shortPositionCap = NULL;
+      #endif
+      _closeOnOpposite = NULL;
+      #ifdef MARTINGALE_FEATURE
+      _shortMartingale = NULL;
+      _longMartingale = NULL;
+      #endif
       _longCondition = NULL;
       _shortCondition = NULL;
-      _longMoneyManagementStrategy = NULL;
-      _shortMoneyManagementStrategy = NULL;
-      _netStopLoss = NULL;
-      _signaler = signaler;
-      _entryType = entryType;
-      _timeframe = timeframe;
+      _longFilterCondition = NULL;
+      _shortFilterCondition = NULL;
       _calculator = calculator;
-      _tradingTime = NULL;
-      _trailing = NULL;
-      _magicNumber = 0;
+      _signaler = signaler;
+      _entryTimeframe = entryTimeframe;
+      _exitTimeframe = exitTimeframe;
+      _lastLot = lots_value;
+      _exitLongCondition = NULL;
+      _exitShortCondition = NULL;
+      _logFile = -1;
    }
 
    ~TradingController()
    {
-      int i_count = ArraySize(_breakeven);
-      for (int i = 0; i < i_count; ++i)
+      if (_logFile != -1)
       {
-         delete _breakeven[i];
+         FileClose(_logFile);
       }
-      delete _positionCap;
-      delete _longMoneyManagementStrategy;
-      delete _shortMoneyManagementStrategy;
-      delete _longCondition;
-      delete _shortCondition;
-      delete _trailing;
+      for (int i = 0; i < ArraySize(_orderHandlers); ++i)
+      {
+         delete _orderHandlers[i];
+      }
+      delete _actions;
+      delete _entryStrategy;
+      #ifdef POSITION_CAP_FEATURE
+      delete _longPositionCap;
+      delete _shortPositionCap;
+      #endif
+      delete _closeOnOpposite;
+      for (int i = 0; i < ArraySize(_longMoneyManagement); ++i)
+      {
+         delete _longMoneyManagement[i];
+      }
+      for (int i = 0; i < ArraySize(_shortMoneyManagement); ++i)
+      {
+         delete _shortMoneyManagement[i];
+      }
+      #ifdef MARTINGALE_FEATURE
+      delete _shortMartingale;
+      delete _longMartingale;
+      #endif
+      if (_exitLongCondition != NULL)
+         _exitLongCondition.Release();
+      if (_exitShortCondition != NULL)
+         _exitShortCondition.Release();
       delete _calculator;
       delete _signaler;
-      delete _tradingTime;
-      delete _netStopLoss;
+      if (_longCondition != NULL)
+         _longCondition.Release();
+      if (_shortCondition != NULL)
+         _shortCondition.Release();
+      if (_longFilterCondition != NULL)
+         _longFilterCondition.Release();
+      if (_shortFilterCondition != NULL)
+         _shortFilterCondition.Release();
    }
 
-   TradingController* SetSlippage(int slippage) { _slippage = slippage; return &this; }
-   TradingController* SetBreakevenType(StopLimitType breakevenType, double breakevenValue) { _breakevenType = breakevenType; _breakevenValue = breakevenValue; return &this; }
-   TradingController* SetCloseOnOpposite(bool closeOnOpposite) { _closeOnOpposite = closeOnOpposite; return &this; }
-   TradingController* SetPositionCap(IPositionCapStrategy* positionCap) { _positionCap = positionCap; return &this; }
-   TradingController* SetLongCondition(ICondition *condition) { _longCondition = condition; return &this; }
-   TradingController* SetShortCondition(ICondition *condition) { _shortCondition = condition; return &this; }
-   TradingController* SetTradingTime(TradingTime *tradingTime) { _tradingTime = tradingTime; return &this; }
-   TradingController* SetTrailing(TrailingLogic *trailing) { _trailing = trailing; return &this; }
-   TradingController* SetNetStopLossStrategy(INetStopLossStrategy *strategy) { _netStopLoss = strategy; return &this; }
-   TradingController* SetLongMoneyManagementStrategy(IMoneyManagementStrategy *moneyManagementStrategy) { _longMoneyManagementStrategy = moneyManagementStrategy; return &this; }
-   TradingController* SetShortMoneyManagementStrategy(IMoneyManagementStrategy *moneyManagementStrategy) { _shortMoneyManagementStrategy = moneyManagementStrategy; return &this; }
-   TradingController* SetMagicNumber(int magicNumber) { _magicNumber = magicNumber; return &this; }
+   void AddOrderAction(AOrderAction* orderAction)
+   {
+      int count = ArraySize(_orderHandlers);
+      ArrayResize(_orderHandlers, count + 1);
+      _orderHandlers[count] = orderAction;
+      orderAction.AddRef();
+   }
+   void SetECNBroker(bool ecn) { _ecnBroker = ecn; }
+   void SetPrintLog(string logFile)
+   {
+      _logFile = FileOpen(logFile, FILE_WRITE | FILE_CSV, ",");
+   }
+   void SetEntryLogic(TradingMode logicType) { _entryLogic = logicType; }
+   void SetExitLogic(TradingMode logicType) { _exitLogic = logicType; }
+   void SetActions(ActionOnConditionLogic* __actions) { _actions = __actions; }
+   void SetLongCondition(ICondition *condition) { _longCondition = condition; }
+   void SetShortCondition(ICondition *condition) { _shortCondition = condition; }
+   void SetLongFilterCondition(ICondition *condition) { _longFilterCondition = condition; }
+   void SetShortFilterCondition(ICondition *condition) { _shortFilterCondition = condition; }
+   void SetExitLongCondition(ICondition *condition) { _exitLongCondition = condition; }
+   void SetExitShortCondition(ICondition *condition) { _exitShortCondition = condition; }
+   #ifdef MARTINGALE_FEATURE
+   void SetShortMartingaleStrategy(IMartingaleStrategy *martingale) { _shortMartingale = martingale; }
+   void SetLongMartingaleStrategy(IMartingaleStrategy *martingale) { _longMartingale = martingale; }
+   #endif
+   void AddLongMoneyManagement(IMoneyManagementStrategy *moneyManagement)
+   {
+      int count = ArraySize(_longMoneyManagement);
+      ArrayResize(_longMoneyManagement, count + 1);
+      _longMoneyManagement[count] = moneyManagement;
+   }
+   void AddShortMoneyManagement(IMoneyManagementStrategy *moneyManagement)
+   {
+      int count = ArraySize(_shortMoneyManagement);
+      ArrayResize(_shortMoneyManagement, count + 1);
+      _shortMoneyManagement[count] = moneyManagement;
+   }
+   void SetCloseOnOpposite(ICloseOnOppositeStrategy *closeOnOpposite) { _closeOnOpposite = closeOnOpposite; }
+   #ifdef POSITION_CAP_FEATURE
+      void SetLongPositionCap(IPositionCapStrategy *positionCap) { _longPositionCap = positionCap; }
+      void SetShortPositionCap(IPositionCapStrategy *positionCap) { _shortPositionCap = positionCap; }
+   #endif
+   void SetEntryStrategy(IEntryStrategy *entryStrategy) { _entryStrategy = entryStrategy; }
 
    void DoTrading()
    {
-      _netStopLoss.DoLogic();
-      int i_count = ArraySize(_breakeven);
-      for (int i = 0; i < i_count; ++i)
+      int entryTradePeriod = _entryLogic == TradingModeLive ? 0 : 1;
+      datetime entryTime = iTime(_calculator.GetSymbolInfo().GetSymbol(), _entryTimeframe, entryTradePeriod);
+      _actions.DoLogic(entryTradePeriod, entryTime);
+      #ifdef MARTINGALE_FEATURE
+         DoMartingale(_shortMartingale);
+         DoMartingale(_longMartingale);
+      #endif
+      string entryLongLog = "";
+      string entryShortLog = "";
+      string exitLongLog = "";
+      string exitShortLog = "";
+      if (EntryAllowed(entryTime))
       {
-         _breakeven[i].DoLogic();
-      }
-      _trailing.DoLogic();
-
-      // if (IsExitBuyCondition() && _allowTrading)
-      // {
-      //    switch (LogicType)
-      //    {
-      //       case DirectLogic:
-      //          {
-      //             if (CloseTrades(POSITION_TYPE_BUY))
-      //                _signaler.SendNotifications(EXIT_BUY_SIGNAL);
-      //             break;
-      //          }
-      //       case ReversalLogic:
-      //          {
-      //             if (CloseTrades(POSITION_TYPE_SELL))
-      //                _signaler.SendNotifications(EXIT_SELL_SIGNAL);
-      //             break;
-      //          }
-      //    }
-      // }
-      // if (IsExitSellCondition() && _allowTrading)
-      // {
-      //    switch (LogicType)
-      //    {
-      //       case DirectLogic:
-      //          if (CloseTrades(POSITION_TYPE_SELL))
-      //             _signaler.SendNotifications(EXIT_SELL_SIGNAL);
-      //          break;
-      //       case ReversalLogic:
-      //          if (CloseTrades(POSITION_TYPE_BUY))
-      //             _signaler.SendNotifications(EXIT_BUY_SIGNAL);
-      //          break;
-      //    }
-      // }
-      
-      string symbol = _calculator.GetSymbolInfo().GetSymbol();
-      datetime current_time = iTime(symbol, _timeframe, 0);
-      if (_tradingTime != NULL && !_tradingTime.IsTradingTime(current_time))
-      {
-         if (MandatoryClosing && _allowTrading)
+         if (DoEntryLogic(entryTradePeriod, entryTime, entryLongLog, entryShortLog))
          {
-            TradesIterator it;
-            it.WhenSymbol(symbol);
-            it.WhenMagicNumber(_magicNumber);
-            int closedCount = TradingCommands::CloseTrades(it);
-            TradingCommands::DeleteOrders(_magicNumber, symbol);
-            if (closedCount)
-               _signaler.SendNotifications("Mandatory closing");
+            _lastActionTime = entryTime;
          }
-         return;
+         _lastEntryTime = entryTime;
       }
 
-      int shift = 0;
-      if (_entryType == EntryOnClose)
+      int exitTradePeriod = _exitLogic == TradingModeLive ? 0 : 1;
+      datetime exitTime = iTime(_calculator.GetSymbolInfo().GetSymbol(), _exitTimeframe, exitTradePeriod);
+      if (ExitAllowed(exitTime))
       {
-         if (_lastEntry == current_time)
-            return;
-         _lastEntry = current_time;
-         shift = 1;
+         DoExitLogic(exitTradePeriod, exitTime, exitLongLog, exitShortLog);
+         _lastExitTime = exitTime;
       }
-      datetime entryTyme = iTime(symbol, _timeframe, shift);
-      if (_longCondition.IsPass(shift, entryTyme))
+      if (_logFile != -1 && (entryLongLog != "" || entryShortLog != "" || exitLongLog != "" || exitShortLog != ""))
       {
-         if (_allowTrading)
-         {
-            if (!_positionCap.IsLimitHit())
-               GoLong(_longMoneyManagementStrategy, shift);
-         }
-         //_signaler.SendNotifications(ENTER_BUY_SIGNAL);
-      }
-      if (_shortCondition.IsPass(shift, entryTyme))
-      {
-         if (_allowTrading)
-         {
-            if (!_positionCap.IsLimitHit())
-               GoShort(_shortMoneyManagementStrategy, shift);
-         }
-         //_signaler.SendNotifications(ENTER_SELL_SIGNAL);
+         FileWrite(_logFile, TimeToString(TimeCurrent()), 
+            "Entry long: " + entryLongLog, 
+            "Entry short: " + entryShortLog, 
+            "Exit long: " + exitLongLog, 
+            "Exit short: " + exitShortLog);
       }
    }
 private:
-   ulong GoLong(IMoneyManagementStrategy *moneyManagementStrategy, const int period)
+   bool ExitAllowed(datetime exitTime)
    {
-      string symbol = _calculator.GetSymbolInfo().GetSymbol();
-      if (_closeOnOpposite)
-      {
-         TradesIterator it();
-         it.WhenMagicNumber(_magicNumber);
-         it.WhenSide(SellSide);
-         it.WhenSymbol(symbol);
-         TradingCommands::CloseTrades(it);
-      }
-
-      double ask = _calculator.GetSymbolInfo().GetAsk();
-      double amount = 0.0;
-      double stopLoss = 0.0;
-      double takeProfit = 0.0;
-      moneyManagementStrategy.Get(period, ask, amount, stopLoss, takeProfit);
-      if (amount == 0.0)
-         return 0;
-      
-      string error;
-      MarketOrderBuilder *orderBuilder = new MarketOrderBuilder();
-      ulong order = orderBuilder
-         .SetStopLoss(stopLoss)
-         .SetSide(BuySide)
-         .SetInstrument(symbol)
-         .SetAmount(amount)
-         .SetSlippage(_slippage)
-         .SetMagicNumber(_magicNumber)
-         .SetTakeProfit(takeProfit)
-         .SetComment("")
-         .Execute(error);
-      delete orderBuilder;
-      if (order != 0)
-      {
-         _trailing.Create(order, stopLoss, true);
-         if (_breakevenType != StopLimitDoNotUse)
-            CreateBreakeven(order);
-      }
-      else
-         Print("Failed to open long position: " + error);
-      return order;
+      return _exitLogic != TradingModeOnBarClose || _lastExitTime != exitTime;
    }
 
-   ulong GoShort(IMoneyManagementStrategy *moneyManagementStrategy, const int period)
+   void DoExitLogic(int exitTradePeriod, datetime date, string& longLog, string& shortLog)
    {
-      string symbol = _calculator.GetSymbolInfo().GetSymbol();
-      if (_closeOnOpposite)
+      if (_logFile != -1)
       {
-         TradesIterator it();
-         it.WhenMagicNumber(_magicNumber);
-         it.WhenSide(BuySide);
-         it.WhenSymbol(symbol);
-         TradingCommands::CloseTrades(it);
+         longLog = _exitLongCondition.GetLogMessage(exitTradePeriod, date);
+         shortLog = _exitShortCondition.GetLogMessage(exitTradePeriod, date);
       }
-
-      double bid = _calculator.GetSymbolInfo().GetBid();
-      double amount = 0.0;
-      double stopLoss = 0.0;
-      double takeProfit = 0.0;
-      moneyManagementStrategy.Get(period, bid, amount, stopLoss, takeProfit);
-      if (amount == 0.0)
-         return 0;
-
-      string error;
-      MarketOrderBuilder *orderBuilder = new MarketOrderBuilder();
-      ulong order = orderBuilder
-         .SetStopLoss(stopLoss)
-         .SetSide(SellSide)
-         .SetInstrument(symbol)
-         .SetAmount(amount)
-         .SetSlippage(_slippage)
-         .SetMagicNumber(_magicNumber)
-         .SetTakeProfit(takeProfit)
-         .SetComment("")
-         .Execute(error);
-      delete orderBuilder;
-      if (order != 0)
+      if (_exitLongCondition.IsPass(exitTradePeriod, date))
       {
-         _trailing.Create(order, stopLoss, false);
-         if (_breakevenType != StopLimitDoNotUse)
-            CreateBreakeven(order);
+         if (_entryStrategy.Exit(BuySide) > 0)
+            _signaler.SendNotifications("Exit Buy");
       }
-      else
-         Print("Failed to open short position: " + error);
-      return order;
+      if (_exitShortCondition.IsPass(exitTradePeriod, date))
+      {
+         if (_entryStrategy.Exit(SellSide) > 0)
+            _signaler.SendNotifications("Exit Sell");
+      }
    }
 
-   void CreateBreakeven(const ulong order)
+   bool EntryAllowed(datetime entryTime)
    {
-      if (!OrderSelect(order))
-         return;
-      ulong orderType = OrderGetInteger(ORDER_TYPE);
-      string symbol = _calculator.GetSymbolInfo().GetSymbol();
-      bool isBuy = orderType == ORDER_TYPE_BUY;
-      double basePrice = isBuy ? _calculator.GetSymbolInfo().GetAsk() : _calculator.GetSymbolInfo().GetBid();
-      double target = 0;
-      double targetValue = isBuy 
-         ? basePrice - target * _calculator.GetSymbolInfo().GetPipSize()
-         : basePrice + target * _calculator.GetSymbolInfo().GetPipSize();
-      double triggerValue = _calculator.CalculateTakeProfit(isBuy, _breakevenValue, _breakevenType, OrderGetDouble(ORDER_VOLUME_CURRENT), basePrice);
+      if (_entryLogic == TradingModeOnBarClose)
+         return _lastEntryTime != entryTime;
+      return _lastActionTime != entryTime;
+   }
 
-      int i_count = ArraySize(_breakeven);
-      for (int i = 0; i < i_count; ++i)
+   bool DoEntryLongLogic(int period, datetime date, string& logMessage)
+   {
+      if (_logFile != -1)
       {
-         if (_breakeven[i].SetOrder(order, triggerValue, targetValue))
+         logMessage = _longCondition.GetLogMessage(period, date);
+      }
+      if (!_longCondition.IsPass(period, date))
+      {
+         return false;
+      }
+      if (_longFilterCondition != NULL && !_longFilterCondition.IsPass(period, date))
+      {
+         return false;
+      }
+      _closeOnOpposite.DoClose(SellSide);
+      #ifdef POSITION_CAP_FEATURE
+         if (_longPositionCap.IsLimitHit())
          {
-            return;
+            if (_lastLimitPositionMessage != date)
+            {
+               _signaler.SendNotifications("Positions limit has been reached");
+            }
+            _lastLimitPositionMessage = date;
+            return false;
+         }
+      #endif
+      for (int i = 0; i < ArraySize(_longMoneyManagement); ++i)
+      {
+         ulong order = _entryStrategy.OpenPosition(period, BuySide, _longMoneyManagement[i], _algorithmId, _ecnBroker);
+         if (order >= 0)
+         {
+            for (int orderHandlerIndex = 0; orderHandlerIndex < ArraySize(_orderHandlers); ++orderHandlerIndex)
+            {
+               _orderHandlers[orderHandlerIndex].DoAction(order);
+            }
+            #ifdef MARTINGALE_FEATURE
+               _longMartingale.OnOrder(order);
+            #endif
          }
       }
-
-      ArrayResize(_breakeven, i_count + 1);
-      _breakeven[i_count] = new BreakevenController();
-      _breakeven[i_count].SetOrder(order, triggerValue, targetValue);
+      _signaler.SendNotifications("Buy");
+      return true;
    }
+
+   bool DoEntryShortLogic(int period, datetime date, string& logMessage)
+   {
+      if (_logFile)
+      {
+         logMessage = _shortCondition.GetLogMessage(period, date);
+      }
+      if (!_shortCondition.IsPass(period, date))
+      {
+         return false;
+      }
+      if (_shortFilterCondition != NULL && !_shortFilterCondition.IsPass(period, date))
+      {
+         return false;
+      }
+      _closeOnOpposite.DoClose(BuySide);
+      #ifdef POSITION_CAP_FEATURE
+         if (_shortPositionCap.IsLimitHit())
+         {
+            if (_lastLimitPositionMessage != date)
+            {
+               _signaler.SendNotifications("Positions limit has been reached");
+            }
+            _lastLimitPositionMessage = date;
+            return false;
+         }
+      #endif
+      for (int i = 0; i < ArraySize(_shortMoneyManagement); ++i)
+      {
+         ulong order = _entryStrategy.OpenPosition(period, SellSide, _shortMoneyManagement[i], _algorithmId, _ecnBroker);
+         if (order >= 0)
+         {
+            for (int orderHandlerIndex = 0; orderHandlerIndex < ArraySize(_orderHandlers); ++orderHandlerIndex)
+            {
+               _orderHandlers[orderHandlerIndex].DoAction(order);
+            }
+            #ifdef MARTINGALE_FEATURE
+               _shortMartingale.OnOrder(order);
+            #endif
+         }
+      }
+      _signaler.SendNotifications("Sell");
+      return true;
+   }
+
+   bool DoEntryLogic(int entryTradePeriod, datetime date, string& longLog, string& shortLog)
+   {
+      bool longOpened = DoEntryLongLogic(entryTradePeriod, date, longLog);
+      bool shortOpened = DoEntryShortLogic(entryTradePeriod, date, shortLog);
+      return longOpened || shortOpened;
+   }
+
+   #ifdef MARTINGALE_FEATURE
+   void DoMartingale(IMartingaleStrategy *martingale)
+   {
+      OrderSide anotherSide;
+      if (martingale.NeedAnotherPosition(anotherSide))
+      {
+         double initialLots = OrderLots();
+         IMoneyManagementStrategy* moneyManagement = martingale.GetMoneyManagement();
+         ulong order = _entryStrategy.OpenPosition(0, anotherSide, moneyManagement, "Martingale position", _ecnBroker);
+         if (order >= 0)
+         {
+            // if (_printLog)
+            // {
+            //    double newLots = 0;
+            //    if (OrderSelect(order, SELECT_BY_TICKET, MODE_TRADES))
+            //    {
+            //       newLots = OrderLots();
+            //    }
+            //    Print("Opening martingale position. Initial lots: " + DoubleToString(initialLots) 
+            //       + ". New martingale lots: " + DoubleToString(newLots));
+            // }
+            martingale.OnOrder(order);
+         }
+         if (anotherSide == BuySide)
+            _signaler.SendNotifications("Opening martingale long position");
+         else
+            _signaler.SendNotifications("Opening martingale short position");
+      }
+   }
+   #endif
 };

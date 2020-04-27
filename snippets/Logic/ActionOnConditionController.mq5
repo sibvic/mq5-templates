@@ -1,4 +1,4 @@
-// Action on condition v2.0
+// Action on condition v3.0
 
 #include <../conditions/ICondition.mq5>
 #include <../actions/IAction.mq5>
@@ -51,7 +51,7 @@ public:
 
       if ( _condition.IsPass(period, date))
       {
-         if (_action.DoAction())
+         if (_action.DoAction(period, date))
             _finished = true;
       }
    }
