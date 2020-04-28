@@ -6,6 +6,7 @@
 #property strict
 
 #define ACT_ON_SWITCH_CONDITION
+#define TAKE_PROFIT_FEATURE
 
 #include <enums/OrderSide.mq5>
 
@@ -142,6 +143,8 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib us
 #include <MoneyManagement/PositionSizeRiskStopLossAndAmountStrategy.mq5>
 #include <MoneyManagement/DefaultStopLossAndAmountStrategy.mq5>
 #include <MoneyManagement/DefaultTakeProfitStrategy.mq5>
+#include <MoneyManagement/RiskToRewardTakeProfitStrategy.mq5>
+#include <MoneyManagement/ATRTakeProfitStrategy.mq5>
 
 class EntryLongCondition : public ACondition
 {
