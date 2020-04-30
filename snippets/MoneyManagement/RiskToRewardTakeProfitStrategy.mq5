@@ -1,4 +1,4 @@
-// Risk to reward take profit strategy v1.0
+// Risk to reward take profit strategy v1.1
 
 #include <ITakeProfitStrategy.mq5>
 
@@ -19,9 +19,9 @@ public:
    virtual void GetTakeProfit(const int period, const double entryPrice, double stopLoss, double amount, double& takeProfit)
    {
       if (_isBuy)
-         takeProfit = entryPrice + (entryPrice - stopLoss) * _takeProfit / 100;
+         takeProfit = entryPrice + MathAbs(entryPrice - stopLoss) * _takeProfit / 100;
       else
-         takeProfit = entryPrice - (entryPrice - stopLoss) * _takeProfit / 100;
+         takeProfit = entryPrice - MathAbs(entryPrice - stopLoss) * _takeProfit / 100;
    }
 };
 #endif
