@@ -18,7 +18,7 @@ bool NamesCollision(const string name)
    return false;
 }
 
-string GenerateIndicatorName(const string target)
+string GenerateIndicatorPrefix(const string target)
 {
    for (int i = 0; i < 1000; ++i)
    {
