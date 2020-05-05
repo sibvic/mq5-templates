@@ -1,33 +1,50 @@
-#property copyright ""
-#property link      ""
-#property version   "1.0"
 #property strict
 
 #property indicator_separate_window
-#property indicator_buffers 3
-#property indicator_plots 3
+#property indicator_buffers 1
+#property indicator_plots 1
 
-string IndicatorName;
 string IndicatorObjPrefix;
+
+bool NamesCollision(const string name)
+{
+   for (int k = ObjectsTotal(0); k >= 0; k--)
+   {
+      if (StringFind(ObjectName(0, k), name) == 0)
+      {
+         return true;
+      }
+   }
+   return false;
+}
 
 string GenerateIndicatorName(const string target)
 {
-   string name = target;
-   return name;
+   for (int i = 0; i < 1000; ++i)
+   {
+      string prefix = target + "_" + IntegerToString(i);
+      if (!NamesCollision(prefix))
+      {
+         return prefix;
+      }
+   }
+   return target;
 }
+
+double out[];
 
 void OnInit()
 {
-   IndicatorName = GenerateIndicatorName("...");
-   IndicatorObjPrefix = "__" + IndicatorName + "__";
-   IndicatorSetString(INDICATOR_SHORTNAME, IndicatorName);
+   IndicatorObjPrefix = GenerateIndicatorPrefix("short_name");
+   IndicatorSetString(INDICATOR_SHORTNAME, "...");
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
 
-   SetIndexBuffer(id + 0, p_arr, INDICATOR_DATA);
-   PlotIndexSetInteger(id + 0, PLOT_LINE_STYLE, STYLE_SOLID);
-   PlotIndexSetInteger(id + 0, PLOT_DRAW_TYPE, DRAW_LINE);
-   PlotIndexSetInteger(id + 0, PLOT_LINE_WIDTH, 1);
-   ArraySetAsSeries(p_arr, true);
+   int id = 0;
+   SetIndexBuffer(id, out, INDICATOR_DATA);
+   PlotIndexSetInteger(id, PLOT_LINE_STYLE, STYLE_SOLID);
+   PlotIndexSetInteger(id, PLOT_DRAW_TYPE, DRAW_LINE);
+   PlotIndexSetInteger(id, PLOT_LINE_WIDTH, 1);
+   ++id;
 }
 
 void OnDeinit(const int reason)
@@ -48,9 +65,10 @@ int OnCalculate(const int rates_total,
 {
    if (prev_calculated <= 0 || prev_calculated > rates_total)
    {
-      ArrayInitialize(Filt, EMPTY_VALUE);
+      ArrayInitialize(out, EMPTY_VALUE);
    }
-   for (int pos = MathMax(0, prev_calculated); pos < rates_total; ++pos)
+   int first = 0;
+   for (int pos = MathMax(first, prev_calculated); pos < rates_total; ++pos)
    {
       
    }
