@@ -68,7 +68,7 @@ int OnCalculate(const int rates_total,
       ArrayInitialize(out, EMPTY_VALUE);
    }
    int first = 0;
-   for (int pos = MathMax(first, prev_calculated); pos < rates_total; ++pos)
+   for (int pos = MathMax(first, prev_calculated - 1); pos < rates_total; ++pos)
    {
       
    }

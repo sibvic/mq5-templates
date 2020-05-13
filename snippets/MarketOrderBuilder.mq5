@@ -1,5 +1,6 @@
 // Market order builder v1.4
 #include <enums/OrderSide.mq5>
+#include <Logic/ActionOnConditionLogic.mq5>
 
 #ifndef MarketOrderBuilder_IMP
 #define MarketOrderBuilder_IMP
