@@ -35,6 +35,16 @@ public:
       return tradeManager.PositionModify(ticket, stopLoss, PositionGetDouble(POSITION_TP));
    }
 
+   static bool MoveTP(const ulong ticket, const double takeProfit, string &error)
+   {
+      if (!PositionSelectByTicket(ticket))
+      {
+         error = "Invalid ticket";
+         return false;
+      }
+      return tradeManager.PositionModify(ticket, PositionGetDouble(POSITION_SL), takeProfit);
+   }
+
    static void DeleteOrders(const int magicNumber, const string symbol)
    {
       OrdersIterator it();

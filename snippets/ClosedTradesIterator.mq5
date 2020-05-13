@@ -1,18 +1,27 @@
-// Closed trades iterator v 1.0
+// Closed trades iterator v 1.1
 #ifndef ClosedTradesIterator_IMP
 class ClosedTradesIterator
 {
    int _lastIndex;
    int _total;
    ulong _currentTicket;
+   string _symbol;
+
 public:
    ClosedTradesIterator()
    {
       _lastIndex = INT_MIN;
    }
-   
+
+   void WhenSymbol(string symbol)
+   {
+      _symbol = symbol;
+   }
+
    ulong GetTicket() { return _currentTicket; }
    ENUM_ORDER_TYPE GetPositionType() { return (ENUM_ORDER_TYPE)HistoryOrderGetInteger(_currentTicket, ORDER_TYPE); }
+   string GetSymbol() { return HistoryOrderGetString(_currentTicket, ORDER_SYMBOL); }
+   datetime GetCloseTime() { return HistoryOrderGetInteger(_currentTicket, ORDER_TIME_DONE); }
 
    int Count()
    {
@@ -70,7 +79,13 @@ private:
    {
       long entry = HistoryDealGetInteger(_currentTicket, DEAL_ENTRY);
       if (entry != DEAL_ENTRY_OUT)
+      {
          return false;
+      }
+      if (_symbol != NULL && GetSymbol() != _symbol)
+      {
+         return false;
+      }
       return true;
    }
 };
