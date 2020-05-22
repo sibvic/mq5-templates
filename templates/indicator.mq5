@@ -70,7 +70,7 @@ int OnCalculate(const int rates_total,
    int first = 0;
    for (int pos = MathMax(first, prev_calculated - 1); pos < rates_total; ++pos)
    {
-      
+      int oldPos = rates_total - pos - 1;
    }
    return rates_total;
 }
