@@ -1,4 +1,4 @@
-// Closed trades iterator v 1.1
+// Closed trades iterator v 1.2
 #ifndef ClosedTradesIterator_IMP
 class ClosedTradesIterator
 {
@@ -19,9 +19,9 @@ public:
    }
 
    ulong GetTicket() { return _currentTicket; }
-   ENUM_ORDER_TYPE GetPositionType() { return (ENUM_ORDER_TYPE)HistoryOrderGetInteger(_currentTicket, ORDER_TYPE); }
-   string GetSymbol() { return HistoryOrderGetString(_currentTicket, ORDER_SYMBOL); }
-   datetime GetCloseTime() { return HistoryOrderGetInteger(_currentTicket, ORDER_TIME_DONE); }
+   ENUM_DEAL_TYPE GetPositionType() { return (ENUM_DEAL_TYPE)HistoryDealGetInteger(_currentTicket, DEAL_TYPE); }
+   string GetSymbol() { return HistoryDealGetString(_currentTicket, DEAL_SYMBOL); }
+   datetime GetCloseTime() { return (datetime)HistoryDealGetInteger(_currentTicket, DEAL_TIME); }
 
    int Count()
    {
