@@ -99,3 +99,7 @@ Usefull functions.
 ## Order
 
 Order entity.
+
+## OrderBuilder
+
+Helps to build a create order command.

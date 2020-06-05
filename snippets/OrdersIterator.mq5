@@ -1,9 +1,10 @@
-// Orders iterator v 1.9
-
 #include <enums/CompareType.mq5>
 #include <enums/OrderSide.mq5>
 
+// Orders iterator v1.9
+
 #ifndef OrdersIterator_IMP
+#define OrdersIterator_IMP
 
 class OrdersIterator
 {
@@ -79,6 +80,7 @@ public:
    long GetMagicNumger() { return OrderGetInteger(ORDER_MAGIC); }
    ENUM_ORDER_TYPE GetType() { return (ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE); }
    string GetSymbol() { return OrderGetString(ORDER_SYMBOL); }
+   string GetComment() { return OrderGetString(ORDER_COMMENT); }
    ulong GetTicket() { return OrderGetTicket(_lastIndex); }
    double GetOpenPrice() { return OrderGetDouble(ORDER_PRICE_OPEN); }
    double GetStopLoss() { return OrderGetDouble(ORDER_SL); }
@@ -165,5 +167,4 @@ private:
       return false;
    }
 };
-#define OrdersIterator_IMP
 #endif

@@ -1,4 +1,8 @@
 // Symbol info v.1.2
+
+#ifndef InstrumentInfo_IMP
+#define InstrumentInfo_IMP
+
 class InstrumentInfo
 {
    string _symbol;
@@ -54,3 +58,5 @@ public:
       return NormalizeDouble(MathRound(rate / _ticksize) * _ticksize, _digit);
    }
 };
+
+#endif
