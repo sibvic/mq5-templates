@@ -50,18 +50,37 @@ public:
    }
 };
 
-string IndicatorName;
 string IndicatorObjPrefix;
-string GenerateIndicatorName(const string target)
+
+bool NamesCollision(const string name)
 {
-   string name = target;
-   return name;
+   for (int k = ObjectsTotal(0); k >= 0; k--)
+   {
+      if (StringFind(ObjectName(0, k), name) == 0)
+      {
+         return true;
+      }
+   }
+   return false;
 }
+
+string GenerateIndicatorPrefix(const string target)
+{
+   for (int i = 0; i < 1000; ++i)
+   {
+      string prefix = target + "_" + IntegerToString(i);
+      if (!NamesCollision(prefix))
+      {
+         return prefix;
+      }
+   }
+   return target;
+}
+
 int OnInit(void)
 {
-   IndicatorName = GenerateIndicatorName("...");
-   IndicatorObjPrefix = "__" + IndicatorName + "__";
-   IndicatorSetString(INDICATOR_SHORTNAME, IndicatorName);
+   IndicatorObjPrefix = GenerateIndicatorPrefix("...");
+   IndicatorSetString(INDICATOR_SHORTNAME, "...");
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
    
    //register outputs
@@ -107,11 +126,16 @@ int OnCalculate(const int rates_total,       // size of input time series
                 const int& spread[]          // Spread array
 )
 {
-   for (int pos = prev_calculated; pos < rates_total; ++pos)
+   if (prev_calculated <= 0 || prev_calculated > rates_total)
+   {
+      ArrayInitialize(out, EMPTY_VALUE);
+   }
+   int first = 0;
+   for (int pos = MathMax(first, prev_calculated - 1); pos < rates_total; ++pos)
    {
       int oldIndex = rates_total - 1 - pos;
-      up.Update(pos);
-      down.Update(pos);
+      up.Update(pos, 0);
+      down.Update(pos, 0);
    }
    return rates_total;
 }
