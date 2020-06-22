@@ -1,12 +1,12 @@
-// Trades monitor v.1.2
-
-#ifndef TradingMonitor_IMP
 #include <../TradesIterator.mq5>
 #include <../OrdersIterator.mq5>
 #include <../ClosedTradesIterator.mq5>
 #include <../Actions/IAction.mq5>
 #include <ITicketTarget.mq5>
 
+// Trades monitor v2.0
+
+#ifndef TradingMonitor_IMP
 #define TRADING_MONITOR_ORDER 0
 #define TRADING_MONITOR_TRADE 1
 #define TRADING_MONITOR_CLOSED_TRADE 2
@@ -108,7 +108,7 @@ public:
             changed = true;
             if (_onNewTrade != NULL)
                // ignore result of DoAction
-               _onNewTrade.DoAction();
+               _onNewTrade.DoAction(0, 0);
          }
          else
          {
@@ -117,7 +117,7 @@ public:
             {
                if (_onTradeChanged != NULL)
                   // ignore result of DoAction
-                  _onTradeChanged.DoAction();
+                  _onTradeChanged.DoAction(0, 0);
                changed = true;
             }
          }
@@ -135,7 +135,7 @@ public:
             {
                _ticketTarget.SetTicket(ticket);
                // ignore result of DoAction
-               _onClosedTrade.DoAction();
+               _onClosedTrade.DoAction(0, 0);
             }
          }
       }

@@ -1,4 +1,7 @@
+#include <ITicketTarget.mq5>
 // Ticket target v1.0
+#ifndef TicketTarget_IMP
+#define TicketTarget_IMP
 
 class TicketTarget : public ITicketTarget
 {
@@ -14,3 +17,5 @@ public:
       return _ticket;
    }   
 };
+
+#endif
