@@ -65,6 +65,7 @@ input TrailingType trailing_type = TrailingDontUse; // Use trailing
 input double TrailingStep = 10; // Trailing step
 input TakeProfitType take_profit_type = TPPips; // Take profit type
 input double take_profit_value           = 10; // Take profit value
+input double take_profit_atr_multiplicator = 1.0; // Take profit ATR Multiplicator
 // input StopLimitType breakeven_type = StopLimitPips; // Trigger type for the breakeven
 // input double breakeven_value = 10; // Trigger for the breakeven
 
