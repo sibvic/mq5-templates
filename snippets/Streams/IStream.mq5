@@ -1,4 +1,4 @@
-// IStream v.1.2
+// IStream v.2.0
 interface IStream
 {
 public:
@@ -6,6 +6,7 @@ public:
    virtual void Release() = 0;
    
    virtual bool GetValues(const int period, const int count, double &val[]) = 0;
+   virtual bool GetSeriesValues(const int period, const int count, double &val[]) = 0;
 
    virtual int Size() = 0;
 };

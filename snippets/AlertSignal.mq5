@@ -1,4 +1,4 @@
-// Alert signal v1.1
+// Alert signal v2.0
 // More templates and snippets on https://github.com/sibvic/mq4-templates
 
 #ifndef AlertSignal_IMP
@@ -32,6 +32,11 @@ public:
          _condition.Release();
    }
 
+   void Init()
+   {
+      ArrayInitialize(_signals, EMPTY_VALUE);
+   }
+
    int RegisterStreams(int id, string name, int code, color clr, IStream* price)
    {
       _message = name;
@@ -42,6 +47,7 @@ public:
       PlotIndexSetInteger(id, PLOT_LINE_COLOR, clr);
       PlotIndexSetString(id, PLOT_LABEL, name);
       PlotIndexSetInteger(id, PLOT_ARROW, code);
+      ArraySetAsSeries(_signals, true);
       
       return id + 1;
    }
@@ -66,8 +72,10 @@ public:
       }
 
       double price[1];
-      if (!_price.GetValues(period, 1, price))
+      if (!_price.GetSeriesValues(period, 1, price))
+      {
          return;
+      }
 
       _signals[period] = price[0];
    }

@@ -1,4 +1,4 @@
-// IndicatorOutputStream v1.1
+// IndicatorOutputStream v2.0
 class IndicatorOutputStream : public ABaseStream
 {
 public:
@@ -28,9 +28,21 @@ public:
       int size = Size();
       for (int i = 0; i < MathMin(count, size - period); ++i)
       {
-         if (_data[size - 1 - period + i] == EMPTY_VALUE)
+         if (_data[period - i] == EMPTY_VALUE)
             return false;
-         val[i] = _data[size - 1 - period + i];
+         val[i] = _data[period + i];
+      }
+      return true;
+   }
+
+   virtual bool GetSeriesValues(const int period, const int count, double &val[])
+   {
+      int size = Size();
+      for (int i = 0; i < MathMin(count, size - period); ++i)
+      {
+         if (_data[size - 1 - period - i] == EMPTY_VALUE)
+            return false;
+         val[i] = _data[size - 1 - period - i];
       }
       return true;
    }

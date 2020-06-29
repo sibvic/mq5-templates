@@ -1,4 +1,4 @@
-// Arrows indicator v1.1
+// Arrows indicator v2.0
 
 #property copyright ""
 #property link      ""
@@ -128,14 +128,16 @@ int OnCalculate(const int rates_total,       // size of input time series
 {
    if (prev_calculated <= 0 || prev_calculated > rates_total)
    {
-      ArrayInitialize(out, EMPTY_VALUE);
+      //ArrayInitialize(out, EMPTY_VALUE);
+      up.Init();
+      down.Init();
    }
    int first = 0;
    for (int pos = MathMax(first, prev_calculated - 1); pos < rates_total; ++pos)
    {
       int oldIndex = rates_total - 1 - pos;
-      up.Update(pos, 0);
-      down.Update(pos, 0);
+      up.Update(oldIndex, time[pos]);
+      down.Update(oldIndex, time[pos]);
    }
    return rates_total;
 }
