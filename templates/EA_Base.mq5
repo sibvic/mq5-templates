@@ -235,6 +235,32 @@ ICondition* CreateShortFilterCondition(string symbol, ENUM_TIMEFRAMES timeframe)
    return condition;
 }
 
+ICondition* CreateExitLongCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+{
+   AndCondition* condition = new AndCondition();
+   condition.Add(new DisabledCondition(), false);
+   #ifdef ACT_ON_SWITCH_CONDITION
+      ActOnSwitchCondition* switchCondition = new ActOnSwitchCondition(symbol, timeframe, (ICondition*) condition);
+      condition.Release();
+      return switchCondition;
+   #else
+      return (ICondition *)condition;
+   #endif
+}
+
+ICondition* CreateExitShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+{
+   AndCondition* condition = new AndCondition();
+   condition.Add(new DisabledCondition(), false);
+   #ifdef ACT_ON_SWITCH_CONDITION
+      ActOnSwitchCondition* switchCondition = new ActOnSwitchCondition(symbol, timeframe, (ICondition*) condition);
+      condition.Release();
+      return switchCondition;
+   #else
+      return (ICondition *)condition;
+   #endif
+}
+
 MoneyManagementStrategy* CreateMoneyManagementStrategy(TradingCalculator* tradingCalculator, string symbol,
    ENUM_TIMEFRAMES timeframe, bool isBuy)
 {
