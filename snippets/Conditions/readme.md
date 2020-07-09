@@ -23,3 +23,11 @@ Trading time condition.
 ## NotCondition
 
 Inverts another condition.
+
+## bar_conditions
+
+Bar conditions.
+
+## bb_conditions
+
+Bands conditions.
