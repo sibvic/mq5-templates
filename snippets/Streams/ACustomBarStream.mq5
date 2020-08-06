@@ -1,4 +1,4 @@
-// ACustomBarStream v1.0
+// ACustomBarStream v1.1
 
 #include <IBarStream.mq5>
 
@@ -96,6 +96,35 @@ public:
       return true;
    }
 
+   virtual bool GetValues(const int period, const int count, double &val[])
+   {
+      if (period >= _size)
+         return false;
+
+      for (int i = 0; i < count; ++i)
+      {
+         double v;
+         if (!GetValue(period + i, v))
+            return false;
+         val[i] = v;
+      }
+      return true;
+   }
+   virtual bool GetSeriesValues(const int period, const int count, double &val[])
+   {
+      if (period >= _size)
+         return false;
+
+      for (int i = 0; i < count; ++i)
+      {
+         double v;
+         if (!GetValue(period + i, v))
+            return false;
+         val[i] = v;
+      }
+      return true;
+   }
+
    virtual bool GetValues(const int period, double &open, double &high, double &low, double &close)
    {
       if (period >= _size)
@@ -104,6 +133,15 @@ public:
       low = _low[_size - 1 - period];
       open = _open[_size - 1 - period];
       close = _close[_size - 1 - period];
+      return true;
+   }
+
+   virtual bool GetOpenClose(const int period, double& open, double& close)
+   {
+      if (period >= _size)
+         return false;
+      close = _close[_size - 1 - period];
+      open = _open[_size - 1 - period];
       return true;
    }
 
