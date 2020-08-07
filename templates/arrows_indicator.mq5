@@ -1,4 +1,4 @@
-// Arrows indicator v2.0
+// Arrows indicator v2.1
 
 #property copyright ""
 #property link      ""
@@ -8,11 +8,14 @@
 #property indicator_plots 2
 #property indicator_buffers 2
 
+#define ACT_ON_SWITCH
+
 input color up_color = Green; // Up color
 input color down_color = Red; // Down color
 
 #include <Signaler.mq5>
 #include <Conditions/ACondition.mq5>
+#include <Conditions/ActOnSwitchCondition.mq5>
 #include <Streams/PriceStream.mq5>
 #include <AlertSignal.mq5>
 
@@ -90,6 +93,14 @@ int OnInit(void)
    mainSignaler.SetMessagePrefix(_Symbol + "/" + mainSignaler.GetTimeframeStr() + ": ");
    ICondition* upCondition = new UpAlertCondition(_Symbol, timeframe);
    ICondition* downCondition = new DownAlertCondition(_Symbol, timeframe);
+   #ifdef ACT_ON_SWITCH
+      ActOnSwitchCondition* upSwitch = new ActOnSwitchCondition(_Symbol, timeframe, upCondition);
+      upCondition.Release();
+      upCondition = upSwitch;
+      ActOnSwitchCondition* downSwitch = new ActOnSwitchCondition(_Symbol, timeframe, downCondition);
+      downCondition.Release();
+      downCondition = downSwitch;
+   #endif
    up = new AlertSignal(upCondition, mainSignaler);
    down = new AlertSignal(downCondition, mainSignaler);
       
