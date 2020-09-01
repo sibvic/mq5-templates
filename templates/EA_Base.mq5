@@ -146,6 +146,7 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib us
 #include <MoneyManagement/DefaultTakeProfitStrategy.mq5>
 #include <MoneyManagement/RiskToRewardTakeProfitStrategy.mq5>
 #include <MoneyManagement/ATRTakeProfitStrategy.mq5>
+#include <MoneyManagement/MoneyManagementFunctions.mq5>
 
 class EntryLongCondition : public ACondition
 {
@@ -259,94 +260,6 @@ ICondition* CreateExitShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
    #else
       return (ICondition *)condition;
    #endif
-}
-
-MoneyManagementStrategy* CreateMoneyManagementStrategy(TradingCalculator* tradingCalculator, string symbol,
-   ENUM_TIMEFRAMES timeframe, bool isBuy)
-{
-   ILotsProvider* lots = NULL;
-   switch (lots_type)
-   {
-      case PositionSizeRisk:
-      case PositionSizeRiskCurrency:
-         break;
-      default:
-         lots = new DefaultLotsProvider(tradingCalculator, lots_type, lots_value);
-         break;
-   }
-   IStopLossAndAmountStrategy* sl = NULL;
-   switch (stop_loss_type)
-   {
-      case SLDoNotUse:
-         {
-            if (lots_type == PositionSizeRisk)
-               sl = new PositionSizeRiskStopLossAndAmountStrategy(tradingCalculator, lots_value, StopLimitDoNotUse, stop_loss_value, isBuy);
-            else
-               sl = new DefaultStopLossAndAmountStrategy(tradingCalculator, lots, StopLimitDoNotUse, stop_loss_value, isBuy);
-         }
-         break;
-      case SLPercent:
-         {
-            if (lots_type == PositionSizeRisk)
-               sl = new PositionSizeRiskStopLossAndAmountStrategy(tradingCalculator, lots_value, StopLimitPercent, stop_loss_value, isBuy);
-            else
-               sl = new DefaultStopLossAndAmountStrategy(tradingCalculator, lots, StopLimitPercent, stop_loss_value, isBuy);
-         }
-         break;
-      case SLPips:
-         {
-            if (lots_type == PositionSizeRisk)
-               sl = new PositionSizeRiskStopLossAndAmountStrategy(tradingCalculator, lots_value, StopLimitPips, stop_loss_value, isBuy);
-            else
-               sl = new DefaultStopLossAndAmountStrategy(tradingCalculator, lots, StopLimitPips, stop_loss_value, isBuy);
-         }
-         break;
-      case SLDollar:
-         {
-            if (lots_type == PositionSizeRisk)
-               sl = new PositionSizeRiskStopLossAndAmountStrategy(tradingCalculator, lots_value, StopLimitDollar, stop_loss_value, isBuy);
-            else
-               sl = new DefaultStopLossAndAmountStrategy(tradingCalculator, lots, StopLimitDollar, stop_loss_value, isBuy);
-         }
-         break;
-      case SLAbsolute:
-         {
-            if (lots_type == PositionSizeRisk)
-               sl = new PositionSizeRiskStopLossAndAmountStrategy(tradingCalculator, lots_value, StopLimitAbsolute, stop_loss_value, isBuy);
-            else
-               sl = new DefaultStopLossAndAmountStrategy(tradingCalculator, lots, StopLimitAbsolute, stop_loss_value, isBuy);
-         }
-         break;
-   }
-   ITakeProfitStrategy* tp = NULL;
-   switch (take_profit_type)
-   {
-      case TPDoNotUse:
-         tp = new DefaultTakeProfitStrategy(tradingCalculator, StopLimitDoNotUse, take_profit_value, isBuy);
-         break;
-      #ifdef TAKE_PROFIT_FEATURE
-         case TPPercent:
-            tp = new DefaultTakeProfitStrategy(tradingCalculator, StopLimitPercent, take_profit_value, isBuy);
-            break;
-         case TPPips:
-            tp = new DefaultTakeProfitStrategy(tradingCalculator, StopLimitPips, take_profit_value, isBuy);
-            break;
-         case TPDollar:
-            tp = new DefaultTakeProfitStrategy(tradingCalculator, StopLimitDollar, take_profit_value, isBuy);
-            break;
-         case TPRiskReward:
-            tp = new RiskToRewardTakeProfitStrategy(take_profit_value, isBuy);
-            break;
-         case TPAbsolute:
-            tp = new DefaultTakeProfitStrategy(tradingCalculator, StopLimitAbsolute, take_profit_value, isBuy);
-            break;
-         case TPAtr:
-            tp = new ATRTakeProfitStrategy(symbol, timeframe, (int)take_profit_value, take_profit_atr_multiplicator, isBuy);
-            break;
-      #endif
-   }
-   
-   return new MoneyManagementStrategy(sl, tp);
 }
 
 TradingController* controllers[];
