@@ -391,8 +391,10 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       }
    #endif
    
-   IMoneyManagementStrategy* longMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, true);
-   IMoneyManagementStrategy* shortMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, false);
+   IMoneyManagementStrategy* longMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, true
+      , lots_type, lots_value, stop_loss_type, stop_loss_value, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+   IMoneyManagementStrategy* shortMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, false
+      , lots_type, lots_value, stop_loss_type, stop_loss_value, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
    controller.AddLongMoneyManagement(longMoneyManagement);
    controller.AddShortMoneyManagement(shortMoneyManagement);
 
