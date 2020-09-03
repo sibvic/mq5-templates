@@ -12,6 +12,19 @@
 
 input color up_color = Green; // Up color
 input color down_color = Red; // Down color
+input string AlertsSection = ""; // == Alerts ==
+input bool     Popup_Alert              = true; // Popup message
+input bool     Notification_Alert       = false; // Push notification
+input bool     Email_Alert              = false; // Email
+input bool     Play_Sound               = false; // Play sound on alert
+input string   Sound_File               = ""; // Sound file
+#ifdef ADVANCED_ALERTS
+input bool     Advanced_Alert           = false; // Advanced alert
+input string   Advanced_Key             = ""; // Advanced alert key
+input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
+input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
+input string   Comment4                 = "- Install AdvancedNotificationsLib using ProfitRobots installer -";
+#endif
 
 #include <Signaler.mq5>
 #include <Conditions/ACondition.mq5>
@@ -92,6 +105,13 @@ int OnInit(void)
 
    ENUM_TIMEFRAMES timeframe = (ENUM_TIMEFRAMES)_Period;
    mainSignaler = new Signaler(_Symbol, timeframe);
+   mainSignaler.SetPopupAlert(Popup_Alert);
+   mainSignaler.SetEmailAlert(Email_Alert);
+   mainSignaler.SetPlaySound(Play_Sound, Sound_File);
+   mainSignaler.SetNotificationAlert(Notification_Alert);
+   #ifdef ADVANCED_ALERTS
+   mainSignaler.SetAdvancedAlert(Advanced_Alert, Advanced_Key);
+   #endif
    mainSignaler.SetMessagePrefix(_Symbol + "/" + mainSignaler.GetTimeframeStr() + ": ");
    {
       ICondition* upCondition = new UpAlertCondition(_Symbol, timeframe);
