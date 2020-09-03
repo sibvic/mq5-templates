@@ -105,17 +105,18 @@ input bool     Notification_Alert       = false; // Push notification
 input bool     Email_Alert              = false; // Email
 input bool     Play_Sound               = false; // Play sound on alert
 input string   Sound_File               = ""; // Sound file
+#ifdef ADVANCED_ALERTS
 input bool     Advanced_Alert           = false; // Advanced alert
 input string   Advanced_Key             = ""; // Advanced alert key
-input string   Comment5                 = "- DISABLED IN THIS VERSION -";
 input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
 input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
 input string   Comment4                 = "- Install AdvancedNotificationsLib using ProfitRobots installer -";
 
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
-//#import "AdvancedNotificationsLib.dll"
-//void AdvancedAlert(string key, string text, string instrument, string timeframe);
-//#import
+#import "AdvancedNotificationsLib.dll"
+void AdvancedAlert(string key, string text, string instrument, string timeframe);
+#import
+#endif
 
 #include <Conditions/TradingTimeCondition.mq5>
 #include <Conditions/DisabledCondition.mq5>
@@ -285,6 +286,13 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    }
 
    Signaler* signaler = new Signaler(symbol, timeframe);
+   signaler.SetPopupAlert(Popup_Alert);
+   signaler.SetEmailAlert(Email_Alert);
+   signaler.SetPlaySound(Play_Sound, Sound_File);
+   signaler.SetNotificationAlert(Notification_Alert);
+   #ifdef ADVANCED_ALERTS
+   signaler.SetAdvancedAlert(Advanced_Alert, Advanced_Key);
+   #endif
    signaler.SetMessagePrefix(symbol + "/" + signaler.GetTimeframeStr() + ": ");
    
    TradingController* controller = new TradingController(tradingCalculator, timeframe, timeframe, signaler);
