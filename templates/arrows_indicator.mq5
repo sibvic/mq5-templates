@@ -99,11 +99,11 @@ int OnInit(void)
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
    
    //register outputs
+   ENUM_TIMEFRAMES timeframe = (ENUM_TIMEFRAMES)_Period;
    int id = 2;
    PriceStream* highStream = new PriceStream(_Symbol, timeframe, PRICE_HIGH);
    PriceStream* lowStream = new PriceStream(_Symbol, timeframe, PRICE_LOW);
 
-   ENUM_TIMEFRAMES timeframe = (ENUM_TIMEFRAMES)_Period;
    mainSignaler = new Signaler(_Symbol, timeframe);
    mainSignaler.SetPopupAlert(Popup_Alert);
    mainSignaler.SetEmailAlert(Email_Alert);
@@ -128,8 +128,8 @@ int OnInit(void)
       ArrayResize(alerts, size + 2);
       alerts[size] = new AlertSignal(upCondition, mainSignaler);
       alerts[size + 1] = new AlertSignal(downCondition, mainSignaler);
-      id = alerts[size].RegisterStreams(id, "Up", 217, up_color, highStream);
-      id = alerts[size + 1].RegisterStreams(id, "Down", 218, down_color, lowStream);
+      id = alerts[size].RegisterStreams(id, 0, "Up", 217, up_color, highStream);
+      id = alerts[size + 1].RegisterStreams(id, 0, "Down", 218, down_color, lowStream);
    }
    lowStream.Release();
    highStream.Release();

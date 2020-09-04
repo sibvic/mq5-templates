@@ -37,16 +37,16 @@ public:
       ArrayInitialize(_signals, EMPTY_VALUE);
    }
 
-   int RegisterStreams(int id, string name, int code, color clr, IStream* price)
+   int RegisterStreams(int id, int shift, string name, int code, color clr, IStream* price)
    {
       _message = name;
       _price = price;
       _price.AddRef();
       SetIndexBuffer(id, _signals, INDICATOR_DATA);
-      PlotIndexSetInteger(id, PLOT_DRAW_TYPE, DRAW_ARROW);
-      PlotIndexSetInteger(id, PLOT_LINE_COLOR, clr);
-      PlotIndexSetString(id, PLOT_LABEL, name);
-      PlotIndexSetInteger(id, PLOT_ARROW, code);
+      PlotIndexSetInteger(id - shift, PLOT_DRAW_TYPE, DRAW_ARROW);
+      PlotIndexSetInteger(id - shift, PLOT_LINE_COLOR, clr);
+      PlotIndexSetString(id - shift, PLOT_LABEL, name);
+      PlotIndexSetInteger(id - shift, PLOT_ARROW, code);
       ArraySetAsSeries(_signals, true);
       
       return id + 1;
