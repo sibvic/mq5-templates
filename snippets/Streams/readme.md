@@ -59,3 +59,7 @@ Stream drawn on the chart.
 ## StreamPack
 
 Stream pack.
+
+## ConstValueStream
+
+Returns constant value.
