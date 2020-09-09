@@ -31,3 +31,7 @@ Bar conditions.
 ## bb_conditions
 
 Bands conditions.
+
+## divergence_conditions
+
+Conditions for detecting a divergence.
