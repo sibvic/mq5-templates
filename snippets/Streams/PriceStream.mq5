@@ -1,9 +1,10 @@
+#include <ABaseStream.mq5>
+
 // PriceStream v2.0
 
 #ifndef PriceStream_IMP
 #define PriceStream_IMP
 
-#include <ABaseStream.mq5>
 class PriceStream : public ABaseStream
 {
    ENUM_APPLIED_PRICE _price;

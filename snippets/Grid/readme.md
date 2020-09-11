@@ -41,3 +41,15 @@ Row of cells
 ## Grid
 
 Grid 
+
+## IValueFormatter
+
+Interface for a value formatter
+
+## AValueFormatter
+
+Abstrace value formatter
+
+## FixedTextFormatter
+
+Formats values as a contant/fixed text value.
