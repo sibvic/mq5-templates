@@ -1,4 +1,5 @@
-// TemaOnStream v1.0
+#include <AOnStream.mq5>
+// TemaOnStream v2.0
 
 class TemaOnStream : public AOnStream
 {
@@ -13,10 +14,10 @@ public:
       _alpha = 2.0 / (1.0 + length);
    }
 
-   bool GetValue(const int period, double &val)
+   bool GetSeriesValue(const int period, double &val)
    {
       double price[1];
-      if (!_source.GetValues(period, 1, price))
+      if (!_source.GetSeriesValues(period, 1, price))
          return false;
 
       int size = Size();

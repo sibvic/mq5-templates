@@ -1,10 +1,17 @@
-// AveragesStreamFactory v1.1
+#include <SMAOnStream.mq5>
+#include <TemaOnStream.mq5>
+#include <VwmaOnStream.mq5>
+#include <HullOnStream.mq5>
+#include <RmaOnStream.mq5>
+#include <DEMAOnStream.mq5>
+
+// AveragesStreamFactory v1.2
 enum MATypes
 {
    ma_sma,     // Simple moving average - SMA
    //ma_ema,     // Exponential moving average - EMA
    //ma_dsema,   // Double smoothed exponential moving average - DSEMA
-   //ma_dema,    // Double exponential moving average - DEMA
+   ma_dema,    // Double exponential moving average - DEMA
    ma_tema,    // Tripple exponential moving average - TEMA
    //ma_smma,    // Smoothed moving average - SMMA
    //ma_lwma,    // Linear weighted moving average - LWMA
@@ -41,6 +48,8 @@ public:
             return new HullOnStream(source, period);
          case ma_rma:
             return new RmaOnStream(source, period);
+         case ma_dema:
+            return new DEMAOnStream(source, period);
       }
       return NULL;
    }

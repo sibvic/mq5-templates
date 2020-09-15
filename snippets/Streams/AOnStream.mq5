@@ -1,4 +1,4 @@
-//AOnStream v1.0
+//AOnStream v2.0
 class AOnStream : public IStream
 {
 protected:
@@ -29,14 +29,27 @@ public:
          delete &this;
    }
 
-   virtual bool GetValue(const int period, double &val) = 0;
+   virtual bool GetSeriesValue(const int period, double &val) = 0;
 
-   bool GetValues(const int period, const int count, double &val[])
+   virtual bool GetSeriesValues(const int period, const int count, double &val[])
    {
       for (int i = 0; i < count; ++i)
       {
          double v;
-         if (!GetValue(period + i, v))
+         if (!GetSeriesValue(period + i, v))
+            return false;
+         val[i] = v;
+      }
+      return true;
+   }
+
+   bool GetValues(const int period, const int count, double &val[])
+   {
+      int size = Size();
+      for (int i = 0; i < count; ++i)
+      {
+         double v;
+         if (!GetSeriesValue(size - 1 - period + i, v))
             return false;
          val[i] = v;
       }

@@ -1,4 +1,5 @@
-// VwmaOnStream v1.0
+#include <AOnStream.mq5>
+// VwmaOnStream v2.0
 class VwmaOnStream : public AOnStream
 {
    IStream *_volumeSource;
@@ -11,7 +12,7 @@ public:
       _length = length;
    }
 
-   bool GetValue(const int period, double &val)
+   bool GetSeriesValue(const int period, double &val)
    {
       double price[1];
       double volume[1];
@@ -19,7 +20,7 @@ public:
       double sum = 0;
       for (int k = 0; k < _length; k++)
       {
-         if (!_source.GetValues(period + k, 1, price) || !_volumeSource.GetValues(period + k, 1, volume))
+         if (!_source.GetSeriesValues(period + k, 1, price) || !_volumeSource.GetSeriesValues(period + k, 1, volume))
             return false;
          sumw += volume[0];
          sum += volume[0] * price[0];

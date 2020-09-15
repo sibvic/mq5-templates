@@ -1,4 +1,5 @@
-//SMAOnStream v1.0
+#include <AOnStream.mq5>
+//SMAOnStream v2.0
 
 class SMAOnStream : public AOnStream
 {
@@ -10,13 +11,13 @@ public:
       _length = length;
    }
 
-   bool GetValue(const int period, double &val)
+   bool GetSeriesValue(const int period, double &val)
    {
       double summ = 0;
       for (int i = 0; i < _length; ++i)
       {
          double price[1];
-         if (!_source.GetValues(period + i, 1, price))
+         if (!_source.GetSeriesValues(period + i, 1, price))
             return false;
          summ += price[0];
       }

@@ -1,5 +1,8 @@
+#include <AOnStream.mq5>
+#include <CustomStream.mq5>
+#include <RmaOnStream.mq5>
 
-// HullOnStream v1.0
+// HullOnStream v2.0
 class HullOnStream : public AOnStream
 {
    int _length;
@@ -26,18 +29,18 @@ public:
       _full.Release();
    }
 
-   bool GetValue(const int period, double &val)
+   bool GetSeriesValue(const int period, double &val)
    {
       int size = Size();
       _buffer.SetSize(size);
       double half[1];
       double full[1];
-      if (!_half.GetValues(period, 1, half) || !_full.GetValues(period, 1, full))
+      if (!_half.GetSeriesValues(period, 1, half) || !_full.GetSeriesValues(period, 1, full))
          return false;
       
       _buffer._data[period] = half[0] * 2 - full[0];
       double res[1];
-      if (!_hull.GetValues(period, 1, res))
+      if (!_hull.GetSeriesValues(period, 1, res))
          return false;
       val = res[0];
       return true;

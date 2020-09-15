@@ -1,4 +1,4 @@
-// IndicatorOutputStream v2.0
+// IndicatorOutputStream v3.0
 class IndicatorOutputStream : public ABaseStream
 {
 public:
@@ -15,6 +15,11 @@ public:
       PlotIndexSetInteger(id + 0, PLOT_DRAW_TYPE, DRAW_LINE);
       PlotIndexSetInteger(id + 0, PLOT_LINE_COLOR, clr);
       PlotIndexSetString(id + 0, PLOT_LABEL, name);
+      return id + 1;
+   }
+   int RegisterInternalStream(int id)
+   {
+      SetIndexBuffer(id + 0, _data, INDICATOR_CALCULATIONS);
       return id + 1;
    }
 
