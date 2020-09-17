@@ -1,4 +1,4 @@
-// Not condition v1.0
+// Not condition v1.1
 
 #include <AConditionBase.mq5>
 
@@ -23,6 +23,11 @@ public:
    virtual bool IsPass(const int period, const datetime date)
    {
       return !_condition.IsPass(period, date);
+   }
+
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      return "Not (" + _condition.GetLogMessage(period, date) + (IsPass(period, date) ? ")=true" : ")=false");
    }
 };
 #endif

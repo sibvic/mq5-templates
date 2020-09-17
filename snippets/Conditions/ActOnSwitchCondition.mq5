@@ -1,4 +1,4 @@
-// Act on switch condition v1.0
+// Act on switch condition v1.1
 
 #include <ACondition.mq5>
 
@@ -37,6 +37,11 @@ public:
       }
       _current = _condition.IsPass(period, date);
       return _current && !_last;
+   }
+
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      return "Switch of (" + _condition.GetLogMessage(period, date) + (IsPass(period, date) ? ")=true" : ")=false");
    }
 };
 #endif

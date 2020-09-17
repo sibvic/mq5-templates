@@ -1,4 +1,4 @@
-// Base condition v1.0
+// Base condition v1.1
 
 #ifndef ABaseCondition_IMP
 #define ABaseCondition_IMP
@@ -12,7 +12,8 @@ protected:
    InstrumentInfo* _instrument;
    string _symbol;
 public:
-   ACondition(const string symbol, ENUM_TIMEFRAMES timeframe)
+   ACondition(const string symbol, ENUM_TIMEFRAMES timeframe, string name = NULL)
+      :AConditionBase(name)
    {
       _instrument = new InstrumentInfo(symbol);
       _timeframe = timeframe;

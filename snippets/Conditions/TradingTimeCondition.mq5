@@ -1,6 +1,6 @@
-// Trading time condition v1.0
+// Trading time condition v1.1
 
-#include <ICondition.mq5>
+#include <AConditionBase.mq5>
 
 #ifndef TradingTimeCondition_IMP
 #define TradingTimeCondition_IMP
@@ -125,12 +125,13 @@ private:
    }
 };
 
-class TradingTimeCondition : public ICondition
+class TradingTimeCondition : public AConditionBase
 {
    TradingTime *_tradingTime;
    ENUM_TIMEFRAMES _timeframe;
 public:
    TradingTimeCondition(ENUM_TIMEFRAMES timeframe)
+      :AConditionBase("Trading time")
    {
       _timeframe = timeframe;
       _tradingTime = new TradingTime();

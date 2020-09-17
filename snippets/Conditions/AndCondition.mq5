@@ -1,4 +1,4 @@
-// And condition v1.0
+// And condition v1.1
 
 #include <AConditionBase.mq5>
 
@@ -37,6 +37,21 @@ public:
             return false;
       }
       return true;
+   }
+
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      string messages = "";
+      int size = ArraySize(_conditions);
+      for (int i = 0; i < size; ++i)
+      {
+         string logMessage = _conditions[i].GetLogMessage(period, date);
+         if (messages != "")
+            messages = messages + " and (" + logMessage + ")";
+         else
+            messages = "(" + logMessage + ")";
+      }
+      return messages + (IsPass(period, date) ? "=true" : "=false");
    }
 };
 #endif

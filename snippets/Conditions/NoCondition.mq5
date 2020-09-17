@@ -1,4 +1,4 @@
-// No condition v1.0
+// No condition v1.1
 
 #include <AConditionBase.mq5>
 
@@ -8,12 +8,12 @@
 class NoCondition : public AConditionBase
 {
 public:
-   bool IsPass(const int period, const datetime date) { return true; }
-
-   virtual string GetLogMessage(const int period, const datetime date)
+   NoCondition()
+      :AConditionBase("No condition")
    {
-      return "No condition";
+
    }
+   bool IsPass(const int period, const datetime date) { return true; }
 };
 
 #endif
