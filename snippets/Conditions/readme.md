@@ -35,3 +35,7 @@ Bands conditions.
 ## divergence_conditions
 
 Conditions for detecting a divergence.
+
+## PositionLimitHitCondition
+
+Position limit hit condition.

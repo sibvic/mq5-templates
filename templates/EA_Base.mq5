@@ -123,6 +123,7 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #include <Conditions/AndCondition.mq5>
 #include <Conditions/ACondition.mq5>
 #include <Conditions/NoCondition.mq5>
+#include <Conditions/NotCondition.mq5>
 #ifdef ACT_ON_SWITCH_CONDITION
 #include <Conditions/ActOnSwitchCondition.mq5>
 #endif
@@ -136,7 +137,7 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #include <TrailingController.mq5>
 #include <NetStopLoss.mq5>
 #include <MarketOrderBuilder.mq5>
-#include <PositionCap.mq5>
+#include <conditions/PositionLimitHitCondition.mq5>
 #include <TradingController.mq5>
 #include <DoCloseOnOppositeStrategy.mq5>
 #include <DontCloseOnOppositeStrategy.mq5>
@@ -357,8 +358,10 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       tradingTimeCondition.Release();
    #endif
 
-   ICondition* longFilterCondition = CreateLongFilterCondition(symbol, timeframe);
-   ICondition* shortFilterCondition = CreateShortFilterCondition(symbol, timeframe);
+   AndCondition* longFilterCondition = new AndCondition();
+   longFilterCondition.Add(CreateLongFilterCondition(symbol, timeframe), false);
+   AndCondition* shortFilterCondition = new AndCondition();
+   shortFilterCondition.Add(CreateShortFilterCondition(symbol, timeframe), false);
 
    #ifdef WITH_EXIT_LOGIC
       controller.SetExitLogic(exit_logic);
@@ -368,6 +371,15 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       ICondition* exitLongCondition = new DisabledCondition();
       ICondition* exitShortCondition = new DisabledCondition();
    #endif
+   if (use_position_cap)
+   {
+      ICondition* buyLimitCondition = new PositionLimitHitCondition(BuySide, magic_number, max_positions, max_positions, symbol);
+      ICondition* sellLimitCondition = new PositionLimitHitCondition(SellSide, magic_number, max_positions, max_positions, symbol);
+      longFilterCondition.Add(new NotCondition(buyLimitCondition), false);
+      shortFilterCondition.Add(new NotCondition(sellLimitCondition), false);
+      buyLimitCondition.Release();
+      sellLimitCondition.Release();
+   }
 
    switch (logic_direction)
    {
@@ -388,6 +400,8 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
          controller.SetExitShortCondition(exitLongCondition);
          break;
    }
+   longFilterCondition.Release();
+   shortFilterCondition.Release();
    #ifdef TRADING_TIME_FEATURE
       if (mandatory_closing)
       {
@@ -437,19 +451,6 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       controller.SetCloseOnOpposite(new DoCloseOnOppositeStrategy(magic_number));
    else
       controller.SetCloseOnOpposite(new DontCloseOnOppositeStrategy());
-
-   #ifdef POSITION_CAP_FEATURE
-      if (position_cap)
-      {
-         controller.SetLongPositionCap(new PositionCapStrategy(BuySide, magic_number, no_of_buy_position, no_of_positions, symbol));
-         controller.SetShortPositionCap(new PositionCapStrategy(SellSide, magic_number, no_of_sell_position, no_of_positions, symbol));
-      }
-      else
-      {
-         controller.SetLongPositionCap(new NoPositionCapStrategy());
-         controller.SetShortPositionCap(new NoPositionCapStrategy());
-      }
-   #endif
 
    controller.SetEntryLogic(entry_logic);
 //   #ifdef USE_MARKET_ORDERS

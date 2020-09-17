@@ -64,10 +64,6 @@ Trailing logic.
 
 Market order builder.
 
-## PositionCap
-
-Position cap.
-
 ## TradeController
 
 Trade controller.
