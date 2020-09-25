@@ -1,4 +1,4 @@
-// Trades iterator v 1.2
+// Trades iterator v 1.3
 
 #include <enums/CompareType.mq5>
 
@@ -62,6 +62,8 @@ public:
    
    ulong GetTicket() { return PositionGetTicket(_lastIndex); }
    double GetLots() { return PositionGetDouble(POSITION_VOLUME); }
+   double GetSwap() { return PositionGetDouble(POSITION_SWAP); }
+   double GetProfit() { return PositionGetDouble(POSITION_PROFIT); }
    double GetOpenPrice() { return PositionGetDouble(POSITION_PRICE_OPEN); }
    double GetStopLoss() { return PositionGetDouble(POSITION_SL); }
    double GetTakeProfit() { return PositionGetDouble(POSITION_TP); }

@@ -1,4 +1,4 @@
-// ABaseStream v1.0
+// ABaseStream v1.1
 #ifndef ABaseStream_IMP
 #define ABaseStream_IMP
 #include <IStream.mq5>
@@ -41,6 +41,13 @@ public:
       --_references;
       if (_references == 0)
          delete &this;
+   }
+
+   virtual bool GetValues(const int period, const int count, double &val[])
+   {
+      int bars = iBars(_symbol, _timeframe);
+      int oldIndex = bars - period - 1;
+      return GetSeriesValues(oldIndex, count, val);
    }
 };
 #endif
