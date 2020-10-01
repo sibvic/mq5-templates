@@ -39,3 +39,11 @@ Conditions for detecting a divergence.
 ## PositionLimitHitCondition
 
 Position limit hit condition.
+
+## StreamLevelCondition
+
+Stream-level condition.
+
+## StreamStreamCondition
+
+Stream-stream condition.

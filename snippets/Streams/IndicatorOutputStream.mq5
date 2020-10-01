@@ -1,4 +1,8 @@
 // IndicatorOutputStream v3.0
+
+#ifdef IndicatorOutputStream_IMP
+#define IndicatorOutputStream_IMP
+
 class IndicatorOutputStream : public ABaseStream
 {
 public:
@@ -52,3 +56,4 @@ public:
       return true;
    }
 };
+#endif

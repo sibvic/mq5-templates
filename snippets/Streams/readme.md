@@ -63,3 +63,35 @@ Stream pack.
 ## ConstValueStream
 
 Returns constant value.
+
+## CCIStream
+
+CCI stream.
+
+## ConditionStream
+
+Condition stream.
+
+## MACDStream
+
+MACD stream.
+
+## MAStream
+
+MA stream.
+
+## RSIStream
+
+RSI stream.
+
+## SlopeStream
+
+Slope stream.
+
+## StochStream
+
+Stochastic stream.
+
+## WPRStream
+
+WPR stream.
