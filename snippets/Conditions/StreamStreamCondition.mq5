@@ -44,9 +44,9 @@ public:
          case FirstBelowSecond:
             return values1[0] < values2[0];
          case FirstCrossOverSecond:
-            return values1[0] >= values2[0] && values[1] < values2[1];
+            return values1[0] >= values2[0] && values1[1] < values2[1];
          case FirstCrossUnderSecond:
-            return values1[0] <= values2[0] && values[1] > values2[1];
+            return values1[0] <= values2[0] && values1[1] > values2[1];
       }
       return false;
    }
