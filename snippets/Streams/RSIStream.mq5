@@ -1,3 +1,5 @@
+#include <ABaseStream.mq5>
+
 // RSI stream v1.0
 
 #ifndef RSIStream_IMP

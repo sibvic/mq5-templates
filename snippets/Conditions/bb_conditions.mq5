@@ -1,5 +1,5 @@
 #include <ACondition.mq5>
-#include <../enums/TwoStreamsConditionType.mq5>
+#include <enums/TwoStreamsConditionType.mq5>
 // Bands conditions v1.0
 
 #ifndef BB_Conditions_IMP

@@ -4,7 +4,7 @@
 #define MAConditions_IMP
 
 #include <ACondition.mq5>
-#include <../enums/TwoStreamsConditionType.mq5>
+#include <enums/TwoStreamsConditionType.mq5>
 
 class MAMACondition : public ACondition
 {
