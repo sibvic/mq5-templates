@@ -4,6 +4,8 @@
 #property indicator_buffers 1
 #property indicator_plots 1
 
+input int bars_limit = 1000; // Bars limit
+
 string IndicatorObjPrefix;
 
 bool NamesCollision(const string name)
@@ -68,7 +70,7 @@ int OnCalculate(const int rates_total,
       ArrayInitialize(out, EMPTY_VALUE);
    }
    int first = 0;
-   for (int pos = MathMax(first, prev_calculated - 1); pos < rates_total; ++pos)
+   for (int pos = MathMax(rates_total - 1 - bars_limit, MathMax(first, prev_calculated - 1)); pos < rates_total; ++pos)
    {
       int oldPos = rates_total - pos - 1;
    }
