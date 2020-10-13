@@ -140,12 +140,36 @@ public:
    void SetEntryLogic(TradingMode logicType) { _entryLogic = logicType; }
    void SetExitLogic(TradingMode logicType) { _exitLogic = logicType; }
    void SetActions(ActionOnConditionLogic* __actions) { _actions = __actions; }
-   void SetLongCondition(ICondition *condition) { _longCondition = condition; }
-   void SetShortCondition(ICondition *condition) { _shortCondition = condition; }
-   void SetLongFilterCondition(ICondition *condition) { _longFilterCondition = condition; }
-   void SetShortFilterCondition(ICondition *condition) { _shortFilterCondition = condition; }
-   void SetExitLongCondition(ICondition *condition) { _exitLongCondition = condition; }
-   void SetExitShortCondition(ICondition *condition) { _exitShortCondition = condition; }
+   void SetLongCondition(ICondition *condition)
+   {
+      _longCondition = condition;
+      _longCondition.AddRef();
+   }
+   void SetShortCondition(ICondition *condition)
+   {
+      _shortCondition = condition;
+      _shortCondition.AddRef();
+   }
+   void SetLongFilterCondition(ICondition *condition) 
+   { 
+      _longFilterCondition = condition;
+      _longFilterCondition.AddRef();
+   }
+   void SetShortFilterCondition(ICondition *condition)
+   {
+      _shortFilterCondition = condition;
+      _shortFilterCondition.AddRef();
+   }
+   void SetExitLongCondition(ICondition *condition)
+   {
+      _exitLongCondition = condition;
+      _exitLongCondition.AddRef();
+   }
+   void SetExitShortCondition(ICondition *condition)
+   {
+      _exitShortCondition = condition;
+      _exitShortCondition.AddRef();
+   }
    #ifdef MARTINGALE_FEATURE
    void SetShortMartingaleStrategy(IMartingaleStrategy *martingale) { _shortMartingale = martingale; }
    void SetLongMartingaleStrategy(IMartingaleStrategy *martingale) { _longMartingale = martingale; }
