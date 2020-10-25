@@ -1,4 +1,4 @@
-// ProfitRobots Dashboard template v.1.5
+// ProfitRobots Dashboard template v.1.6
 // You can find more templates at https://github.com/sibvic/mq4-templates
 
 #property indicator_separate_window
@@ -108,16 +108,36 @@ Grid *grid;
 #include <Grid/GridBuilder.mq5>
 string IndicatorName;
 string IndicatorObjPrefix;
-string GenerateIndicatorName(const string target)
+
+bool NamesCollision(const string name)
 {
-   string name = target;
-   return name;
+   for (int k = ObjectsTotal(0); k >= 0; k--)
+   {
+      if (StringFind(ObjectName(0, k), name) == 0)
+      {
+         return true;
+      }
+   }
+   return false;
 }
+
+string GenerateIndicatorPrefix(const string target)
+{
+   for (int i = 0; i < 1000; ++i)
+   {
+      string prefix = target + "_" + IntegerToString(i);
+      if (!NamesCollision(prefix))
+      {
+         return prefix;
+      }
+   }
+   return target;
+}
+
 int OnInit(void)
 {
-   IndicatorName = GenerateIndicatorName("...");
-   IndicatorObjPrefix = "__" + IndicatorName + "__";
-   IndicatorSetString(INDICATOR_SHORTNAME, IndicatorName);
+   IndicatorObjPrefix = GenerateIndicatorPrefix("...");
+   IndicatorSetString(INDICATOR_SHORTNAME, "...");
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
 
    GridBuilder builder(x_shift, 50, cell_height, cell_height, display_mode == Vertical, corner);

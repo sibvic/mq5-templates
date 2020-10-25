@@ -2,6 +2,7 @@
 
 #include <ICellFactory.mq5>
 #include <TrendValueCell.mq5>
+#include <FixedTextFormatter.mq5>
 
 #ifndef TrendValueCellFactory_IMP
 #define TrendValueCellFactory_IMP
