@@ -2,6 +2,12 @@
 #include <../enums/TakeProfitType.mq5>
 #include <../enums/PositionSizeType.mq5>
 #include <../TradingCalculator.mq5>
+#include <MoneyManagementStrategy.mq5>
+#include <ILotsProvider.mq5>
+#include <DefaultLotsProvider.mq5>
+#include <PositionSizeRiskStopLossAndAmountStrategy.mq5>
+#include <DefaultStopLossAndAmountStrategy.mq5>
+#include <DefaultTakeProfitStrategy.mq5>
 #ifndef MoneyManagementFunctions_IMP
 #define MoneyManagementFunctions_IMP
 
