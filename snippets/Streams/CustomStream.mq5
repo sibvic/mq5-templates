@@ -29,7 +29,7 @@ public:
          delete &this;
    }
 
-   virtual bool GetValues(const int period, const int count, double &val[])
+   virtual bool GetSeriesValues(const int period, const int count, double &val[])
    {
       int size = Size();
       for (int i = 0; i < count; ++i)
@@ -39,6 +39,13 @@ public:
          val[i] = _data[size - 1 - period + i];
       }
       return true;
+   }
+
+   virtual bool GetValues(const int period, const int count, double &val[])
+   {
+      int bars = iBars(_Symbol, (ENUM_TIMEFRAMES)_Period);
+      int oldIndex = bars - period - 1;
+      return GetSeriesValues(oldIndex, count, val);
    }
 
    void SetSize(int size)
