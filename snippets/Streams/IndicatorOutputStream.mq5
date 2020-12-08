@@ -1,6 +1,8 @@
+#include <ABaseStream.mq5>
+
 // IndicatorOutputStream v3.0
 
-#ifdef IndicatorOutputStream_IMP
+#ifndef IndicatorOutputStream_IMP
 #define IndicatorOutputStream_IMP
 
 class IndicatorOutputStream : public ABaseStream
