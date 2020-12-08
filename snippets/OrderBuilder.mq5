@@ -1,11 +1,6 @@
-// Order builder
-// v.1.3
-
-enum OrderSide
-{
-   BuySide,
-   SellSide
-};
+#include <enums/OrderSide.mq5>
+#include <InstrumentInfo.mq5>
+// Order builder v1.3
 
 #ifndef OrderBuilder_IMP
 #define OrderBuilder_IMP
