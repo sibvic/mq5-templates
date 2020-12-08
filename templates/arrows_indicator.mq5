@@ -101,8 +101,8 @@ int OnInit(void)
    //register outputs
    ENUM_TIMEFRAMES timeframe = (ENUM_TIMEFRAMES)_Period;
    int id = 2;
-   PriceStream* highStream = new PriceStream(_Symbol, timeframe, PRICE_HIGH);
-   PriceStream* lowStream = new PriceStream(_Symbol, timeframe, PRICE_LOW);
+   SimplePriceStream* highStream = new SimplePriceStream(_Symbol, timeframe, PRICE_HIGH);
+   SimplePriceStream* lowStream = new SimplePriceStream(_Symbol, timeframe, PRICE_LOW);
 
    mainSignaler = new Signaler(_Symbol, timeframe);
    mainSignaler.SetPopupAlert(Popup_Alert);
