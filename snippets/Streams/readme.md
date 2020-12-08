@@ -10,7 +10,11 @@ Base stream implementation.
 
 ## PriceStream
 
-Price stream.
+Returns values from another stream.
+
+## SimplePriceStream
+
+Return prices from MT4 (iClose...).
 
 ## CustomStream
 
@@ -95,3 +99,15 @@ Stochastic stream.
 ## WPRStream
 
 WPR stream.
+
+## AStandardTimeframeBarStream
+
+Base class for bar streams based on a standard timeframe.
+
+## BarStream
+
+Standard bar stream.
+
+## HABarStream
+
+Heiken-Ashi bar stream.
