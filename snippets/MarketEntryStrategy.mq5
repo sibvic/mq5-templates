@@ -1,4 +1,4 @@
-// Market entry strategy v1.0
+// Market entry strategy v1.1
 
 #include <IEntryStrategy.mq5>
 #include <Logic/ActionOnConditionLogic.mq5>
@@ -12,6 +12,7 @@ class MarketEntryStrategy : public IEntryStrategy
    int _magicNumber;
    int _slippagePoints;
    ActionOnConditionLogic* _actions;
+   int _references;
 public:
    MarketEntryStrategy(const string symbol, 
       const int magicMumber, 
@@ -22,6 +23,19 @@ public:
       _magicNumber = magicMumber;
       _slippagePoints = slippagePoints;
       _symbol = symbol;
+      _references = 1;
+   }
+
+   virtual void AddRef()
+   {
+      ++_references;
+   }
+
+   virtual void Release()
+   {
+      --_references;
+      if (_references == 0)
+         delete &this;
    }
 
    ulong OpenPosition(const int period, OrderSide side, IMoneyManagementStrategy *moneyManagement, const string comment, bool ecnBroker)

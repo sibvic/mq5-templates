@@ -25,3 +25,11 @@ Closes trade.
 ## CreateHiddenTPSLControllerAction
 
 Creates hidden take profit and stop loss controller.
+
+## CreateMartingaleAction
+
+Creates martingale position.
+
+## EntryAction
+
+Entry action.

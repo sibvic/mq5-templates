@@ -1,4 +1,4 @@
-// Default lots provider v1.0
+// Default lots provider v2.0
 
 #include <ILotsProvider.mq5>
 
@@ -17,7 +17,7 @@ public:
       _lots = lots;
    }
 
-   virtual double GetLots(double stopLoss)
+   virtual double GetValue(int period, double entryPrice)
    {
       return _calculator.GetLots(_lotsType, _lots, BuySide, 0, 0);
    }

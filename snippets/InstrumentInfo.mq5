@@ -1,4 +1,4 @@
-// Symbol info v.1.2
+// Symbol info v1.3
 
 #ifndef InstrumentInfo_IMP
 #define InstrumentInfo_IMP
@@ -51,11 +51,41 @@ public:
    static double GetAsk(const string symbol) { return SymbolInfoDouble(symbol, SYMBOL_ASK); }
    double GetBid() { return SymbolInfoDouble(_symbol, SYMBOL_BID); }
    double GetAsk() { return SymbolInfoDouble(_symbol, SYMBOL_ASK); }
-   double GetMinVolume() { return SymbolInfoDouble(_symbol, SYMBOL_VOLUME_MIN); }
+   double GetMinLots() { return SymbolInfoDouble(_symbol, SYMBOL_VOLUME_MIN); };
 
    double RoundRate(const double rate)
    {
       return NormalizeDouble(MathRound(rate / _ticksize) * _ticksize, _digit);
+   }
+
+   double RoundLots(const double lots)
+   {
+      double lotStep = SymbolInfoDouble(_symbol, SYMBOL_VOLUME_STEP);
+      if (lotStep == 0)
+      {
+         return 0.0;
+      }
+      return floor(lots / lotStep) * lotStep;
+   }
+
+   double LimitLots(const double lots)
+   {
+      double minVolume = GetMinLots();
+      if (minVolume > lots)
+      {
+         return 0.0;
+      }
+      double maxVolume = SymbolInfoDouble(_symbol, SYMBOL_VOLUME_MAX);
+      if (maxVolume < lots)
+      {
+         return maxVolume;
+      }
+      return lots;
+   }
+
+   double NormalizeLots(const double lots)
+   {
+      return LimitLots(RoundLots(lots));
    }
 };
 

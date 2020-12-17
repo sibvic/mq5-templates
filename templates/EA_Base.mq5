@@ -7,6 +7,9 @@
 
 #define ACT_ON_SWITCH_CONDITION
 #define TAKE_PROFIT_FEATURE
+#define MARTINGALE_FEATURE
+#define ADVANCED_ALERTS
+#define USE_MARKET_ORDERS
 
 #include <enums/OrderSide.mq5>
 
@@ -73,6 +76,33 @@ input string PositionCapSection = ""; // == Position cap ==
 input bool use_position_cap = true; // Use position cap?
 input int max_positions = 2; // Max positions
 
+enum MartingaleType
+{
+   MartingaleDoNotUse, // Do not use
+   MartingaleOnLoss // Open another position on loss
+};
+enum MartingaleLotSizingType
+{
+   MartingaleLotSizingNo, // No lot sizing
+   MartingaleLotSizingMultiplicator, // Using miltiplicator
+   MartingaleLotSizingAdd // Addition
+};
+enum MartingaleStepSizeType
+{
+   MartingaleStepSizePips, // Pips
+   MartingaleStepSizePercent, // %
+};
+#ifdef MARTINGALE_FEATURE
+   input string MartingaleSection = ""; // == Martingale type ==
+   input MartingaleType martingale_type = MartingaleDoNotUse; // Martingale type
+   input MartingaleLotSizingType martingale_lot_sizing_type = MartingaleLotSizingNo; // Martingale lot sizing type
+   input double martingale_lot_value = 1.5; // Matringale lot sizing value
+   MartingaleStepSizeType martingale_step_type = MartingaleStepSizePips; // Step unit
+   input double martingale_step = 50; // Open matringale position step
+   input int max_longs = 5; // Max long positions
+   input int max_shorts = 5; // Max short positions
+#endif
+
 enum DayOfWeek
 {
    DayOfWeekSunday = 0, // Sunday
@@ -138,17 +168,12 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #include <NetStopLoss.mq5>
 #include <MarketOrderBuilder.mq5>
 #include <conditions/PositionLimitHitCondition.mq5>
+#include <Actions/EntryAction.mq5>
 #include <TradingController.mq5>
 #include <DoCloseOnOppositeStrategy.mq5>
 #include <DontCloseOnOppositeStrategy.mq5>
-#include <MoneyManagement/MoneyManagementStrategy.mq5>
-#include <MoneyManagement/DefaultLotsProvider.mq5>
-#include <MoneyManagement/PositionSizeRiskStopLossAndAmountStrategy.mq5>
-#include <MoneyManagement/DefaultStopLossAndAmountStrategy.mq5>
-#include <MoneyManagement/DefaultTakeProfitStrategy.mq5>
-#include <MoneyManagement/RiskToRewardTakeProfitStrategy.mq5>
-#include <MoneyManagement/ATRTakeProfitStrategy.mq5>
-#include <MoneyManagement/MoneyManagementFunctions.mq5>
+#include <EntryPositionController.mq5>
+#include <MoneyManagement/functions.mq5>
 
 class EntryLongCondition : public ACondition
 {
@@ -264,6 +289,33 @@ ICondition* CreateExitShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
    #endif
 }
 
+#ifdef MARTINGALE_FEATURE
+void CreateMartingale(TradingCalculator* tradingCalculator, string symbol, ENUM_TIMEFRAMES timeframe, IEntryStrategy* entryStrategy, 
+   OrderHandlers* orderHandlers, ActionOnConditionLogic* actions)
+{
+   CustomLotsProvider* lots = new CustomLotsProvider();
+
+   IStopLossStrategy* stopLoss = CreateStopLossStrategyForLots(lots, tradingCalculator, symbol, timeframe, true, stop_loss_type, stop_loss_value, 0/*stop_loss_atr_multiplicator*/);
+   ITakeProfitStrategy* tp = CreateTakeProfitStrategy(tradingCalculator, symbol, timeframe, true, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+   IMoneyManagementStrategy* longMoneyManagement = new MoneyManagementStrategy(lots, stopLoss, tp);
+   IAction* openLongAction = new EntryAction(entryStrategy, BuySide, longMoneyManagement, "", orderHandlers, true);
+   
+   stopLoss = CreateStopLossStrategyForLots(lots, tradingCalculator, symbol, timeframe, false, stop_loss_type, stop_loss_value, 0/*stop_loss_atr_multiplicator*/);
+   tp = CreateTakeProfitStrategy(tradingCalculator, symbol, timeframe, false, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+   IMoneyManagementStrategy* shortMoneyManagement = new MoneyManagementStrategy(lots, stopLoss, tp);
+   IAction* openShortAction = new EntryAction(entryStrategy, SellSide, shortMoneyManagement, "", orderHandlers, true);
+
+   CreateMartingaleAction* martingaleAction = new CreateMartingaleAction(lots, martingale_lot_sizing_type, martingale_lot_value, 
+      martingale_step, openLongAction, openShortAction, max_longs, max_shorts, actions);
+   openLongAction.Release();
+   openShortAction.Release();
+   
+   martingaleAction.RestoreActions(_Symbol, magic_number);
+   orderHandlers.AddOrderAction(martingaleAction);
+   martingaleAction.Release();
+}
+#endif
+
 TradingController* controllers[];
 
 TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timeframe, string &error)
@@ -285,6 +337,7 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       delete tradingCalculator;
       return NULL;
    }
+   OrderHandlers* orderHandlers = new OrderHandlers();
 
    Signaler* signaler = new Signaler(symbol, timeframe);
    signaler.SetPopupAlert(Popup_Alert);
@@ -330,19 +383,19 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       }
    #endif
 
+   #ifdef USE_MARKET_ORDERS
+      IEntryStrategy* entryStrategy = new MarketEntryStrategy(symbol, magic_number, slippage_points, actions, ecn_broker);
+   #else
+      // AStream *longPrice = new LongEntryStream(symbol, timeframe);
+      // AStream *shortPrice = new ShortEntryStream(symbol, timeframe);
+      // IEntryStrategy* entryStrategy = new PendingEntryStrategy(symbol, magic_number, slippage_points, longPrice, shortPrice, actions, ecn_broker);
+   #endif
    #ifdef MARTINGALE_FEATURE
       switch (martingale_type)
       {
-         case MartingaleDoNotUse:
-            controller.SetShortMartingaleStrategy(new NoMartingaleStrategy());
-            controller.SetLongMartingaleStrategy(new NoMartingaleStrategy());
-            break;
          case MartingaleOnLoss:
             {
-               PriceMovedFromTradeOpenCondition* condition = new PriceMovedFromTradeOpenCondition(symbol, timeframe, martingale_step_type, martingale_step);
-               controller.SetShortMartingaleStrategy(new ActiveMartingaleStrategy(tradingCalculator, martingale_lot_sizing_type, martingale_lot_value, condition));
-               controller.SetLongMartingaleStrategy(new ActiveMartingaleStrategy(tradingCalculator, martingale_lot_sizing_type, martingale_lot_value, condition));
-               condition.Release();
+               CreateMartingale(tradingCalculator, symbol, timeframe, entryStrategy, orderHandlers, actions);
             }
             break;
       }
@@ -380,6 +433,18 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       buyLimitCondition.Release();
       sellLimitCondition.Release();
    }
+   ICloseOnOppositeStrategy* closeOnOpposite = close_on_opposite 
+      ? (ICloseOnOppositeStrategy*)new DoCloseOnOppositeStrategy(slippage_points, magic_number)
+      : (ICloseOnOppositeStrategy*)new DontCloseOnOppositeStrategy();
+   EntryPositionController* longPosition = new EntryPositionController(BuySide, longCondition, longFilterCondition, 
+      closeOnOpposite, signaler, "", "Buy");
+   EntryPositionController* shortPosition = new EntryPositionController(SellSide, shortCondition, shortFilterCondition,
+      closeOnOpposite, signaler, "", "Sell");
+   longCondition.Release();
+   shortCondition.Release();
+   longFilterCondition.Release();
+   shortFilterCondition.Release();
+   closeOnOpposite.Release();
 
    switch (logic_direction)
    {
@@ -447,19 +512,8 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       }
    #endif
 
-   if (close_on_opposite)
-      controller.SetCloseOnOpposite(new DoCloseOnOppositeStrategy(magic_number));
-   else
-      controller.SetCloseOnOpposite(new DontCloseOnOppositeStrategy());
-
    controller.SetEntryLogic(entry_logic);
-//   #ifdef USE_MARKET_ORDERS
-      controller.SetEntryStrategy(new MarketEntryStrategy(symbol, magic_number, slippage_points, actions));
-   // #else
-   //    IStream *longPrice = new LongEntryStream(symbol, timeframe);
-   //    IStream *shortPrice = new ShortEntryStream(symbol, timeframe);
-   //    controller.SetEntryStrategy(new PendingEntryStrategy(symbol, magic_number, slippage_points, longPrice, shortPrice, actions));
-   // #endif
+   controller.SetEntryStrategy(entryStrategy);
    if (print_log)
    {
       controller.SetPrintLog(log_file);
@@ -468,8 +522,10 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    return controller;
 }
 
+OrderHandlers* orderHandlers;
 int OnInit()
 {
+   orderHandlers = new OrderHandlers();
    string error;
    string sym_arr[];
    if (symbols != "")
@@ -501,6 +557,8 @@ int OnInit()
 
 void OnDeinit(const int reason)
 {
+   orderHandlers.Clear();
+   orderHandlers.Release();
    for (int i = 0; i < ArraySize(controllers); ++i)
    {
       delete controllers[i];

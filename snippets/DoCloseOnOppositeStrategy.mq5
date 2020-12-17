@@ -1,4 +1,4 @@
-// Close on opposite strategy v1.0
+// Close on opposite strategy v2.0
 
 #include <ICloseOnOppositeStrategy.mq5>
 
@@ -8,10 +8,26 @@
 class DoCloseOnOppositeStrategy : public ICloseOnOppositeStrategy
 {
    int _magicNumber;
+   int _slippage;
+   int _references;
 public:
-   DoCloseOnOppositeStrategy(const int magicNumber)
+   DoCloseOnOppositeStrategy(const int slippage, const int magicNumber)
    {
       _magicNumber = magicNumber;
+      _slippage = slippage;
+      _references = 1;
+   }
+
+   virtual void AddRef()
+   {
+      ++_references;
+   }
+
+   virtual void Release()
+   {
+      --_references;
+      if (_references == 0)
+         delete &this;
    }
 
    void DoClose(const OrderSide side)

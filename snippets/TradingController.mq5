@@ -1,4 +1,4 @@
-// Trade controller v.2.0
+// Trade controller v3.0
 
 #include <Trade\Trade.mqh>
 #include <BreakevenController.mq5>
@@ -25,10 +25,6 @@ class TradingController
    ICondition* _shortFilterCondition;
    ICondition* _exitLongCondition;
    ICondition* _exitShortCondition;
-   #ifdef MARTINGALE_FEATURE
-   IMartingaleStrategy *_shortMartingale;
-   IMartingaleStrategy *_longMartingale;
-   #endif
    IMoneyManagementStrategy *_longMoneyManagement[];
    IMoneyManagementStrategy *_shortMoneyManagement[];
    ICloseOnOppositeStrategy *_closeOnOpposite;
@@ -62,10 +58,6 @@ public:
       _shortPositionCap = NULL;
       #endif
       _closeOnOpposite = NULL;
-      #ifdef MARTINGALE_FEATURE
-      _shortMartingale = NULL;
-      _longMartingale = NULL;
-      #endif
       _longCondition = NULL;
       _shortCondition = NULL;
       _longFilterCondition = NULL;
@@ -105,10 +97,6 @@ public:
       {
          delete _shortMoneyManagement[i];
       }
-      #ifdef MARTINGALE_FEATURE
-      delete _shortMartingale;
-      delete _longMartingale;
-      #endif
       if (_exitLongCondition != NULL)
          _exitLongCondition.Release();
       if (_exitShortCondition != NULL)
@@ -170,10 +158,6 @@ public:
       _exitShortCondition = condition;
       _exitShortCondition.AddRef();
    }
-   #ifdef MARTINGALE_FEATURE
-   void SetShortMartingaleStrategy(IMartingaleStrategy *martingale) { _shortMartingale = martingale; }
-   void SetLongMartingaleStrategy(IMartingaleStrategy *martingale) { _longMartingale = martingale; }
-   #endif
    void AddLongMoneyManagement(IMoneyManagementStrategy *moneyManagement)
    {
       int count = ArraySize(_longMoneyManagement);
@@ -198,10 +182,6 @@ public:
       int entryTradePeriod = _entryLogic == TradingModeLive ? 0 : 1;
       datetime entryTime = iTime(_calculator.GetSymbolInfo().GetSymbol(), _entryTimeframe, entryTradePeriod);
       _actions.DoLogic(entryTradePeriod, entryTime);
-      #ifdef MARTINGALE_FEATURE
-         DoMartingale(_shortMartingale);
-         DoMartingale(_longMartingale);
-      #endif
       string entryLongLog = "";
       string entryShortLog = "";
       string exitLongLog = "";
@@ -298,9 +278,6 @@ private:
             {
                _orderHandlers[orderHandlerIndex].DoAction(order);
             }
-            #ifdef MARTINGALE_FEATURE
-               _longMartingale.OnOrder(order);
-            #endif
          }
       }
       _signaler.SendNotifications("Buy");
@@ -342,9 +319,6 @@ private:
             {
                _orderHandlers[orderHandlerIndex].DoAction(order);
             }
-            #ifdef MARTINGALE_FEATURE
-               _shortMartingale.OnOrder(order);
-            #endif
          }
       }
       _signaler.SendNotifications("Sell");
@@ -357,35 +331,4 @@ private:
       bool shortOpened = DoEntryShortLogic(entryTradePeriod, date, shortLog);
       return longOpened || shortOpened;
    }
-
-   #ifdef MARTINGALE_FEATURE
-   void DoMartingale(IMartingaleStrategy *martingale)
-   {
-      OrderSide anotherSide;
-      if (martingale.NeedAnotherPosition(anotherSide))
-      {
-         double initialLots = OrderLots();
-         IMoneyManagementStrategy* moneyManagement = martingale.GetMoneyManagement();
-         ulong order = _entryStrategy.OpenPosition(0, anotherSide, moneyManagement, "Martingale position", _ecnBroker);
-         if (order >= 0)
-         {
-            // if (_printLog)
-            // {
-            //    double newLots = 0;
-            //    if (OrderSelect(order, SELECT_BY_TICKET, MODE_TRADES))
-            //    {
-            //       newLots = OrderLots();
-            //    }
-            //    Print("Opening martingale position. Initial lots: " + DoubleToString(initialLots) 
-            //       + ". New martingale lots: " + DoubleToString(newLots));
-            // }
-            martingale.OnOrder(order);
-         }
-         if (anotherSide == BuySide)
-            _signaler.SendNotifications("Opening martingale long position");
-         else
-            _signaler.SendNotifications("Opening martingale short position");
-      }
-   }
-   #endif
 };

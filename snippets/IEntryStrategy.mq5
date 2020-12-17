@@ -1,4 +1,4 @@
-// Entry strategy v1.0
+// Entry strategy v1.1
 
 #include <MoneyManagement/IMoneyManagementStrategy.mq5>
 
@@ -7,6 +7,9 @@
 interface IEntryStrategy
 {
 public:
+   virtual void AddRef() = 0;
+   virtual void Release() = 0;
+
    virtual ulong OpenPosition(const int period, OrderSide side, IMoneyManagementStrategy *moneyManagement, const string comment, bool ecnBroker) = 0;
 
    virtual int Exit(const OrderSide side) = 0;

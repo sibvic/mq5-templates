@@ -1,4 +1,4 @@
-// Order v1.0
+// Order v1.1
 
 #ifndef Order_IMP
 #define Order_IMP
@@ -16,9 +16,11 @@ class OrderByMagicNumber : public IOrder
 {
    int _magicMumber;
    int _references;
+   ulong _ticketId;
 public:
    OrderByMagicNumber(int magicNumber)
    {
+      _ticketId = 0;
       _magicMumber = magicNumber;
       _references = 1;
    }
@@ -39,8 +41,8 @@ public:
    {
       OrdersIterator it();
       it.WhenMagicNumber(_magicMumber);
-      ulong ticketId = it.First();
-      return OrderSelect(ticketId);
+      _ticketId = it.First();
+      return OrderSelect(_ticketId);
    }
 };
 
