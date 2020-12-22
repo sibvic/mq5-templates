@@ -384,7 +384,7 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    #endif
 
    #ifdef USE_MARKET_ORDERS
-      IEntryStrategy* entryStrategy = new MarketEntryStrategy(symbol, magic_number, slippage_points, actions, ecn_broker);
+      IEntryStrategy* entryStrategy = new MarketEntryStrategy(symbol, magic_number, slippage_points, actions);
    #else
       // AStream *longPrice = new LongEntryStream(symbol, timeframe);
       // AStream *shortPrice = new ShortEntryStream(symbol, timeframe);
@@ -479,9 +479,9 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    #endif
    
    IMoneyManagementStrategy* longMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, true
-      , lots_type, lots_value, stop_loss_type, stop_loss_value, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+      , lots_type, lots_value, stop_loss_type, stop_loss_value, 1, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
    IMoneyManagementStrategy* shortMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, false
-      , lots_type, lots_value, stop_loss_type, stop_loss_value, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+      , lots_type, lots_value, stop_loss_type, stop_loss_value, 1, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
    controller.AddLongMoneyManagement(longMoneyManagement);
    controller.AddShortMoneyManagement(shortMoneyManagement);
 

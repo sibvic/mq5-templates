@@ -27,7 +27,6 @@ class TradingController
    ICondition* _exitShortCondition;
    IMoneyManagementStrategy *_longMoneyManagement[];
    IMoneyManagementStrategy *_shortMoneyManagement[];
-   ICloseOnOppositeStrategy *_closeOnOpposite;
    #ifdef POSITION_CAP_FEATURE
    IPositionCapStrategy *_longPositionCap;
    IPositionCapStrategy *_shortPositionCap;
@@ -57,7 +56,6 @@ public:
       _longPositionCap = NULL;
       _shortPositionCap = NULL;
       #endif
-      _closeOnOpposite = NULL;
       _longCondition = NULL;
       _shortCondition = NULL;
       _longFilterCondition = NULL;
@@ -88,7 +86,6 @@ public:
       delete _longPositionCap;
       delete _shortPositionCap;
       #endif
-      delete _closeOnOpposite;
       for (int i = 0; i < ArraySize(_longMoneyManagement); ++i)
       {
          delete _longMoneyManagement[i];
@@ -170,7 +167,6 @@ public:
       ArrayResize(_shortMoneyManagement, count + 1);
       _shortMoneyManagement[count] = moneyManagement;
    }
-   void SetCloseOnOpposite(ICloseOnOppositeStrategy *closeOnOpposite) { _closeOnOpposite = closeOnOpposite; }
    #ifdef POSITION_CAP_FEATURE
       void SetLongPositionCap(IPositionCapStrategy *positionCap) { _longPositionCap = positionCap; }
       void SetShortPositionCap(IPositionCapStrategy *positionCap) { _shortPositionCap = positionCap; }
@@ -257,7 +253,6 @@ private:
       {
          return false;
       }
-      _closeOnOpposite.DoClose(SellSide);
       #ifdef POSITION_CAP_FEATURE
          if (_longPositionCap.IsLimitHit())
          {
@@ -298,7 +293,6 @@ private:
       {
          return false;
       }
-      _closeOnOpposite.DoClose(BuySide);
       #ifdef POSITION_CAP_FEATURE
          if (_shortPositionCap.IsLimitHit())
          {
