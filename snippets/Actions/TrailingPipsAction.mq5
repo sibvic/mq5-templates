@@ -1,4 +1,4 @@
-// Trailing action v1.0
+// Trailing action v2.0
 
 #include <AAction.mq5>
 #include <../Trade.mq5>
@@ -13,11 +13,17 @@ class TrailingPipsAction : public AAction
    ITrade* _trade;
    InstrumentInfo* _instrument;
    double _lastClose;
+   double _distancePips;
+   double _stepPips;
    double _distance;
+   double _step;
 public:
-   TrailingPipsAction(ITrade* trade, double distance)
+   TrailingPipsAction(ITrade* trade, double distancePips, double stepPips)
    {
-      _distance = distance;
+      _distancePips = distancePips;
+      _stepPips = stepPips;
+      _distance = 0;
+      _step = 0;
       _trade = trade;
       _trade.AddRef();
       _lastClose = 0;
@@ -30,7 +36,7 @@ public:
       delete _instrument;
    }
 
-   virtual bool DoAction()
+   virtual bool DoAction(const int period, const datetime date)
    {
       if (!_trade.Select())
          return true;
@@ -40,6 +46,8 @@ public:
       {
          _lastClose = closePrice;
          _instrument = new InstrumentInfo(symbol);
+         _distance = _distancePips * _instrument.GetPipSize();
+         _step = _stepPips * _instrument.GetPipSize();
       }
 
       double stopLoss = PositionGetDouble(POSITION_SL);
@@ -47,20 +55,52 @@ public:
       if (stopDistance <= _distance)
          return false;
 
-      ENUM_POSITION_TYPE positionType = (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
       ulong ticketId = PositionGetInteger(POSITION_TICKET);
+      _lastClose = closePrice;
+      double newStop = GetNewStopLoss(closePrice);
+      if (newStop == 0.0)
+         return false;
+      
       string error;
+      TradingCommands::MoveSL(ticketId, newStop, error);
+      
+      return false;
+   }
+private:
+   double GetNewStopLoss(double closePrice)
+   {
+      double stopLoss = PositionGetDouble(POSITION_SL);
+      if (stopLoss == 0.0)
+      {
+         return 0;
+      }
+         
+      double newStop = stopLoss;
+      ENUM_POSITION_TYPE positionType = (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
       if (positionType == POSITION_TYPE_BUY)
       {
-         TradingCommands::MoveSL(ticketId, closePrice - _distance * _instrument.GetPipSize(), error);
+         while (_instrument.RoundRate(newStop + _step) < _instrument.RoundRate(closePrice - _distance))
+         {
+            newStop = _instrument.RoundRate(newStop + _step);
+         }
+         if (newStop == stopLoss) 
+         {
+            return 0;
+         }
       }
       else
       {
-         TradingCommands::MoveSL(ticketId, closePrice + _distance * _instrument.GetPipSize(), error);
+         while (_instrument.RoundRate(newStop - _step) > _instrument.RoundRate(closePrice + _distance))
+         {
+            newStop = _instrument.RoundRate(newStop - _step);
+         }
+         if (newStop == stopLoss) 
+         {
+            return 0;
+         }
       }
-      _lastClose = closePrice;
-      
-      return false;
+
+      return newStop;
    }
 };
 #endif

@@ -7,9 +7,14 @@
 
 #define ACT_ON_SWITCH_CONDITION
 #define TAKE_PROFIT_FEATURE
+#define STOP_LOSS_FEATURE
 #define MARTINGALE_FEATURE
 #define ADVANCED_ALERTS
 #define USE_MARKET_ORDERS
+#define TRADING_TIME_FEATURE
+#define WITH_EXIT_LOGIC
+#define NET_STOP_LOSS_FEATURE
+#define NET_TAKE_PROFIT_FEATURE
 
 #include <enums/OrderSide.mq5>
 
@@ -55,6 +60,9 @@ input string symbols = ""; // Symbols to trade. Separated by ","
 input bool allow_trading = true; // Allow trading
 input bool BTCAccount = false; // Is BTC Account?
 input TradingMode entry_logic = TradingModeOnBarClose; // Entry type
+#ifdef WITH_EXIT_LOGIC
+   input TradingMode exit_logic = TradingModeOnBarClose; // Exit type
+#endif
 input TradingDirection trading_side = BothSides; // What trades should be taken
 input double lots_value            = 0.1; // Position size
 input PositionSizeType lots_type = PositionSizeContract; // Position size type
@@ -65,7 +73,8 @@ input string SLSection            = ""; // == Stop loss/TakeProfit ==
 input StopLossType stop_loss_type = SLPips; // Stop loss type
 input double stop_loss_value            = 10; // Stop loss value
 input TrailingType trailing_type = TrailingDontUse; // Use trailing
-input double TrailingStep = 10; // Trailing step
+input double trailing_start = 0; // Min distance to order to activate the trailing
+input double trailing_step = 10; // Trailing step
 input TakeProfitType take_profit_type = TPPips; // Take profit type
 input double take_profit_value           = 10; // Take profit value
 input double take_profit_atr_multiplicator = 1.0; // Take profit ATR Multiplicator
@@ -169,6 +178,7 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #include <MarketOrderBuilder.mq5>
 #include <conditions/PositionLimitHitCondition.mq5>
 #include <Actions/EntryAction.mq5>
+#include <Actions/CreateTrailingAction.mq5>
 #include <TradingController.mq5>
 #include <DoCloseOnOppositeStrategy.mq5>
 #include <DontCloseOnOppositeStrategy.mq5>
@@ -375,7 +385,7 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       #endif
          case TrailingPips:
             {
-               CreateTrailingAction* trailingAction = new CreateTrailingAction(trailing_start, trailing_step, actions);
+               CreateTrailingAction* trailingAction = new CreateTrailingAction(trailing_start, false, trailing_step, actions);
                controller.AddOrderAction(trailingAction);
                trailingAction.Release();
             }
@@ -563,6 +573,8 @@ void OnDeinit(const int reason)
    {
       delete controllers[i];
    }
+   int size = ArraySize(controllers);
+   ArrayResize(controllers, 0);
 }
 
 void OnTick()

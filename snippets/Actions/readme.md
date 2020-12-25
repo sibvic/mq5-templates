@@ -33,3 +33,7 @@ Creates martingale position.
 ## EntryAction
 
 Entry action.
+
+## CreateTrailingAction
+
+Creates trailing action for the order. Start could be specified in pips or % of stop loss.
