@@ -6,65 +6,41 @@
 #include <ICloseOnOppositeStrategy.mq5>
 #include <IEntryStrategy.mq5>
 #include <Actions/AOrderAction.mq5>
+#include <EntryPositionController.mq4>
 
 class TradingController
 {
    ENUM_TIMEFRAMES _entryTimeframe;
    ENUM_TIMEFRAMES _exitTimeframe;
    datetime _lastActionTime;
-   double _lastLot;
-   ActionOnConditionLogic* actions;
    Signaler *_signaler;
-   datetime _lastLimitPositionMessage;
    datetime _lastEntryTime;
    datetime _lastExitTime;
    TradingCalculator *_calculator;
-   ICondition* _longCondition;
-   ICondition* _shortCondition;
-   ICondition* _longFilterCondition;
-   ICondition* _shortFilterCondition;
    ICondition* _exitLongCondition;
    ICondition* _exitShortCondition;
-   IMoneyManagementStrategy *_longMoneyManagement[];
-   IMoneyManagementStrategy *_shortMoneyManagement[];
-   #ifdef POSITION_CAP_FEATURE
-   IPositionCapStrategy *_longPositionCap;
-   IPositionCapStrategy *_shortPositionCap;
-   #endif
    IEntryStrategy *_entryStrategy;
-   string _algorithmId;
    ActionOnConditionLogic* _actions;
-   AOrderAction* _orderHandlers[];
    TradingMode _entryLogic;
    TradingMode _exitLogic;
-   bool _ecnBroker;
    int _logFile;
+   EntryPositionController* _longPositions[];
+   EntryPositionController* _shortPositions[];
 public:
    TradingController(TradingCalculator *calculator, 
                      ENUM_TIMEFRAMES entryTimeframe, 
                      ENUM_TIMEFRAMES exitTimeframe, 
+                     ActionOnConditionLogic* actions,
                      Signaler *signaler, 
                      const string algorithmId = "")
    {
-      _lastLimitPositionMessage = 0;
-      _ecnBroker = false;
       _entryLogic = TradingModeOnBarClose;
-      _exitLogic = TradingModeLive;
-      _actions = NULL;
-      _algorithmId = algorithmId;
-      #ifdef POSITION_CAP_FEATURE
-      _longPositionCap = NULL;
-      _shortPositionCap = NULL;
-      #endif
-      _longCondition = NULL;
-      _shortCondition = NULL;
-      _longFilterCondition = NULL;
-      _shortFilterCondition = NULL;
+      _exitLogic = TradingModeOnBarClose;
+      _actions = actions;
       _calculator = calculator;
       _signaler = signaler;
       _entryTimeframe = entryTimeframe;
       _exitTimeframe = exitTimeframe;
-      _lastLot = lots_value;
       _exitLongCondition = NULL;
       _exitShortCondition = NULL;
       _logFile = -1;
@@ -76,102 +52,60 @@ public:
       {
          FileClose(_logFile);
       }
-      for (int i = 0; i < ArraySize(_orderHandlers); ++i)
+      for (int i = 0; i < ArraySize(_longPositions); ++i)
       {
-         delete _orderHandlers[i];
+         delete _longPositions[i];
       }
+      ArrayResize(_longPositions, 0);
+      for (int i = 0; i < ArraySize(_shortPositions); ++i)
+      {
+         delete _shortPositions[i];
+      }
+      ArrayResize(_shortPositions, 0);
       delete _actions;
       delete _entryStrategy;
-      #ifdef POSITION_CAP_FEATURE
-      delete _longPositionCap;
-      delete _shortPositionCap;
-      #endif
-      for (int i = 0; i < ArraySize(_longMoneyManagement); ++i)
-      {
-         delete _longMoneyManagement[i];
-      }
-      for (int i = 0; i < ArraySize(_shortMoneyManagement); ++i)
-      {
-         delete _shortMoneyManagement[i];
-      }
       if (_exitLongCondition != NULL)
          _exitLongCondition.Release();
       if (_exitShortCondition != NULL)
          _exitShortCondition.Release();
       delete _calculator;
       delete _signaler;
-      if (_longCondition != NULL)
-         _longCondition.Release();
-      if (_shortCondition != NULL)
-         _shortCondition.Release();
-      if (_longFilterCondition != NULL)
-         _longFilterCondition.Release();
-      if (_shortFilterCondition != NULL)
-         _shortFilterCondition.Release();
    }
 
-   void AddOrderAction(AOrderAction* orderAction)
+   void AddLongPosition(EntryPositionController* entryPos)
    {
-      int count = ArraySize(_orderHandlers);
-      ArrayResize(_orderHandlers, count + 1);
-      _orderHandlers[count] = orderAction;
-      orderAction.AddRef();
+      int size = ArraySize(_longPositions);
+      ArrayResize(_longPositions, size + 1);
+      _longPositions[size] = entryPos;
    }
-   void SetECNBroker(bool ecn) { _ecnBroker = ecn; }
+   void AddShortPosition(EntryPositionController* entryPos)
+   {
+      int size = ArraySize(_shortPositions);
+      ArrayResize(_shortPositions, size + 1);
+      _shortPositions[size] = entryPos;
+   }
+
    void SetPrintLog(string logFile)
    {
       _logFile = FileOpen(logFile, FILE_WRITE | FILE_CSV, ",");
+      for (int i = 0; i < ArraySize(_longPositions); ++i)
+      {
+         _longPositions[i].IncludeLog();
+      }
+      for (int i = 0; i < ArraySize(_shortPositions); ++i)
+      {
+         _shortPositions[i].IncludeLog();
+      }
    }
    void SetEntryLogic(TradingMode logicType) { _entryLogic = logicType; }
    void SetExitLogic(TradingMode logicType) { _exitLogic = logicType; }
-   void SetActions(ActionOnConditionLogic* __actions) { _actions = __actions; }
-   void SetLongCondition(ICondition *condition)
-   {
-      _longCondition = condition;
-      _longCondition.AddRef();
-   }
-   void SetShortCondition(ICondition *condition)
-   {
-      _shortCondition = condition;
-      _shortCondition.AddRef();
-   }
-   void SetLongFilterCondition(ICondition *condition) 
+   void SetExitLongCondition(ICondition *condition) { _exitLongCondition = condition; }
+   void SetExitShortCondition(ICondition *condition) { _exitShortCondition = condition; }
+   void SetEntryStrategy(IEntryStrategy *entryStrategy)
    { 
-      _longFilterCondition = condition;
-      _longFilterCondition.AddRef();
+      _entryStrategy = entryStrategy; 
+      _entryStrategy.AddRef(); 
    }
-   void SetShortFilterCondition(ICondition *condition)
-   {
-      _shortFilterCondition = condition;
-      _shortFilterCondition.AddRef();
-   }
-   void SetExitLongCondition(ICondition *condition)
-   {
-      _exitLongCondition = condition;
-      _exitLongCondition.AddRef();
-   }
-   void SetExitShortCondition(ICondition *condition)
-   {
-      _exitShortCondition = condition;
-      _exitShortCondition.AddRef();
-   }
-   void AddLongMoneyManagement(IMoneyManagementStrategy *moneyManagement)
-   {
-      int count = ArraySize(_longMoneyManagement);
-      ArrayResize(_longMoneyManagement, count + 1);
-      _longMoneyManagement[count] = moneyManagement;
-   }
-   void AddShortMoneyManagement(IMoneyManagementStrategy *moneyManagement)
-   {
-      int count = ArraySize(_shortMoneyManagement);
-      ArrayResize(_shortMoneyManagement, count + 1);
-      _shortMoneyManagement[count] = moneyManagement;
-   }
-   #ifdef POSITION_CAP_FEATURE
-      void SetLongPositionCap(IPositionCapStrategy *positionCap) { _longPositionCap = positionCap; }
-      void SetShortPositionCap(IPositionCapStrategy *positionCap) { _shortPositionCap = positionCap; }
-   #endif
-   void SetEntryStrategy(IEntryStrategy *entryStrategy) { _entryStrategy = entryStrategy; }
 
    void DoTrading()
    {
@@ -182,12 +116,16 @@ public:
       string entryShortLog = "";
       string exitLongLog = "";
       string exitShortLog = "";
-      if (EntryAllowed(entryTime))
+      if (_lastEntryTime != 0 && EntryAllowed(entryTime))
       {
          if (DoEntryLogic(entryTradePeriod, entryTime, entryLongLog, entryShortLog))
          {
             _lastActionTime = entryTime;
          }
+         _lastEntryTime = entryTime;
+      }
+      else if (_lastEntryTime == 0)
+      {
          _lastEntryTime = entryTime;
       }
 
@@ -201,10 +139,10 @@ public:
       if (_logFile != -1 && (entryLongLog != "" || entryShortLog != "" || exitLongLog != "" || exitShortLog != ""))
       {
          FileWrite(_logFile, TimeToString(TimeCurrent()), 
-            "Entry long: " + entryLongLog, 
-            "Entry short: " + entryShortLog, 
-            "Exit long: " + exitLongLog, 
-            "Exit short: " + exitShortLog);
+            ";Entry long: " + entryLongLog, 
+            ";Entry short: " + entryShortLog, 
+            ";Exit long: " + exitLongLog, 
+            ";Exit short: " + exitShortLog);
       }
    }
 private:
@@ -215,114 +153,54 @@ private:
 
    void DoExitLogic(int exitTradePeriod, datetime date, string& longLog, string& shortLog)
    {
+      bool exitLongPassed = _exitLongCondition.IsPass(exitTradePeriod, date);
+      bool exitShortPassed = _exitShortCondition.IsPass(exitTradePeriod, date);
       if (_logFile != -1)
       {
-         longLog = _exitLongCondition.GetLogMessage(exitTradePeriod, date);
-         shortLog = _exitShortCondition.GetLogMessage(exitTradePeriod, date);
+         longLog = _exitLongCondition.GetLogMessage(exitTradePeriod, date) + "; Exit long executed: " + (exitLongPassed ? "true" : "false");
+         shortLog = _exitShortCondition.GetLogMessage(exitTradePeriod, date) + "; Exit short executed: " + (exitShortPassed ? "true" : "false");
       }
-      if (_exitLongCondition.IsPass(exitTradePeriod, date))
+      if (exitLongPassed)
       {
          if (_entryStrategy.Exit(BuySide) > 0)
+         {
             _signaler.SendNotifications("Exit Buy");
+         }
       }
-      if (_exitShortCondition.IsPass(exitTradePeriod, date))
+      if (exitShortPassed)
       {
          if (_entryStrategy.Exit(SellSide) > 0)
+         {
             _signaler.SendNotifications("Exit Sell");
+         }
       }
    }
 
    bool EntryAllowed(datetime entryTime)
    {
       if (_entryLogic == TradingModeOnBarClose)
+      {
          return _lastEntryTime != entryTime;
+      }
       return _lastActionTime != entryTime;
    }
-
-   bool DoEntryLongLogic(int period, datetime date, string& logMessage)
-   {
-      if (_logFile != -1)
-      {
-         logMessage = _longCondition.GetLogMessage(period, date);
-      }
-      if (!_longCondition.IsPass(period, date))
-      {
-         return false;
-      }
-      if (_longFilterCondition != NULL && !_longFilterCondition.IsPass(period, date))
-      {
-         return false;
-      }
-      #ifdef POSITION_CAP_FEATURE
-         if (_longPositionCap.IsLimitHit())
-         {
-            if (_lastLimitPositionMessage != date)
-            {
-               _signaler.SendNotifications("Positions limit has been reached");
-            }
-            _lastLimitPositionMessage = date;
-            return false;
-         }
-      #endif
-      for (int i = 0; i < ArraySize(_longMoneyManagement); ++i)
-      {
-         ulong order = _entryStrategy.OpenPosition(period, BuySide, _longMoneyManagement[i], _algorithmId, _ecnBroker);
-         if (order >= 0)
-         {
-            for (int orderHandlerIndex = 0; orderHandlerIndex < ArraySize(_orderHandlers); ++orderHandlerIndex)
-            {
-               _orderHandlers[orderHandlerIndex].DoAction(order);
-            }
-         }
-      }
-      _signaler.SendNotifications("Buy");
-      return true;
-   }
-
-   bool DoEntryShortLogic(int period, datetime date, string& logMessage)
-   {
-      if (_logFile)
-      {
-         logMessage = _shortCondition.GetLogMessage(period, date);
-      }
-      if (!_shortCondition.IsPass(period, date))
-      {
-         return false;
-      }
-      if (_shortFilterCondition != NULL && !_shortFilterCondition.IsPass(period, date))
-      {
-         return false;
-      }
-      #ifdef POSITION_CAP_FEATURE
-         if (_shortPositionCap.IsLimitHit())
-         {
-            if (_lastLimitPositionMessage != date)
-            {
-               _signaler.SendNotifications("Positions limit has been reached");
-            }
-            _lastLimitPositionMessage = date;
-            return false;
-         }
-      #endif
-      for (int i = 0; i < ArraySize(_shortMoneyManagement); ++i)
-      {
-         ulong order = _entryStrategy.OpenPosition(period, SellSide, _shortMoneyManagement[i], _algorithmId, _ecnBroker);
-         if (order >= 0)
-         {
-            for (int orderHandlerIndex = 0; orderHandlerIndex < ArraySize(_orderHandlers); ++orderHandlerIndex)
-            {
-               _orderHandlers[orderHandlerIndex].DoAction(order);
-            }
-         }
-      }
-      _signaler.SendNotifications("Sell");
-      return true;
-   }
-
    bool DoEntryLogic(int entryTradePeriod, datetime date, string& longLog, string& shortLog)
    {
-      bool longOpened = DoEntryLongLogic(entryTradePeriod, date, longLog);
-      bool shortOpened = DoEntryShortLogic(entryTradePeriod, date, shortLog);
-      return longOpened || shortOpened;
+      bool positionOpened = false;
+      for (int i = 0; i < ArraySize(_longPositions); ++i)
+      {
+         if (_longPositions[i].DoEntry(entryTradePeriod, date, longLog))
+         {
+            positionOpened = true;
+         }
+      }
+      for (int i = 0; i < ArraySize(_shortPositions); ++i)
+      {
+         if (_shortPositions[i].DoEntry(entryTradePeriod, date, shortLog))
+         {
+            positionOpened = true;
+         }
+      }
+      return positionOpened;
    }
 };

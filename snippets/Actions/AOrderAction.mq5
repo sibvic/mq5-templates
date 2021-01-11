@@ -14,6 +14,8 @@ public:
       _currentTicket = ticket;
       return DoAction(0, 0);
    }
+   
+   virtual void RestoreActions(string symbol, int magicNumber) = 0;
 };
 
 #endif

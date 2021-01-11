@@ -25,11 +25,13 @@ public:
    {
       _algorithmId = algorithmId;
       _filterCondition = filterCondition;
-      _filterCondition.AddRef();
+      if (_filterCondition != NULL)
+      {
+         _filterCondition.AddRef();
+      }
       _signaler = signaler;
       _side = side;
       _includeLog = false;
-      _condition = NULL;
       _condition = condition;
       _condition.AddRef();
       _closeOnOpposite = closeOnOpposite;
@@ -40,7 +42,10 @@ public:
    {
       _closeOnOpposite.Release();
       _condition.Release();
-      _filterCondition.Release();
+      if (_filterCondition != NULL)
+      {
+         _filterCondition.Release();
+      }
       
       for (int i = 0; i < ArraySize(_actions); ++i)
       {

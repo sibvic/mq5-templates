@@ -328,6 +328,46 @@ void CreateMartingale(TradingCalculator* tradingCalculator, string symbol, ENUM_
 
 TradingController* controllers[];
 
+AOrderAction* CreateTrailing(const string symbol, const ENUM_TIMEFRAMES timeframe, ActionOnConditionLogic* actions)
+{
+   #ifdef STOP_LOSS_FEATURE
+      switch (trailing_type)
+      {
+         case TrailingDontUse:
+            return NULL;
+      #ifdef INDICATOR_BASED_TRAILING
+         case TrailingIndicator:
+            return NULL;
+      #endif
+         case TrailingPips:
+            {
+               //if (trailing_target_type == TrailingTargetStep)
+               {
+                  return new CreateTrailingAction(trailing_start, false, trailing_step, actions);
+               }
+               // IStream* stream = CreateTrailingStream(symbol, timeframe);
+               // AOrderAction* action = new CreateTrailingStreamAction(trailing_start, false, stream, actions);
+               // stream.Release();
+               // return action;
+            }
+         // case TrailingATR:
+         //    return new CreateATRTrailingAction(symbol, timeframe, trailing_start, trailing_step, actions);
+         // case TrailingSLPercent:
+         //    {
+         //       if (trailing_target_type == TrailingTargetStep)
+         //       {
+         //          return new CreateTrailingAction(trailing_start, true, trailing_step, actions);
+         //       }
+         //       IStream* stream = CreateTrailingStream(symbol, timeframe);
+         //       AOrderAction* action = new CreateTrailingStreamAction(trailing_start, true, stream, actions);
+         //       stream.Release();
+         //       return action;
+         //    }
+      }
+   #endif
+   return NULL;
+}
+
 TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timeframe, string &error)
 {
    #ifdef TRADING_TIME_FEATURE
@@ -347,7 +387,6 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       delete tradingCalculator;
       return NULL;
    }
-   OrderHandlers* orderHandlers = new OrderHandlers();
 
    Signaler* signaler = new Signaler(symbol, timeframe);
    signaler.SetPopupAlert(Popup_Alert);
@@ -359,10 +398,8 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    #endif
    signaler.SetMessagePrefix(symbol + "/" + signaler.GetTimeframeStr() + ": ");
    
-   TradingController* controller = new TradingController(tradingCalculator, timeframe, timeframe, signaler);
-   
    ActionOnConditionLogic* actions = new ActionOnConditionLogic();
-   controller.SetActions(actions);
+   TradingController* controller = new TradingController(tradingCalculator, timeframe, timeframe, actions, signaler);
    //controller.SetECNBroker(ecn_broker);
    
    //if (breakeven_type != StopLimitDoNotUse)
@@ -374,24 +411,13 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       #endif
    }
 
-   #ifdef STOP_LOSS_FEATURE
-      switch (trailing_type)
-      {
-         case TrailingDontUse:
-            break;
-      #ifdef INDICATOR_BASED_TRAILING
-         case TrailingIndicator:
-            break;
-      #endif
-         case TrailingPips:
-            {
-               CreateTrailingAction* trailingAction = new CreateTrailingAction(trailing_start, false, trailing_step, actions);
-               controller.AddOrderAction(trailingAction);
-               trailingAction.Release();
-            }
-            break;
-      }
-   #endif
+   AOrderAction* trailingAction = CreateTrailing(symbol, timeframe, actions);
+   if (trailingAction != NULL)
+   {
+      trailingAction.RestoreActions(_Symbol, magic_number);
+      orderHandlers.AddOrderAction(trailingAction);
+      trailingAction.Release();
+   }
 
    #ifdef USE_MARKET_ORDERS
       IEntryStrategy* entryStrategy = new MarketEntryStrategy(symbol, magic_number, slippage_points, actions);
@@ -455,28 +481,20 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    longFilterCondition.Release();
    shortFilterCondition.Release();
    closeOnOpposite.Release();
+   controller.AddLongPosition(longPosition);
+   controller.AddShortPosition(shortPosition);
 
    switch (logic_direction)
    {
       case DirectLogic:
-         controller.SetLongCondition(longCondition);
-         controller.SetLongFilterCondition(longFilterCondition);
-         controller.SetShortCondition(shortCondition);
-         controller.SetShortFilterCondition(shortFilterCondition);
          controller.SetExitLongCondition(exitLongCondition);
          controller.SetExitShortCondition(exitShortCondition);
          break;
       case ReversalLogic:
-         controller.SetLongCondition(shortCondition);
-         controller.SetLongFilterCondition(shortFilterCondition);
-         controller.SetShortCondition(longCondition);
-         controller.SetShortFilterCondition(longFilterCondition);
          controller.SetExitLongCondition(exitShortCondition);
          controller.SetExitShortCondition(exitLongCondition);
          break;
    }
-   longFilterCondition.Release();
-   shortFilterCondition.Release();
    #ifdef TRADING_TIME_FEATURE
       if (mandatory_closing)
       {
@@ -488,12 +506,16 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       }
    #endif
    
-   IMoneyManagementStrategy* longMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, true
-      , lots_type, lots_value, stop_loss_type, stop_loss_value, 1, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
-   IMoneyManagementStrategy* shortMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, false
-      , lots_type, lots_value, stop_loss_type, stop_loss_value, 1, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
-   controller.AddLongMoneyManagement(longMoneyManagement);
-   controller.AddShortMoneyManagement(shortMoneyManagement);
+  IMoneyManagementStrategy* longMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, true, 
+      lots_type, lots_value, stop_loss_type, stop_loss_value, 1/*stop_loss_atr_multiplicator*/, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+   IAction* openLongAction = new EntryAction(entryStrategy, BuySide, longMoneyManagement, "", orderHandlers, false);
+   longPosition.AddAction(openLongAction);
+   openLongAction.Release();
+   IMoneyManagementStrategy* shortMoneyManagement = CreateMoneyManagementStrategy(tradingCalculator, symbol, timeframe, false, 
+      lots_type, lots_value, stop_loss_type, stop_loss_value, 1/*stop_loss_atr_multiplicator*/, take_profit_type, take_profit_value, take_profit_atr_multiplicator);
+   IAction* openShortAction = new EntryAction(entryStrategy, SellSide, shortMoneyManagement, "", orderHandlers, false);
+   shortPosition.AddAction(openShortAction);
+   openShortAction.Release();
 
    #ifdef NET_STOP_LOSS_FEATURE
       if (net_stop_loss_type != StopLimitDoNotUse)
