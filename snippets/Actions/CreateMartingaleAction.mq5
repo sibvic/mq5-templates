@@ -3,7 +3,7 @@
 #include <../Logic/ActionOnConditionLogic.mq5>
 #include <../Trade.mq5>
 #include <AOrderAction.mq5>
-// v1.0
+// v1.1
 
 class CustomLotsProvider : public ILotsProvider
 {
@@ -61,14 +61,12 @@ public:
 
    virtual bool DoAction(const int period, const datetime date)
    {
-      ITrade* order = new TradeByTicketId(_currentTicket);
-      if (!order.Select())
+      if (IsLimitHit())
       {
-         order.Release();
          return false;
       }
-
-      if (IsLimitHit())
+      ITrade* order = new TradeByTicketId(_currentTicket);
+      if (!order.Select())
       {
          order.Release();
          return false;
