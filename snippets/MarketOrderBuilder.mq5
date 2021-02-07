@@ -1,4 +1,4 @@
-// Market order builder v1.4
+// Market order builder v1.5
 #include <enums/OrderSide.mq5>
 #include <Logic/ActionOnConditionLogic.mq5>
 
@@ -15,7 +15,6 @@ class MarketOrderBuilder
    double _limit;
    int _magicNumber;
    string _comment;
-   bool _btcAccount;
    bool _ecnBroker;
    ActionOnConditionLogic* _actions;
 public:
@@ -23,7 +22,6 @@ public:
    {
       _ecnBroker = false;
       _actions = actions;
-      _btcAccount = false;
       _amount = 0;
       _rate = 0;
       _slippage = 0;
@@ -42,7 +40,6 @@ public:
    MarketOrderBuilder* SetStopLoss(const double stop) { _stop = stop; return &this; }
    MarketOrderBuilder* SetTakeProfit(const double limit) { _limit = limit; return &this; }
    MarketOrderBuilder* SetMagicNumber(const int magicNumber) { _magicNumber = magicNumber; return &this; }
-   MarketOrderBuilder* SetBTCAccount(const bool isBtcAccount) { _btcAccount = isBtcAccount; return &this; }
    
    ulong Execute(string &error)
    {
@@ -88,8 +85,14 @@ public:
       request.magic = _magicNumber;
       if (_comment != "")
          request.comment = _comment;
-      if (_btcAccount)
+      if (fillingMode & SYMBOL_FILLING_FOK == SYMBOL_FILLING_FOK)
+      {
          request.type_filling = SYMBOL_FILLING_FOK;
+      }
+      else if (fillingMode & SYMBOL_FILLING_IOC == SYMBOL_FILLING_IOC)
+      {
+         request.type_filling = SYMBOL_FILLING_IOC;
+      }
       MqlTradeResult result;
       ZeroMemory(result);
       bool res = OrderSend(request, result);
