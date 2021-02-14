@@ -1,4 +1,4 @@
-// Market order builder v1.5
+// Market order builder v1.6
 #include <enums/OrderSide.mq5>
 #include <Logic/ActionOnConditionLogic.mq5>
 
@@ -71,6 +71,7 @@ public:
       int digits = (int)SymbolInfoInteger(_instrument, SYMBOL_DIGITS);
       double rate = _orderSide == BuySide ? SymbolInfoDouble(_instrument, SYMBOL_ASK) : SymbolInfoDouble(_instrument, SYMBOL_BID);
       double ticksize = SymbolInfoDouble(_instrument, SYMBOL_TRADE_TICK_SIZE);
+      int fillingMode = SymbolInfoInteger(_instrument, SYMBOL_FILLING_MODE);
       
       MqlTradeRequest request;
       ZeroMemory(request);
@@ -85,6 +86,7 @@ public:
       request.magic = _magicNumber;
       if (_comment != "")
          request.comment = _comment;
+         
       if (fillingMode & SYMBOL_FILLING_FOK == SYMBOL_FILLING_FOK)
       {
          request.type_filling = SYMBOL_FILLING_FOK;

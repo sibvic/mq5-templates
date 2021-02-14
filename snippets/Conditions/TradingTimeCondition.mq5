@@ -1,11 +1,92 @@
-// Trading time condition v1.1
+// Trading time condition v1.2
 
 #include <AConditionBase.mq5>
 
 #ifndef TradingTimeCondition_IMP
 #define TradingTimeCondition_IMP
 
-class TradingTime
+
+int ParseTime(const string time, string &error)
+{
+   string items[];
+   StringSplit(time, ':', items);
+   int hours;
+   int minutes;
+   int seconds;
+   if (ArraySize(items) > 1)
+   {
+      if (ArraySize(items) != 3)
+      {
+         error = "Bad format for " + time;
+         return -1;
+      }
+      //hh:mm:ss
+      seconds = (int)StringToInteger(items[2]);
+      minutes = (int)StringToInteger(items[1]);
+      hours = (int)StringToInteger(items[0]);
+   }
+   else
+   {
+      //hhmmss
+      int time_parsed = (int)StringToInteger(time);
+      seconds = time_parsed % 100;
+      
+      time_parsed /= 100;
+      minutes = time_parsed % 100;
+      time_parsed /= 100;
+      hours = time_parsed % 100;
+   }
+   if (hours > 24)
+   {
+      error = "Incorrect number of hours in " + time;
+      return -1;
+   }
+   if (minutes > 59)
+   {
+      error = "Incorrect number of minutes in " + time;
+      return -1;
+   }
+   if (seconds > 59)
+   {
+      error = "Incorrect number of seconds in " + time;
+      return -1;
+   }
+   if (hours == 24 && (minutes != 0 || seconds != 0))
+   {
+      error = "Incorrect date";
+      return -1;
+   }
+   return (hours * 60 + minutes) * 60 + seconds;
+}
+
+ICondition* CreateTradingTimeCondition(const string startTime, const string endTime, bool useWeekly,
+   const DayOfWeek startDay, const string weekStartTime, const DayOfWeek stopDay, 
+   const string weekEndTime, string &error)
+{
+   int _startTime = ParseTime(startTime, error);
+   if (_startTime == -1)
+      return NULL;
+   int _endTime = ParseTime(endTime, error);
+   if (_endTime == -1)
+      return NULL;
+   if (!useWeekly)
+   {
+      if (_startTime == _endTime)
+         return new NoCondition();
+      return new TradingTimeCondition(_startTime, _endTime);
+   }
+
+   int _weekStartTime = ParseTime(weekStartTime, error);
+   if (_weekStartTime == -1)
+      return NULL;
+   int _weekEndTime = ParseTime(weekEndTime, error);
+   if (_weekEndTime == -1)
+      return NULL;
+
+   return new TradingTimeCondition(_startTime, _endTime, startDay, _weekStartTime, stopDay, _weekEndTime);
+}
+
+class TradingTimeCondition : public AConditionBase
 {
    int _startTime;
    int _endTime;
@@ -15,51 +96,54 @@ class TradingTime
    int _weekStopTime;
    int _weekStopDay;
 public:
-   TradingTime()
+   TradingTimeCondition(int startTime, int endTime)
+      :AConditionBase("Trading Time")
    {
-      _startTime = 0;
-      _endTime = 0;
+      _startTime = startTime;
+      _endTime = endTime;
       _useWeekTime = false;
    }
 
-   bool SetWeekTradingTime(const DayOfWeek startDay, const string startTime, const DayOfWeek stopDay, 
-      const string stopTime, string &error)
+   TradingTimeCondition(int startTime, int endTime, const DayOfWeek startDay,
+      int weekStartTime, const DayOfWeek stopDay, int weekEndTime)
+      :AConditionBase("Trading Time")
    {
+      _startTime = startTime;
+      _endTime = endTime;
       _useWeekTime = true;
-      _weekStartTime = ParseTime(startTime, error);
-      if (_weekStartTime == -1)
-         return false;
-      _weekStopTime = ParseTime(stopTime, error);
-      if (_weekStopTime == -1)
-         return false;
-      
       _weekStartDay = (int)startDay;
       _weekStopDay = (int)stopDay;
-      return true;
+      _weekStartTime = weekStartTime;
+      _weekStopTime = weekEndTime;
    }
 
-   bool Init(const string startTime, const string endTime, string &error)
+   virtual bool IsPass(const int period, const datetime date)
    {
-      _startTime = ParseTime(startTime, error);
-      if (_startTime == -1)
-         return false;
-      _endTime = ParseTime(endTime, error);
-      if (_endTime == -1)
-         return false;
-
-      return true;
-   }
-
-   bool IsTradingTime(datetime dt)
-   {
-      if (_startTime == _endTime && !_useWeekTime)
-         return true;
       MqlDateTime current_time;
-      if (!TimeToStruct(dt, current_time))
+      if (!TimeToStruct(TimeCurrent(), current_time))
          return false;
       if (!IsIntradayTradingTime(current_time))
          return false;
       return IsWeeklyTradingTime(current_time);
+   }
+
+   void GetStartEndTime(const datetime date, datetime &start, datetime &end)
+   {
+      MqlDateTime current_time;
+      if (!TimeToStruct(date, current_time))
+         return;
+
+      current_time.hour = 0;
+      current_time.min = 0;
+      current_time.sec = 0;
+      datetime referece = StructToTime(current_time);
+
+      start = referece + _startTime;
+      end = referece + _endTime;
+      if (_startTime > _endTime)
+      {
+         start += 86400;
+      }
    }
 private:
    bool IsIntradayTradingTime(const MqlDateTime &current_time)
@@ -97,60 +181,75 @@ private:
 
       return true;
    }
+};
 
-   int ParseTime(const string time, string &error)
+class TokyoTimezoneCondition : public TradingTimeCondition
+{
+public:
+   TokyoTimezoneCondition()
+      : TradingTimeCondition((-5) * 3600, (-5 + 9) * 3600)
    {
-      int time_parsed = (int)StringToInteger(time);
-      int seconds = time_parsed % 100;
-      if (seconds > 59)
-      {
-         error = "Incorrect number of seconds in " + time;
-         return -1;
-      }
-      time_parsed /= 100;
-      int minutes = time_parsed % 100;
-      if (minutes > 59)
-      {
-         error = "Incorrect number of minutes in " + time;
-         return -1;
-      }
-      time_parsed /= 100;
-      int hours = time_parsed % 100;
-      if (hours > 24 || (hours == 24 && (minutes > 0 || seconds > 0)))
-      {
-         error = "Incorrect number of hours in " + time;
-         return -1;
-      }
-      return (hours * 60 + minutes) * 60 + seconds;
+
+   }
+   
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      bool result = IsPass(period, date);
+      return "Tokyo TZ: " + (result ? "true" : "false");
    }
 };
 
-class TradingTimeCondition : public AConditionBase
+class NewYorkTimezoneCondition : public TradingTimeCondition
 {
-   TradingTime *_tradingTime;
-   ENUM_TIMEFRAMES _timeframe;
 public:
-   TradingTimeCondition(ENUM_TIMEFRAMES timeframe)
-      :AConditionBase("Trading time")
+   NewYorkTimezoneCondition()
+      : TradingTimeCondition(8 * 3600, (8 + 9) * 3600)
    {
-      _timeframe = timeframe;
-      _tradingTime = new TradingTime();
+
+   }
+   
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      bool result = IsPass(period, date);
+      return "NY TZ: " + (result ? "true" : "false");
+   }
+};
+
+class LondonTimezoneCondition : public TradingTimeCondition
+{
+public:
+   LondonTimezoneCondition()
+      : TradingTimeCondition(3 * 3600, (3 + 9) * 3600)
+   {
+
+   }
+   
+   virtual string GetLogMessage(const int period, const datetime date)
+   {
+      bool result = IsPass(period, date);
+      return "London TZ: " + (result ? "true" : "false");
+   }
+};
+
+class DayTimeCondition : public TradingTimeCondition
+{
+   int _dayOfMonth;
+public:
+   DayTimeCondition(int dayOfMonth, int startTime, int intervalSeconds)
+      :TradingTimeCondition(startTime, startTime + intervalSeconds)
+   {
+      _dayOfMonth = dayOfMonth;
    }
 
-   ~TradingTimeCondition()
+   virtual bool IsPass(const int period, const datetime date)
    {
-      delete _tradingTime;
-   }
-
-   bool Init(const string startTime, const string endTime, string &error)
-   {
-      return _tradingTime.Init(startTime, endTime, error);
-   }
-
-   virtual bool IsPass(const int period)
-   {
-      datetime time = iTime(_Symbol, _timeframe, period);
-      return _tradingTime.IsTradingTime(time);
+      MqlDateTime current_time;
+      if (!TimeToStruct(TimeCurrent(), current_time) || current_time.day != _dayOfMonth)
+      {
+         return false;
+      }
+      
+      return TradingTimeCondition::IsPass(period, date);
    }
 };
 #endif

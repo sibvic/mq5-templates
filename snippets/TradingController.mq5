@@ -6,7 +6,7 @@
 #include <ICloseOnOppositeStrategy.mq5>
 #include <IEntryStrategy.mq5>
 #include <Actions/AOrderAction.mq5>
-#include <EntryPositionController.mq4>
+#include <EntryPositionController.mq5>
 
 class TradingController
 {

@@ -12,6 +12,7 @@
 #define ADVANCED_ALERTS
 #define USE_MARKET_ORDERS
 #define TRADING_TIME_FEATURE
+#define WEEKLY_TRADING_TIME_FEATURE
 #define WITH_EXIT_LOGIC
 #define NET_STOP_LOSS_FEATURE
 #define NET_TAKE_PROFIT_FEATURE
@@ -126,13 +127,29 @@ enum DayOfWeek
 input string OtherSection            = ""; // == Other ==
 input int magic_number        = 42; // Magic number
 input PositionDirection logic_direction = DirectLogic; // Logic type
-input string StartTime = "000000"; // Start time in hhmmss format
-input string EndTime = "235959"; // End time in hhmmss format
-input bool LimitWeeklyTime = false; // Weekly time
-input DayOfWeek WeekStartDay = DayOfWeekSunday; // Start day
-input string WeekStartTime = "000000"; // Start time in hhmmss format
-input DayOfWeek WeekStopDay = DayOfWeekSaturday; // Stop day
-input string WeekStopTime = "235959"; // Stop time in hhmmss format
+
+#ifdef TRADING_TIME_FEATURE
+   input string start_time = "000000"; // Start time in hhmmss format
+   input string stop_time = "000000"; // Stop time in hhmmss format
+   input bool mandatory_closing = false; // Mandatory closing for non-trading time
+#else
+   string start_time = "000000"; // Start time in hhmmss format
+   string stop_time = "000000"; // Stop time in hhmmss format
+   bool mandatory_closing = false;
+#endif
+#ifdef WEEKLY_TRADING_TIME_FEATURE
+   input bool use_weekly_timing = false; // Weekly time
+   input DayOfWeek week_start_day = DayOfWeekSunday; // Start day
+   input string week_start_time = "000000"; // Start time in hhmmss format
+   input DayOfWeek week_stop_day = DayOfWeekSaturday; // Stop day
+   input string week_stop_time = "235959"; // Stop time in hhmmss format
+#else
+   bool use_weekly_timing = false; // Weekly time
+   DayOfWeek week_start_day = DayOfWeekSunday; // Start day
+   string week_start_time = "000000"; // Start time in hhmmss format
+   DayOfWeek week_stop_day = DayOfWeekSaturday; // Stop day
+   string week_stop_time = "235959"; // Stop time in hhmmss format
+#endif
 input bool MandatoryClosing = false; // Mandatory closing for non-trading time
 input bool print_log = false; // Print decisions into the log
 input string log_file = "log.csv"; // Log file name
@@ -179,6 +196,10 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #include <conditions/PositionLimitHitCondition.mq5>
 #include <Actions/EntryAction.mq5>
 #include <Actions/CreateTrailingAction.mq5>
+#ifdef MARTINGALE_FEATURE
+#include <Actions/CreateMartingaleAction.mq5>
+#endif
+#include <Actions/CloseAllAction.mq5>
 #include <TradingController.mq5>
 #include <DoCloseOnOppositeStrategy.mq5>
 #include <DontCloseOnOppositeStrategy.mq5>
