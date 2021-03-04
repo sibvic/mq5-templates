@@ -6,6 +6,8 @@
 
 [Injection of includes into MQL4/5](https://github.com/sibvic/MQ4Inject)
 
+[Automatic Trade Script Converter](https://www.microsoft.com/en-us/p/pinescript-converter/9mwmkf7bmqgn?activetab=pivot:overviewtab)
+
 ### Templates
 
 [FXTS2](https://github.com/sibvic/fxts2-templates) 
