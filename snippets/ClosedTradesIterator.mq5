@@ -1,4 +1,4 @@
-// Closed trades iterator v 1.2
+// Closed trades iterator v 1.3
 #ifndef ClosedTradesIterator_IMP
 class ClosedTradesIterator
 {
@@ -6,11 +6,12 @@ class ClosedTradesIterator
    int _total;
    ulong _currentTicket;
    string _symbol;
-
+   int _magicNumber;
 public:
    ClosedTradesIterator()
    {
       _lastIndex = INT_MIN;
+      _magicNumber = 0;
    }
 
    void WhenSymbol(string symbol)
@@ -18,10 +19,18 @@ public:
       _symbol = symbol;
    }
 
+   void WhenMagicNumber(int magicNumber)
+   {
+      _magicNumber = magicNumber;
+   }
+
    ulong GetTicket() { return _currentTicket; }
    ENUM_DEAL_TYPE GetPositionType() { return (ENUM_DEAL_TYPE)HistoryDealGetInteger(_currentTicket, DEAL_TYPE); }
    string GetSymbol() { return HistoryDealGetString(_currentTicket, DEAL_SYMBOL); }
    datetime GetCloseTime() { return (datetime)HistoryDealGetInteger(_currentTicket, DEAL_TIME); }
+   int GetMagicNumber() { return HistoryDealGetInteger(_currentTicket, DEAL_MAGIC); }
+   double GetProfit() { return HistoryDealGetDouble(_currentTicket, DEAL_PROFIT); }
+   double GetLots() { return HistoryDealGetDouble(_currentTicket, DEAL_VOLUME); }
 
    int Count()
    {
@@ -83,6 +92,10 @@ private:
          return false;
       }
       if (_symbol != NULL && GetSymbol() != _symbol)
+      {
+         return false;
+      }
+      if (_magicNumber != 0 && GetMagicNumber() != _magicNumber)
       {
          return false;
       }
