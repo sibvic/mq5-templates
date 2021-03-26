@@ -1,5 +1,5 @@
-#include <AOnStream.mq5>
-#include <CustomStream.mq5>
+#include <../AOnStream.mq5>
+#include <../CustomStream.mq5>
 #include <RmaOnStream.mq5>
 
 // HullOnStream v2.0

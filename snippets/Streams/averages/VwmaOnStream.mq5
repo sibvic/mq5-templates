@@ -1,4 +1,4 @@
-#include <AOnStream.mq5>
+#include <../AOnStream.mq5>
 // VwmaOnStream v2.0
 class VwmaOnStream : public AOnStream
 {

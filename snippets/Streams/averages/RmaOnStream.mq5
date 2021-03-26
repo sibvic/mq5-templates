@@ -1,4 +1,4 @@
-#include <AOnStream.mq5>
+#include <../AOnStream.mq5>
 
 //RmaOnStream v2.1
 class RmaOnStream : public AOnStream
@@ -15,8 +15,8 @@ public:
    bool GetSeriesValue(const int period, double &val)
    {
       int size = Size();
-      double price;
-      if (!_source.GetValue(period, price))
+      double price[1];
+      if (!_source.GetSeriesValues(period, 1, price))
          return false;
 
       if (ArrayRange(_buffer, 0) < size) 
@@ -25,11 +25,11 @@ public:
       int index = size - 1 - period;
       if (index == 0)
       {
-         _buffer[index] = price;
+         _buffer[index] = price[0];
       }
       else
       {
-         _buffer[index] = (_buffer[index - 1] * (_length - 1) + price) / _length;
+         _buffer[index] = (_buffer[index - 1] * (_length - 1) + price[0]) / _length;
       }
       val = _buffer[index];
       return true;

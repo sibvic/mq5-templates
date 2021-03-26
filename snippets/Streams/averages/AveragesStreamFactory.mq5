@@ -4,6 +4,7 @@
 #include <HullOnStream.mq5>
 #include <RmaOnStream.mq5>
 #include <DEMAOnStream.mq5>
+#include <LinearRegressionOnStream.mq5>
 
 // AveragesStreamFactory v1.2
 enum MATypes
@@ -22,7 +23,7 @@ enum MATypes
    ma_rma,       // RMA
    //ma_tma,     // Triangular moving average
    //ma_sine,    // Sine weighted moving average
-   //ma_linr,    // Linear regression value
+   ma_linr,    // Linear regression value
    //ma_ie2,     // IE/2
    //ma_nlma,    // Non lag moving average
    //ma_zlma,    // Zero lag moving average
@@ -50,6 +51,8 @@ public:
             return new RmaOnStream(source, period);
          case ma_dema:
             return new DEMAOnStream(source, period);
+         case ma_linr:
+            return new LinearRegressionOnStream(source, period);
       }
       return NULL;
    }

@@ -1,4 +1,4 @@
-#include <AOnStream.mq5>
+#include <../AOnStream.mq5>
 // TemaOnStream v2.0
 
 class TemaOnStream : public AOnStream

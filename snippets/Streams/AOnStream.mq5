@@ -1,3 +1,5 @@
+#include <IStream.mq5>
+
 //AOnStream v2.0
 class AOnStream : public IStream
 {
