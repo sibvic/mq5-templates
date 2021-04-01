@@ -106,7 +106,6 @@ public:
 Grid *grid;
 
 #include <Grid/GridBuilder.mq5>
-string IndicatorName;
 string IndicatorObjPrefix;
 
 bool NamesCollision(const string name)
