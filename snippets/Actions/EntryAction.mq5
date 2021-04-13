@@ -18,10 +18,10 @@ class EntryAction : public AAction
    bool _ecnBroker;
 public:
    EntryAction(IEntryStrategy* entryStrategy, OrderSide side, IMoneyManagementStrategy* moneyManagement, string algorithmId, 
-      OrderHandlers* orderHandlers, bool ecnBroker, bool singleAction = false)
+      OrderHandlers* __orderHandlers, bool ecnBroker, bool singleAction = false)
    {
       _singleAction = singleAction;
-      _orderHandlers = orderHandlers;
+      _orderHandlers = __orderHandlers;
       _orderHandlers.AddRef();
       _algorithmId = algorithmId;
       _moneyManagement = moneyManagement;
@@ -40,7 +40,7 @@ public:
 
    virtual bool DoAction(const int period, const datetime date)
    {
-      int order = _entryStrategy.OpenPosition(period, _side, _moneyManagement, _algorithmId, _ecnBroker);
+      ulong order = _entryStrategy.OpenPosition(period, _side, _moneyManagement, _algorithmId, _ecnBroker);
       if (order >= 0)
       {
          _orderHandlers.DoAction(order);
