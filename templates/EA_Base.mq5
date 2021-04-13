@@ -76,11 +76,24 @@ input double stop_loss_value            = 10; // Stop loss value
 input TrailingType trailing_type = TrailingDontUse; // Use trailing
 input double trailing_start = 0; // Min distance to order to activate the trailing
 input double trailing_step = 10; // Trailing step
+
+#ifdef NET_STOP_LOSS_FEATURE
+   input string NetStopSection = ""; // == Net stop ==
+   input StopLimitType net_stop_loss_type = StopLimitDoNotUse; // Net stop loss type
+   input double net_stop_loss_value = 10; // Net stop loss value
+#endif
+
 input TakeProfitType take_profit_type = TPPips; // Take profit type
 input double take_profit_value           = 10; // Take profit value
 input double take_profit_atr_multiplicator = 1.0; // Take profit ATR Multiplicator
 // input StopLimitType breakeven_type = StopLimitPips; // Trigger type for the breakeven
 // input double breakeven_value = 10; // Trigger for the breakeven
+
+#ifdef NET_TAKE_PROFIT_FEATURE
+   input string NetTakeProfitSection            = ""; // == Net Take Profit ==
+   input StopLimitType net_take_profit_type = StopLimitDoNotUse; // Net take profit type
+   input double net_take_profit_value = 10; // Net take profit value
+#endif
 
 input string PositionCapSection = ""; // == Position cap ==
 input bool use_position_cap = true; // Use position cap?
@@ -191,14 +204,13 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #include <OrdersIterator.mq5>
 #include <TradingCommands.mq5>
 #include <TrailingController.mq5>
-#include <NetStopLoss.mq5>
 #include <MarketOrderBuilder.mq5>
 #include <conditions/PositionLimitHitCondition.mq5>
 #include <Actions/EntryAction.mq5>
+#include <Actions/MoveNetStopLossAction.mq5>
+#include <Actions/MoveNetTakeProfitAction.mq5>
 #include <Actions/CreateTrailingAction.mq5>
-#ifdef MARTINGALE_FEATURE
 #include <Actions/CreateMartingaleAction.mq5>
-#endif
 #include <Actions/CloseAllAction.mq5>
 #include <TradingController.mq5>
 #include <DoCloseOnOppositeStrategy.mq5>
@@ -541,7 +553,7 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    #ifdef NET_STOP_LOSS_FEATURE
       if (net_stop_loss_type != StopLimitDoNotUse)
       {
-         MoveNetStopLossAction* action = new MoveNetStopLossAction(tradingCalculator, net_stop_loss_type, net_stop_loss_value, signaler, magic_number);
+         MoveNetStopLossAction* action = new MoveNetStopLossAction(tradingCalculator, net_stop_loss_type, net_stop_loss_value, magic_number);
          #ifdef USE_NET_BREAKEVEN
             if (breakeven_type != StopLimitDoNotUse)
             {
@@ -558,7 +570,7 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    #ifdef NET_TAKE_PROFIT_FEATURE
       if (net_take_profit_type != StopLimitDoNotUse)
       {
-         IAction* action = new MoveNetTakeProfitAction(tradingCalculator, net_take_profit_type, net_take_profit_value, signaler, magic_number);
+         IAction* action = new MoveNetTakeProfitAction(tradingCalculator, net_take_profit_type, net_take_profit_value, magic_number);
          NoCondition* condition = new NoCondition();
          actions.AddActionOnCondition(action, condition);
          action.Release();

@@ -80,14 +80,6 @@ Iterates closed trades.
 
 Draws an arrow on condition.
 
-## NetStopLoss
-
-Net stop loss logic.
-
-## NetTakeProfit
-
-Net take profit logic.
-
 ## Routines
 
 Usefull functions.

@@ -1,4 +1,4 @@
-// Trading calculator v.1.3
+// Trading calculator v2.0
 
 #include <enums/PositionSizeType.mq5>
 #include <enums/StopLimitType.mq5>
@@ -33,13 +33,13 @@ public:
       return _symbolInfo;
    }
 
-   double GetBreakevenPrice(const bool isBuy, const int magicNumber)
+   double GetBreakevenPrice(const bool isBuy, const int magicNumber, double& totalAmount)
    {
       string symbol = _symbolInfo.GetSymbol();
       double lotStep = SymbolInfoDouble(symbol, SYMBOL_VOLUME_STEP);
       double price = isBuy ? _symbolInfo.GetBid() : _symbolInfo.GetAsk();
       double totalPL = 0;
-      double totalAmount = 0;
+      totalAmount = 0;
       TradesIterator it1();
       it1.WhenMagicNumber(magicNumber);
       it1.WhenSymbol(symbol);
