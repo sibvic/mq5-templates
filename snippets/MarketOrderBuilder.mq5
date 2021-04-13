@@ -1,4 +1,4 @@
-// Market order builder v1.6
+// Market order builder v1.7
 #include <enums/OrderSide.mq5>
 #include <Logic/ActionOnConditionLogic.mq5>
 
@@ -87,11 +87,11 @@ public:
       if (_comment != "")
          request.comment = _comment;
          
-      if (fillingMode & SYMBOL_FILLING_FOK == SYMBOL_FILLING_FOK)
+      if ((fillingMode & SYMBOL_FILLING_FOK) == SYMBOL_FILLING_FOK)
       {
          request.type_filling = SYMBOL_FILLING_FOK;
       }
-      else if (fillingMode & SYMBOL_FILLING_IOC == SYMBOL_FILLING_IOC)
+      else if ((fillingMode & SYMBOL_FILLING_IOC) == SYMBOL_FILLING_IOC)
       {
          request.type_filling = SYMBOL_FILLING_IOC;
       }
