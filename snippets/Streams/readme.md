@@ -95,3 +95,7 @@ Return absolute value of a source.
 ## ChangeStream
 
 Returns change of a source value compared to the previous value.
+
+## D1CustomHourBarStream
+
+D1 custom hour start stream.
