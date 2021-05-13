@@ -3,7 +3,7 @@
 #include <../Logic/ActionOnConditionLogic.mq5>
 #include <AOrderAction.mq5>
 
-// Create trailing action v1.0
+// Create trailing action v1.1
 
 #ifndef CreateTrailingAction_IMP
 #define CreateTrailingAction_IMP
@@ -69,7 +69,7 @@ public:
       int mult = digit == 3 || digit == 5 ? 10 : 1;
       double pipSize = point * mult;
       
-      double distance = (PositionGetDouble(POSITION_PRICE_OPEN) - PositionGetDouble(POSITION_SL)) / pipSize;
+      double distance = MathAbs(PositionGetDouble(POSITION_PRICE_OPEN) - PositionGetDouble(POSITION_SL)) / pipSize;
       double start = _startInPercent ? distance * _start / 100.0 : _start;
 
       string ticketIdStr = IntegerToString(_currentTicket);

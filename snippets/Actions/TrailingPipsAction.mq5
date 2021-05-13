@@ -1,4 +1,4 @@
-// Trailing action v2.0
+// Trailing action v2.1
 
 #include <AAction.mq5>
 #include <../Trade.mq5>
