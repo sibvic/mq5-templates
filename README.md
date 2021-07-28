@@ -6,7 +6,9 @@
 
 [Injection of includes into MQL4/5](https://github.com/sibvic/MQ4Inject)
 
-[Automatic Trade Script Converter](https://www.microsoft.com/en-us/p/pinescript-converter/9mwmkf7bmqgn?activetab=pivot:overviewtab)
+[Automatic Trade Script Converter App](https://www.microsoft.com/en-us/p/pinescript-converter/9mwmkf7bmqgn?activetab=pivot:overviewtab)
+
+[Automatic Trade Script Converter WebApp](https://convert.profitrobots.com)
 
 ### Templates
 
@@ -29,9 +31,3 @@
 [Indicore](https://github.com/sibvic/vsc-indicore)
 
 [NinjaTrader8](https://github.com/sibvic/vsc-nt8-snippets)
-
-## Donations gratefully accepted.
-
-* [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/sibvic)
-
-Or support us on [Patreon](https://www.patreon.com/profitrobots)
