@@ -103,3 +103,7 @@ D1 custom hour start stream.
 ## TrueRangeStream
 
 True range stream.
+
+## PivotStream
+
+Pivot stream.
