@@ -107,3 +107,11 @@ True range stream.
 ## PivotStream
 
 Pivot stream.
+
+## HighestHighStream
+
+Calculates highest value
+
+## LowestLowStream
+
+Calculates lowest value

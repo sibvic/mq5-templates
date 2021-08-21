@@ -41,3 +41,7 @@ TSI on a stream.
 ## LinearRegressionOnStream
 
 Linear regression on stream.
+
+## WMAOnStream
+
+WMA on stream.
