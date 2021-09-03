@@ -7,3 +7,7 @@ Base EA template.
 ## Indicator
 
 Indicator base template.
+
+## heatmap
+
+Display heatmap.

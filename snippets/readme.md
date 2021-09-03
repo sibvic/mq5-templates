@@ -99,3 +99,7 @@ Entry position controller.
 ## OrderHandlers
 
 Creates actions for new orders.
+
+## HeatMapValueCalculator
+
+Logic for displaying heatmap value.
