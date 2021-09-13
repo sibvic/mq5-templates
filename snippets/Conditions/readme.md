@@ -47,3 +47,19 @@ Stream-level condition.
 ## StreamStreamCondition
 
 Stream-stream condition.
+
+## ConditionBuilder
+
+Parses conditions defined in a string for (like 1 and 2 or 3) and create them.
+
+Supported features:
+ - and
+ - or
+
+## AndCondition
+
+Returns true when all conditions returns true.
+
+## OrCondition
+
+Return true when at least one of the conditions returns true.
