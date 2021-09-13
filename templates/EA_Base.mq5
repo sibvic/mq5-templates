@@ -1,4 +1,4 @@
-#property copyright "Copyright © 2020, ProfitRobots"
+#property copyright "Copyright © 2021, ProfitRobots"
 #property link      "https://github.com/sibvic/mq5-templates"
 #property description "ProfitRobots templates"
 #property version   "1.0"
