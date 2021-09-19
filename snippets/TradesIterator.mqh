@@ -1,6 +1,6 @@
 // Trades iterator v 1.3
 
-#include <enums/CompareType.mq5>
+#include <enums/CompareType.mqh>
 
 #ifndef TradesIterator_IMP
 

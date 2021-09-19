@@ -1,5 +1,5 @@
-#include <ACustomBarStream.mq5>
-#include <../InstrumentInfo.mq5>
+#include <ACustomBarStream.mqh>
+#include <../InstrumentInfo.mqh>
 
 // Renko stream v1.0
 

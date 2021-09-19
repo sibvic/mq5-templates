@@ -1,4 +1,4 @@
-#include <../AOnStream.mq5>
+#include <../AOnStream.mqh>
 
 // ALMA on stream v1.0
 

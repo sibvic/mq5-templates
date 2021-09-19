@@ -1,6 +1,6 @@
 // Grid cells v1.0
 
-#include <GridRow.mq5>
+#include <GridRow.mqh>
 
 #ifndef GridCells_IMP
 #define GridCells_IMP

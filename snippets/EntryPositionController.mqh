@@ -1,6 +1,6 @@
-#include <conditions/ICondition.mq5>
-#include <enums/OrderSide.mq5>
-#include <Signaler.mq5>
+#include <conditions/ICondition.mqh>
+#include <enums/OrderSide.mqh>
+#include <Signaler.mqh>
 
 // Entry position controller v1.0
 

@@ -1,6 +1,6 @@
 // AAction v1.0
 
-#include <IAction.mq5>
+#include <IAction.mqh>
 
 #ifndef AAction_IMP
 

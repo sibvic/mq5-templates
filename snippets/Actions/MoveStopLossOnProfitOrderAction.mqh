@@ -2,8 +2,8 @@
 #ifndef MoveStopLossOnProfitOrderAction_IMP
 #define MoveStopLossOnProfitOrderAction_IMP
 
-#include <AOrderAction.mq5>
-#include <MoveToBreakevenAction.mq5>
+#include <AOrderAction.mqh>
+#include <MoveToBreakevenAction.mqh>
 
 class MoveStopLossOnProfitOrderAction : public AOrderAction
 {

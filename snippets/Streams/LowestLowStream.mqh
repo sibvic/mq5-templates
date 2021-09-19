@@ -1,6 +1,6 @@
 // Lowest low stream v1.0
 
-#include <AOnStream.mq5>
+#include <AOnStream.mqh>
 
 class LowestLowStream : public AOnStream
 {

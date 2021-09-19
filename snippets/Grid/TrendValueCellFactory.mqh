@@ -1,8 +1,8 @@
 // Trend value cell factory v2.0
 
-#include <ICellFactory.mq5>
-#include <TrendValueCell.mq5>
-#include <FixedTextFormatter.mq5>
+#include <ICellFactory.mqh>
+#include <TrendValueCell.mqh>
+#include <FixedTextFormatter.mqh>
 
 #ifndef TrendValueCellFactory_IMP
 #define TrendValueCellFactory_IMP

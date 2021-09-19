@@ -1,4 +1,4 @@
-#include <ABaseStream.mq5>
+#include <ABaseStream.mqh>
 
 #ifndef TrueRangeStream_IMP
 #define TrueRangeStream_IMP

@@ -1,4 +1,4 @@
-#include <ABaseStream.mq5>
+#include <ABaseStream.mqh>
 
 // RSI stream v1.0
 

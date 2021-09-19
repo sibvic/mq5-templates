@@ -1,7 +1,7 @@
 // Order action (abstract) v1.0
 // Used to execute action on orders
 
-#include <AAction.mq5>
+#include <AAction.mqh>
 #ifndef AOrderAction_IMP
 #define AOrderAction_IMP
 class AOrderAction : public AAction

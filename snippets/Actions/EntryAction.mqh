@@ -1,6 +1,6 @@
-#include <../MoneyManagement/IMoneyManagementStrategy.mq5>
-#include <../IEntryStrategy.mq5>
-#include <../OrderHandlers.mq5>
+#include <../MoneyManagement/IMoneyManagementStrategy.mqh>
+#include <../IEntryStrategy.mqh>
+#include <../OrderHandlers.mqh>
 
 // Entry action v1.0
 

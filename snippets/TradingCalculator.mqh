@@ -1,10 +1,10 @@
 // Trading calculator v2.0
 
-#include <enums/PositionSizeType.mq5>
-#include <enums/StopLimitType.mq5>
-#include <enums/OrderSide.mq5>
-#include <InstrumentInfo.mq5>
-#include <TradesIterator.mq5>
+#include <enums/PositionSizeType.mqh>
+#include <enums/StopLimitType.mqh>
+#include <enums/OrderSide.mqh>
+#include <InstrumentInfo.mqh>
+#include <TradesIterator.mqh>
 
 #ifndef TradingCalculator_IMP
 #define TradingCalculator_IMP

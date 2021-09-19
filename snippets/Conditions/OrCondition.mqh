@@ -2,7 +2,7 @@
 
 // Returns true when at least one of the conditions returns true.
 
-#include <AConditionBase.mq5>
+#include <AConditionBase.mqh>
 
 #ifndef OrCondition_IMP
 #define OrCondition_IMP

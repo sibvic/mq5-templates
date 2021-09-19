@@ -1,4 +1,4 @@
-#include <ITicketTarget.mq5>
+#include <ITicketTarget.mqh>
 // Ticket target v1.0
 #ifndef TicketTarget_IMP
 #define TicketTarget_IMP

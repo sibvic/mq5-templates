@@ -3,8 +3,8 @@
 #ifndef MAConditions_IMP
 #define MAConditions_IMP
 
-#include <ACondition.mq5>
-#include <enums/TwoStreamsConditionType.mq5>
+#include <ACondition.mqh>
+#include <enums/TwoStreamsConditionType.mqh>
 
 class MAMACondition : public ACondition
 {

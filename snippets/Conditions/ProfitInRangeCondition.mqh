@@ -1,8 +1,8 @@
 // Profit in range condition v2.0
 
-#include <AConditionBase.mq5>
-#include <../Trade.mq5>
-#include <../InstrumentInfo.mq5>
+#include <AConditionBase.mqh>
+#include <../Trade.mqh>
+#include <../InstrumentInfo.mqh>
 
 #ifndef ProfitInRangeCondition_IMP
 #define ProfitInRangeCondition_IMP

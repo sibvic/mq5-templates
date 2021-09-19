@@ -1,7 +1,7 @@
 // Stop loss and amount strategy for position size risk v1.1
 
-#include <IStopLossAndAmountStrategy.mq5>
-#include <../TradingCalculator.mq5>
+#include <IStopLossAndAmountStrategy.mqh>
+#include <../TradingCalculator.mqh>
 
 #ifndef PositionSizeRiskStopLossAndAmountStrategy_IMP
 #define PositionSizeRiskStopLossAndAmountStrategy_IMP

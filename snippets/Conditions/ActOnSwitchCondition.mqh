@@ -1,6 +1,6 @@
 // Act on switch condition v1.1
 
-#include <ACondition.mq5>
+#include <ACondition.mqh>
 
 #ifndef ActOnSwitchCondition_IMP
 #define ActOnSwitchCondition_IMP

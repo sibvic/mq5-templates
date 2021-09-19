@@ -1,7 +1,7 @@
 // ABaseStream v1.1
 #ifndef ABaseStream_IMP
 #define ABaseStream_IMP
-#include <IStream.mq5>
+#include <IStream.mqh>
 class ABaseStream : public IStream
 {
 protected:

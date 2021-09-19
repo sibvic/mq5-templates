@@ -1,6 +1,6 @@
 // Label cell v2.0
 
-#include <ICell.mq5>
+#include <ICell.mqh>
 
 #ifndef LabelCell_IMP
 #define LabelCell_IMP

@@ -1,8 +1,8 @@
-#include <../TradesIterator.mq5>
-#include <../OrdersIterator.mq5>
-#include <../ClosedTradesIterator.mq5>
-#include <../Actions/IAction.mq5>
-#include <ITicketTarget.mq5>
+#include <../TradesIterator.mqh>
+#include <../OrdersIterator.mqh>
+#include <../ClosedTradesIterator.mqh>
+#include <../Actions/IAction.mqh>
+#include <ITicketTarget.mqh>
 
 // Trades monitor v2.0
 

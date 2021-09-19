@@ -1,4 +1,4 @@
-#include <enums/TwoStreamsConditionType.mq5>
+#include <enums/TwoStreamsConditionType.mqh>
 // Stream level condition v1.0
 
 #ifndef StreamLevelCondition_IMP

@@ -1,4 +1,4 @@
-#include <../AOnStream.mq5>
+#include <../AOnStream.mqh>
 //LinearRegressionOnStream v1.0
 
 class LinearRegressionOnStream : public AOnStream

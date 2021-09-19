@@ -1,7 +1,7 @@
-#include <../conditions/ProfitInRangeCondition.mq5>
-#include <TrailingPipsAction.mq5>
-#include <../Logic/ActionOnConditionLogic.mq5>
-#include <AOrderAction.mq5>
+#include <../conditions/ProfitInRangeCondition.mqh>
+#include <TrailingPipsAction.mqh>
+#include <../Logic/ActionOnConditionLogic.mqh>
+#include <AOrderAction.mqh>
 
 // Create trailing action v1.1
 

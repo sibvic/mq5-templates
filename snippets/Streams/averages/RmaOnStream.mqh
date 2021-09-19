@@ -1,4 +1,4 @@
-#include <../AOnStream.mq5>
+#include <../AOnStream.mqh>
 
 //RmaOnStream v2.1
 class RmaOnStream : public AOnStream

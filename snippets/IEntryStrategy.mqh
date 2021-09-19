@@ -1,6 +1,6 @@
 // Entry strategy v1.1
 
-#include <MoneyManagement/IMoneyManagementStrategy.mq5>
+#include <MoneyManagement/IMoneyManagementStrategy.mqh>
 
 #ifndef IEntryStrategy_IMP
 #define IEntryStrategy_IMP

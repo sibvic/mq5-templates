@@ -1,6 +1,6 @@
 // ACustomBarStream v1.1
 
-#include <IBarStream.mq5>
+#include <IBarStream.mqh>
 
 #ifndef ACustomBarStream_IMP
 #define ACustomBarStream_IMP

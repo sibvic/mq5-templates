@@ -13,7 +13,7 @@ public:
    virtual TrailingControllerType GetType() = 0;
 };
 
-#include <Signaler.mq5>
+#include <Signaler.mqh>
 
 class CustomLevelController : public ITrailingController
 {

@@ -1,7 +1,7 @@
-#include <../AOnStream.mq5>
-#include <RmaOnStream.mq5>
-#include <../ChangeStream.mq5>
-#include <../AbsStream.mq5>
+#include <../AOnStream.mqh>
+#include <RmaOnStream.mqh>
+#include <../ChangeStream.mqh>
+#include <../AbsStream.mqh>
 
 //TSIOnStream v1.0
 class TSIOnStream : public AOnStream

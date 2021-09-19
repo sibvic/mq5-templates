@@ -1,5 +1,5 @@
-#include <ABaseStream.mq5>
-#include <IBarStream.mq5>
+#include <ABaseStream.mqh>
+#include <IBarStream.mqh>
 
 // PriceStream v2.0
 

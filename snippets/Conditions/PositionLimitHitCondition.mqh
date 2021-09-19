@@ -1,7 +1,7 @@
 
-#include <AConditionBase.mq5>
-#include <../enums/OrderSide.mq5>
-#include <../TradesIterator.mq5>
+#include <AConditionBase.mqh>
+#include <../enums/OrderSide.mqh>
+#include <../TradesIterator.mqh>
 
 // Position limit hit condition v1.0
 

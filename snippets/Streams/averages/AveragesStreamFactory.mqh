@@ -1,10 +1,10 @@
-#include <SMAOnStream.mq5>
-#include <TemaOnStream.mq5>
-#include <VwmaOnStream.mq5>
-#include <HullOnStream.mq5>
-#include <RmaOnStream.mq5>
-#include <DEMAOnStream.mq5>
-#include <LinearRegressionOnStream.mq5>
+#include <SMAOnStream.mqh>
+#include <TemaOnStream.mqh>
+#include <VwmaOnStream.mqh>
+#include <HullOnStream.mqh>
+#include <RmaOnStream.mqh>
+#include <DEMAOnStream.mqh>
+#include <LinearRegressionOnStream.mqh>
 
 // AveragesStreamFactory v1.2
 enum MATypes

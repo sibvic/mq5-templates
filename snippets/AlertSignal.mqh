@@ -4,9 +4,9 @@
 #ifndef AlertSignal_IMP
 #define AlertSignal_IMP
 
-#include <Conditions/ICondition.mq5>
-#include <Streams/IStream.mq5>
-#include <Signaler.mq5>
+#include <Conditions/ICondition.mqh>
+#include <Streams/IStream.mqh>
+#include <Signaler.mqh>
 
 class AlertSignal
 {

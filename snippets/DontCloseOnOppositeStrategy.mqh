@@ -1,6 +1,6 @@
 // Don't close on opposite strategy v1.1
 
-#include <ICloseOnOppositeStrategy.mq5>
+#include <ICloseOnOppositeStrategy.mqh>
 
 #ifndef DontCloseOnOppositeStrategy_IMP
 #define DontCloseOnOppositeStrategy_IMP

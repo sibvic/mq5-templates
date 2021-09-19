@@ -1,6 +1,6 @@
 // ATR take profit strategy v1.0
 
-#include <ITakeProfitStrategy.mq5>
+#include <ITakeProfitStrategy.mqh>
 
 #ifndef ATRTakeProfitStrategy_IMP
 #define ATRTakeProfitStrategy_IMP

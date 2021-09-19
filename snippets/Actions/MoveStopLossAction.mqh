@@ -1,6 +1,6 @@
 // Move stop loss action v1.0
 
-#include <AAction.mq5>
+#include <AAction.mqh>
 
 #ifndef MoveStopLossAction_IMP
 #define MoveStopLossAction_IMP

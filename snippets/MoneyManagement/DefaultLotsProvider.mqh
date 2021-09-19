@@ -1,6 +1,6 @@
 // Default lots provider v2.0
 
-#include <ILotsProvider.mq5>
+#include <ILotsProvider.mqh>
 
 #ifndef DefaultLotsProvider_IMP
 #define DefaultLotsProvider_IMP

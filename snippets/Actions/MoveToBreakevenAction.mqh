@@ -3,10 +3,10 @@
 #ifndef MoveToBreakevenAction_IMP
 #define MoveToBreakevenAction_IMP
 
-#include <../Order.mq5>
-#include <../TradingCommands.mq5>
-#include <../Signaler.mq5>
-#include <../InstrumentInfo.mq5>
+#include <../Order.mqh>
+#include <../TradingCommands.mqh>
+#include <../Signaler.mqh>
+#include <../InstrumentInfo.mqh>
 
 class MoveToBreakevenAction : public AAction
 {

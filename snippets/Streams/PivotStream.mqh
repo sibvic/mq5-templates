@@ -1,6 +1,6 @@
 //Pivot stream v1.0
 
-#include <ABaseStream.mq5>
+#include <ABaseStream.mqh>
 
 enum PivotStreamType
 {

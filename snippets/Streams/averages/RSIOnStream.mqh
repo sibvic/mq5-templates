@@ -1,5 +1,5 @@
-#include <../AOnStream.mq5>
-#include <../ChangeStream.mq5>
+#include <../AOnStream.mqh>
+#include <../ChangeStream.mqh>
 
 //RSIOnStream v1.0
 class RSIOnStream : public AOnStream

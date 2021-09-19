@@ -1,5 +1,5 @@
 // Disabled condition v1.1
-#include <AConditionBase.mq5>
+#include <AConditionBase.mqh>
 
 #ifndef DisabledCondition_IMP
 #define DisabledCondition_IMP

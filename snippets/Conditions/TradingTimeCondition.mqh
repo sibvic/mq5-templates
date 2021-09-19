@@ -1,6 +1,6 @@
 // Trading time condition v1.2
 
-#include <AConditionBase.mq5>
+#include <AConditionBase.mqh>
 
 #ifndef TradingTimeCondition_IMP
 #define TradingTimeCondition_IMP

@@ -1,5 +1,5 @@
 // D1 bar with custom start hour v1.0
-#include <ACustomBarStream.mq5>
+#include <ACustomBarStream.mqh>
 
 #ifndef D1CustomHourBarStream_IMP
 #define D1CustomHourBarStream_IMP

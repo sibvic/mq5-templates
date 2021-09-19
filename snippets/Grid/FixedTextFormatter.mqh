@@ -1,4 +1,4 @@
-#include <AValueFormatter.mq5>
+#include <AValueFormatter.mqh>
 // Formats value as a contant/fixed text value v1.0
 
 #ifndef FixedTextFormatter_IMP

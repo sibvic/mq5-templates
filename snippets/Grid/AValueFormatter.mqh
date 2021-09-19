@@ -1,4 +1,4 @@
-#include <IValueFormatter.mq5>
+#include <IValueFormatter.mqh>
 // Abstrace value formatter v1.0
 
 #ifndef AValueFormatter_IMP

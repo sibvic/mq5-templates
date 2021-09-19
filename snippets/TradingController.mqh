@@ -1,12 +1,12 @@
 // Trade controller v3.0
 
 #include <Trade\Trade.mqh>
-#include <BreakevenController.mq5>
-#include <Logic/ActionOnConditionLogic.mq5>
-#include <ICloseOnOppositeStrategy.mq5>
-#include <IEntryStrategy.mq5>
-#include <Actions/AOrderAction.mq5>
-#include <EntryPositionController.mq5>
+#include <BreakevenController.mqh>
+#include <Logic/ActionOnConditionLogic.mqh>
+#include <ICloseOnOppositeStrategy.mqh>
+#include <IEntryStrategy.mqh>
+#include <Actions/AOrderAction.mqh>
+#include <EntryPositionController.mqh>
 
 class TradingController
 {

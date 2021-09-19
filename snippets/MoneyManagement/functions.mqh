@@ -1,21 +1,21 @@
-#include <../enums/TakeProfitType.mq5>
-#include <../enums/StopLossType.mq5>
-#include <../enums/PositionSizeType.mq5>
-#include <IStopLossStrategy.mq5>
-#include <DefaultStopLossStrategy.mq5>
-// #include <HighLowStopLossStrategy.mq5>
-#include <MoneyManagementStrategy.mq5>
-// #include <ATRStopLossStrategy.mq5>
-#include <RiskBalanceStopLossStrategy.mq5>
-#include <ILotsProvider.mq5>
-#include <RiskLotsProvider.mq5>
-#include <DefaultLotsProvider.mq5>
-#include <DollarStopLossStrategy.mq5>
-#include <ITakeProfitStrategy.mq5>
-#include <DefaultTakeProfitStrategy.mq5>
-#include <RiskToRewardTakeProfitStrategy.mq5>
-// #include <ATRTakeProfitStrategy.mq5>
-#include <../TradingCalculator.mq5>
+#include <../enums/TakeProfitType.mqh>
+#include <../enums/StopLossType.mqh>
+#include <../enums/PositionSizeType.mqh>
+#include <IStopLossStrategy.mqh>
+#include <DefaultStopLossStrategy.mqh>
+// #include <HighLowStopLossStrategy.mqh>
+#include <MoneyManagementStrategy.mqh>
+// #include <ATRStopLossStrategy.mqh>
+#include <RiskBalanceStopLossStrategy.mqh>
+#include <ILotsProvider.mqh>
+#include <RiskLotsProvider.mqh>
+#include <DefaultLotsProvider.mqh>
+#include <DollarStopLossStrategy.mqh>
+#include <ITakeProfitStrategy.mqh>
+#include <DefaultTakeProfitStrategy.mqh>
+#include <RiskToRewardTakeProfitStrategy.mqh>
+// #include <ATRTakeProfitStrategy.mqh>
+#include <../TradingCalculator.mqh>
 
 #ifndef MoneyManagementFunctions_IMP
 #define MoneyManagementFunctions_IMP

@@ -3,8 +3,8 @@
 #ifndef ABaseCondition_IMP
 #define ABaseCondition_IMP
 
-#include <AConditionBase.mq5>
-#include <../InstrumentInfo.mq5>
+#include <AConditionBase.mqh>
+#include <../InstrumentInfo.mqh>
 class ACondition : public AConditionBase
 {
 protected:

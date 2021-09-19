@@ -41,8 +41,8 @@ input color dn_color = Red; // Down color
 input color ne_color = Gray; // Neutral color
 input int bars_limit = 1000; // Bars limit
 
-#include <HeatMapValueCalculator.mq5>
-#include <streams/HABarStream.mq5> 
+#include <HeatMapValueCalculator.mqh>
+#include <streams/HABarStream.mqh> 
 
 IHeatMapValueCalculator* conditions[];
 
@@ -73,7 +73,7 @@ string GenerateIndicatorPrefix(const string target)
    return target;
 }
 
-#include <Conditions/ACondition.mq5>
+#include <Conditions/ACondition.mqh>
 
 class LongCondition : public ACondition
 {

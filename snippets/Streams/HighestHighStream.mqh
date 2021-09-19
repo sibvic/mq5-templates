@@ -1,6 +1,6 @@
 // Highest high stream v1.0
 
-#include <AOnStream.mq5>
+#include <AOnStream.mqh>
 
 class HighestHighStream : public AOnStream
 {

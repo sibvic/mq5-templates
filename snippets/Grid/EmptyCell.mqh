@@ -1,6 +1,6 @@
 // Empty cell v1.0
 
-#include <ICell.mq5>
+#include <ICell.mqh>
 
 #ifndef EmptyCell_IMP
 #define EmptyCell_IMP

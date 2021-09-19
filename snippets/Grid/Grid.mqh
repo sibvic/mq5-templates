@@ -1,6 +1,6 @@
 // Grid v1.0
 
-#include <Row.mq5>
+#include <Row.mqh>
 
 #ifndef Grid_IMP
 #define Grid_IMP

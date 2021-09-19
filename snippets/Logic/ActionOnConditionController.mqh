@@ -1,7 +1,7 @@
 // Action on condition v3.0
 
-#include <../conditions/ICondition.mq5>
-#include <../actions/IAction.mq5>
+#include <../conditions/ICondition.mqh>
+#include <../actions/IAction.mqh>
 
 #ifndef ActionOnConditionController_IMP
 #define ActionOnConditionController_IMP

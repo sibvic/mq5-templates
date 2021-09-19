@@ -3,7 +3,7 @@
 #ifndef ACondition_IMP
 #define ACondition_IMP
 
-#include <ICondition.mq5>
+#include <ICondition.mqh>
 class AConditionBase : public ICondition
 {
    int _references;

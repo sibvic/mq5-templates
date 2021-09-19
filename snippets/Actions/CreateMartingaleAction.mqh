@@ -1,8 +1,8 @@
-#include <../Conditions/ProfitInRangeCondition.mq5>
-#include <../MoneyManagement/ILotsProvider.mq5>
-#include <../Logic/ActionOnConditionLogic.mq5>
-#include <../Trade.mq5>
-#include <AOrderAction.mq5>
+#include <../Conditions/ProfitInRangeCondition.mqh>
+#include <../MoneyManagement/ILotsProvider.mqh>
+#include <../Logic/ActionOnConditionLogic.mqh>
+#include <../Trade.mqh>
+#include <AOrderAction.mqh>
 // v1.1
 
 class CustomLotsProvider : public ILotsProvider

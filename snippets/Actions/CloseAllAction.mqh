@@ -1,8 +1,8 @@
 // Close all action v1.0
 
-#include <AAction.mq5>
-#include <../TradesIterator.mq5>
-#include <../TradingCommands.mq5>
+#include <AAction.mqh>
+#include <../TradesIterator.mqh>
+#include <../TradingCommands.mqh>
 
 #ifndef CloseAllAction_IMP
 #define CloseAllAction_IMP

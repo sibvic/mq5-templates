@@ -1,7 +1,7 @@
 // Trading commands v.2.0
 
-#include <TradesIterator.mq5>
-#include <OrdersIterator.mq5>
+#include <TradesIterator.mqh>
+#include <OrdersIterator.mqh>
 
 #ifndef tradeManager_INSTANCE
 #define tradeManager_INSTANCE

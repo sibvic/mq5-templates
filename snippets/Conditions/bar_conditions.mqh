@@ -1,4 +1,4 @@
-#include <ACondition.mq5>
+#include <ACondition.mqh>
 // Bar condnitions v1.0
 
 #ifndef BarConditions_IMP

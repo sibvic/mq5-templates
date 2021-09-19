@@ -1,5 +1,5 @@
-#include <IStopLossStrategy.mq5>
-#include <ILotsProvider.mq5>
+#include <IStopLossStrategy.mqh>
+#include <ILotsProvider.mqh>
 
 // Risks % of the balance v1.0
 

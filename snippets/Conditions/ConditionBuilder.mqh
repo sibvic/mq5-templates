@@ -1,5 +1,5 @@
-#include <OrCondition.mq5>
-#include <AndCondition.mq5>
+#include <OrCondition.mqh>
+#include <AndCondition.mqh>
 
 // Condition builder v1.0
 

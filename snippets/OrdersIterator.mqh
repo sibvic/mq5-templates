@@ -1,5 +1,5 @@
-#include <enums/CompareType.mq5>
-#include <enums/OrderSide.mq5>
+#include <enums/CompareType.mqh>
+#include <enums/OrderSide.mqh>
 
 // Orders iterator v1.9
 

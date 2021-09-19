@@ -1,5 +1,5 @@
-#include <ACondition.mq5>
-#include <enums/TwoStreamsConditionType.mq5>
+#include <ACondition.mqh>
+#include <enums/TwoStreamsConditionType.mqh>
 
 // Ichimoku conditions v1.1
 

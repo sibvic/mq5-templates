@@ -1,6 +1,6 @@
 // Action on condition logic v2.0
 
-#include <ActionOnConditionController.mq5>
+#include <ActionOnConditionController.mqh>
 
 #ifndef ActionOnConditionLogic_IMP
 #define ActionOnConditionLogic_IMP

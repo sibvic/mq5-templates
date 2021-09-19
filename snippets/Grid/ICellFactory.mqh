@@ -1,6 +1,6 @@
 // Interface for a cell factory v2.0
 
-#include <ICell.mq5>
+#include <ICell.mqh>
 
 #ifndef ICellFactory_IMP
 #define ICellFactory_IMP

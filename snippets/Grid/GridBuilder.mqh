@@ -1,6 +1,6 @@
 // Grid builder v2.0
 
-#include <ICellFactory.mq5>
+#include <ICellFactory.mqh>
 
 #ifndef GridBuilder_IMP
 #define GridBuilder_IMP

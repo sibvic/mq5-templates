@@ -1,5 +1,5 @@
-#include <enums/OrderSide.mq5>
-#include <InstrumentInfo.mq5>
+#include <enums/OrderSide.mqh>
+#include <InstrumentInfo.mqh>
 // Order builder v1.3
 
 #ifndef OrderBuilder_IMP

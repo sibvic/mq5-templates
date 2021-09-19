@@ -1,7 +1,7 @@
 // Market entry strategy v1.1
 
-#include <IEntryStrategy.mq5>
-#include <Logic/ActionOnConditionLogic.mq5>
+#include <IEntryStrategy.mqh>
+#include <Logic/ActionOnConditionLogic.mqh>
 
 #ifndef MarketEntryStrategy_IMP
 #define MarketEntryStrategy_IMP

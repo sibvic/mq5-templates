@@ -1,4 +1,4 @@
-#include <ABaseStream.mq5>
+#include <ABaseStream.mqh>
 
 // IndicatorOutputStream v3.0
 

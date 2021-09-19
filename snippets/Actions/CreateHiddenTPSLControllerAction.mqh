@@ -1,11 +1,11 @@
 // Create hidden take profit/stop loss controller action v1.0
 
-#include <AAction.mq5>
-#include <../Trade.mq5>
-#include <../Conditions/ProfitInRangeCondition.mq5>
-#include <../Conditions/NotCondition.mq5>
-#include <../Logic/ActionOnConditionLogic.mq5>
-#include <CloseTradeAction.mq5>
+#include <AAction.mqh>
+#include <../Trade.mqh>
+#include <../Conditions/ProfitInRangeCondition.mqh>
+#include <../Conditions/NotCondition.mqh>
+#include <../Logic/ActionOnConditionLogic.mqh>
+#include <CloseTradeAction.mqh>
 
 #ifndef CreateHiddenTPSLControllerAction_IMP
 #define CreateHiddenTPSLControllerAction_IMP

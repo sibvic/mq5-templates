@@ -1,6 +1,6 @@
 // Close on opposite strategy v2.0
 
-#include <ICloseOnOppositeStrategy.mq5>
+#include <ICloseOnOppositeStrategy.mqh>
 
 #ifndef DoCloseOnOppositeStrategy_IMP
 #define DoCloseOnOppositeStrategy_IMP

@@ -1,6 +1,6 @@
-#include <../AOnStream.mq5>
-#include <../CustomStream.mq5>
-#include <RmaOnStream.mq5>
+#include <../AOnStream.mqh>
+#include <../CustomStream.mqh>
+#include <RmaOnStream.mqh>
 
 // DEMAOnStream v1.0
 class DEMAOnStream : public AOnStream

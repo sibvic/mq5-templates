@@ -1,4 +1,4 @@
-#include <AOnStream.mq5>
+#include <AOnStream.mqh>
 
 //ChangeStream v1.0
 class ChangeStream : public AOnStream

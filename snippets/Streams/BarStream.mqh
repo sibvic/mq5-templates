@@ -1,4 +1,4 @@
-#include <AStandardTimeframeBarStream.mq5>
+#include <AStandardTimeframeBarStream.mqh>
 
 // Bar stream v1.0
 

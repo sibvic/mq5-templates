@@ -1,7 +1,7 @@
 // Default take profit strategy v1.1
 
-#include <ITakeProfitStrategy.mq5>
-#include <../TradingCalculator.mq5>
+#include <ITakeProfitStrategy.mqh>
+#include <../TradingCalculator.mqh>
 
 #ifndef DefaultTakeProfitStrategy_IMP
 #define DefaultTakeProfitStrategy_IMP

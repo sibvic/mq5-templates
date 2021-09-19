@@ -1,4 +1,4 @@
-#include <AOnStream.mq5>
+#include <AOnStream.mqh>
 
 //AbsStream v1.0
 class AbsStream : public AOnStream
