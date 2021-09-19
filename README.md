@@ -1,5 +1,10 @@
 # MQL5/MT5/MetaTrader 5 templates
 
+There are two ways to compile the template:
+
+- My injecting all code into the template using [MQ4Inject](https://github.com/sibvic/MQ4Inject)
+- By coping content of the **snippets** folder into your MQL5\Include folder.
+
 ## Related projects
 
 [Lint utility for indicators/strategies](https://github.com/sibvic/fxlint)
