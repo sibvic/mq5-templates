@@ -26,11 +26,11 @@ input string   Comment3                 = "- Allow use of dll in the indicator p
 input string   Comment4                 = "- Install AdvancedNotificationsLib using ProfitRobots installer -";
 #endif
 
-#include <Signaler.mq5>
-#include <Conditions/ACondition.mq5>
-#include <Conditions/ActOnSwitchCondition.mq5>
-#include <Streams/PriceStream.mq5>
-#include <AlertSignal.mq5>
+#include <Signaler.mqh>
+#include <Conditions/ACondition.mqh>
+#include <Conditions/ActOnSwitchCondition.mqh>
+#include <Streams/PriceStream.mqh>
+#include <AlertSignal.mqh>
 
 AlertSignal* alerts[];
 Signaler* mainSignaler;

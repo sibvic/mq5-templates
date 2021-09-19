@@ -49,7 +49,7 @@ input bool alert_on_close = false; // Alert on bar close
 
 string   WindowName;
 
-#include <conditions/ACondition.mq5>
+#include <conditions/ACondition.mqh>
 
 class UpCondition : public ACondition
 {
@@ -98,14 +98,14 @@ public:
    int GetNext() { _current += _shift; return _current; }
 };
 
-#include <Grid/EmptyCell.mq5>
-#include <Grid/LabelCell.mq5>
-#include <Grid/Grid.mq5>
-#include <Grid/TrendValueCellFactory.mq5>
+#include <Grid/EmptyCell.mqh>
+#include <Grid/LabelCell.mqh>
+#include <Grid/Grid.mqh>
+#include <Grid/TrendValueCellFactory.mqh>
 
 Grid *grid;
 
-#include <Grid/GridBuilder.mq5>
+#include <Grid/GridBuilder.mqh>
 string IndicatorObjPrefix;
 
 bool NamesCollision(const string name)

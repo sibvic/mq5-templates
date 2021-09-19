@@ -17,13 +17,15 @@
 #define NET_STOP_LOSS_FEATURE
 #define NET_TAKE_PROFIT_FEATURE
 
-#include <enums/OrderSide.mq5>
+#include <enums/OrderSide.mqh>
 
 #ifndef tradeManager_INSTANCE
 #define tradeManager_INSTANCE
 #include <Trade\Trade.mqh>
 CTrade tradeManager;
 #endif
+#include <enums/DayOfWeek.mqh>
+#include <enums/MartingaleLotSizingType.mqh>
 
 enum TradingMode
 {
@@ -38,10 +40,10 @@ enum TradingDirection
    BothSides // Both
 };
 
-#include <enums/StopLimitType.mq5>
-#include <enums/PositionSizeType.mq5>
-#include <enums/StopLossType.mq5>
-#include <enums/TakeProfitType.mq5>
+#include <enums/StopLimitType.mqh>
+#include <enums/PositionSizeType.mqh>
+#include <enums/StopLossType.mqh>
+#include <enums/TakeProfitType.mqh>
 
 enum PositionDirection
 {
@@ -104,12 +106,6 @@ enum MartingaleType
    MartingaleDoNotUse, // Do not use
    MartingaleOnLoss // Open another position on loss
 };
-enum MartingaleLotSizingType
-{
-   MartingaleLotSizingNo, // No lot sizing
-   MartingaleLotSizingMultiplicator, // Using miltiplicator
-   MartingaleLotSizingAdd // Addition
-};
 enum MartingaleStepSizeType
 {
    MartingaleStepSizePips, // Pips
@@ -125,17 +121,6 @@ enum MartingaleStepSizeType
    input int max_longs = 5; // Max long positions
    input int max_shorts = 5; // Max short positions
 #endif
-
-enum DayOfWeek
-{
-   DayOfWeekSunday = 0, // Sunday
-   DayOfWeekMonday = 1, // Monday
-   DayOfWeekTuesday = 2, // Tuesday
-   DayOfWeekWednesday = 3, // Wednesday
-   DayOfWeekThursday = 4, // Thursday
-   DayOfWeekFriday = 5, // Friday
-   DayOfWeekSaturday = 6 // Saturday
-};
 
 input string OtherSection            = ""; // == Other ==
 input int magic_number        = 42; // Magic number
@@ -187,36 +172,36 @@ void AdvancedAlert(string key, string text, string instrument, string timeframe)
 #import
 #endif
 
-#include <Conditions/TradingTimeCondition.mq5>
-#include <Conditions/DisabledCondition.mq5>
-#include <Conditions/AndCondition.mq5>
-#include <Conditions/ACondition.mq5>
-#include <Conditions/NoCondition.mq5>
-#include <Conditions/NotCondition.mq5>
+#include <Conditions/TradingTimeCondition.mqh>
+#include <Conditions/DisabledCondition.mqh>
+#include <Conditions/AndCondition.mqh>
+#include <Conditions/ACondition.mqh>
+#include <Conditions/NoCondition.mqh>
+#include <Conditions/NotCondition.mqh>
 #ifdef ACT_ON_SWITCH_CONDITION
-#include <Conditions/ActOnSwitchCondition.mq5>
+#include <Conditions/ActOnSwitchCondition.mqh>
 #endif
-#include <Streams/IStream.mq5>
-#include <MarketEntryStrategy.mq5>
-#include <InstrumentInfo.mq5>
-#include <TradesIterator.mq5>
-#include <TradingCalculator.mq5>
-#include <OrdersIterator.mq5>
-#include <TradingCommands.mq5>
-#include <TrailingController.mq5>
-#include <MarketOrderBuilder.mq5>
-#include <conditions/PositionLimitHitCondition.mq5>
-#include <Actions/EntryAction.mq5>
-#include <Actions/MoveNetStopLossAction.mq5>
-#include <Actions/MoveNetTakeProfitAction.mq5>
-#include <Actions/CreateTrailingAction.mq5>
-#include <Actions/CreateMartingaleAction.mq5>
-#include <Actions/CloseAllAction.mq5>
-#include <TradingController.mq5>
-#include <DoCloseOnOppositeStrategy.mq5>
-#include <DontCloseOnOppositeStrategy.mq5>
-#include <EntryPositionController.mq5>
-#include <MoneyManagement/functions.mq5>
+#include <Streams/IStream.mqh>
+#include <MarketEntryStrategy.mqh>
+#include <InstrumentInfo.mqh>
+#include <TradesIterator.mqh>
+#include <TradingCalculator.mqh>
+#include <OrdersIterator.mqh>
+#include <TradingCommands.mqh>
+#include <TrailingController.mqh>
+#include <MarketOrderBuilder.mqh>
+#include <conditions/PositionLimitHitCondition.mqh>
+#include <Actions/EntryAction.mqh>
+#include <Actions/MoveNetStopLossAction.mqh>
+#include <Actions/MoveNetTakeProfitAction.mqh>
+#include <Actions/CreateTrailingAction.mqh>
+#include <Actions/CreateMartingaleAction.mqh>
+#include <Actions/CloseAllAction.mqh>
+#include <TradingController.mqh>
+#include <DoCloseOnOppositeStrategy.mqh>
+#include <DontCloseOnOppositeStrategy.mqh>
+#include <EntryPositionController.mqh>
+#include <MoneyManagement/functions.mqh>
 
 class EntryLongCondition : public ACondition
 {
@@ -349,7 +334,7 @@ void CreateMartingale(TradingCalculator* tradingCalculator, string symbol, ENUM_
    IAction* openShortAction = new EntryAction(entryStrategy, SellSide, shortMoneyManagement, "", orderHandlers, true);
 
    CreateMartingaleAction* martingaleAction = new CreateMartingaleAction(lots, martingale_lot_sizing_type, martingale_lot_value, 
-      martingale_step, openLongAction, openShortAction, max_longs, max_shorts, actions);
+      martingale_step, openLongAction, openShortAction, max_longs, max_shorts, actions, magic_number);
    openLongAction.Release();
    openShortAction.Release();
    
