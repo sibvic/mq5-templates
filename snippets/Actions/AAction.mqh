@@ -1,6 +1,6 @@
-// AAction v1.0
+#include <Actions/IAction.mqh>
 
-#include <IAction.mqh>
+// AAction v1.0
 
 #ifndef AAction_IMP
 

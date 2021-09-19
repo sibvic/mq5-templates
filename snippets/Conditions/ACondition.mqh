@@ -1,10 +1,11 @@
+#include <Conditions/AConditionBase.mqh>
+#include <InstrumentInfo.mqh>
+
 // Base condition v1.1
 
 #ifndef ABaseCondition_IMP
 #define ABaseCondition_IMP
 
-#include <AConditionBase.mqh>
-#include <../InstrumentInfo.mqh>
 class ACondition : public AConditionBase
 {
 protected:

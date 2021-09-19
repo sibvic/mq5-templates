@@ -1,8 +1,8 @@
-// Close all action v1.0
+#include <Actions/AAction.mqh>
+#include <TradesIterator.mqh>
+#include <TradingCommands.mqh>
 
-#include <AAction.mqh>
-#include <../TradesIterator.mqh>
-#include <../TradingCommands.mqh>
+// Close all action v1.0
 
 #ifndef CloseAllAction_IMP
 #define CloseAllAction_IMP

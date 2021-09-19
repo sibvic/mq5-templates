@@ -1,9 +1,10 @@
-// Money management strategy v2.0
+#include <MoneyManagement/IMoneyManagementStrategy.mqh>
+#include <MoneyManagement/ILotsProvider.mqh>
+#include <MoneyManagement/IStopLossAndAmountStrategy.mqh>
+#include <MoneyManagement/ITakeProfitStrategy.mqh>
+#include <MoneyManagement/IStopLossStrategy.mqh>
 
-#include <IMoneyManagementStrategy.mqh>
-#include <ILotsProvider.mqh>
-#include <IStopLossAndAmountStrategy.mqh>
-#include <ITakeProfitStrategy.mqh>
+// Money management strategy v2.0
 
 #ifndef MoneyManagementStrategy_IMP
 #define MoneyManagementStrategy_IMP

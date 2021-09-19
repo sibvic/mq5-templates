@@ -1,6 +1,8 @@
-// Trading time condition v1.2
+#include <Conditions/AConditionBase.mqh>
+#include <Conditions/NoCondition.mqh>
+#include <enums/DayOfWeek.mqh>
 
-#include <AConditionBase.mqh>
+// Trading time condition v1.2
 
 #ifndef TradingTimeCondition_IMP
 #define TradingTimeCondition_IMP

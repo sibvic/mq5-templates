@@ -1,6 +1,8 @@
-// Default lots provider v2.0
+#include <MoneyManagement/ILotsProvider.mqh>
+#include <enums/PositionSizeType.mqh>
+#include <TradingCalculator.mqh>
 
-#include <ILotsProvider.mqh>
+// Default lots provider v2.0
 
 #ifndef DefaultLotsProvider_IMP
 #define DefaultLotsProvider_IMP

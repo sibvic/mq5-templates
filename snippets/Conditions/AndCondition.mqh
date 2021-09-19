@@ -1,6 +1,6 @@
-// And condition v1.1
+#include <Conditions/AConditionBase.mqh>
 
-#include <AConditionBase.mqh>
+// And condition v1.1
 
 #ifndef AndCondition_IMP
 #define AndCondition_IMP

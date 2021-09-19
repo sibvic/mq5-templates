@@ -1,6 +1,6 @@
-// Action on condition logic v2.0
+#include <Logic/ActionOnConditionController.mqh>
 
-#include <ActionOnConditionController.mqh>
+// Action on condition logic v2.0
 
 #ifndef ActionOnConditionLogic_IMP
 #define ActionOnConditionLogic_IMP

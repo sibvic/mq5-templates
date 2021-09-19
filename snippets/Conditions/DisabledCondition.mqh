@@ -1,5 +1,6 @@
+#include <Conditions/AConditionBase.mqh>
+
 // Disabled condition v1.1
-#include <AConditionBase.mqh>
 
 #ifndef DisabledCondition_IMP
 #define DisabledCondition_IMP

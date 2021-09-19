@@ -1,9 +1,9 @@
-// Trailing action v2.1
+#include <Actions/AAction.mqh>
+#include <Trade.mqh>
+#include <TradingCommands.mqh>
+#include <InstrumentInfo.mqh>
 
-#include <AAction.mqh>
-#include <../Trade.mqh>
-#include <../TradingCommands.mqh>
-#include <../InstrumentInfo.mqh>
+// Trailing action v2.1
 
 #ifndef TrailingAction_IMP
 #define TrailingAction_IMP

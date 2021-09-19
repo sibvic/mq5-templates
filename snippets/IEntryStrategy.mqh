@@ -1,6 +1,7 @@
-// Entry strategy v1.1
-
 #include <MoneyManagement/IMoneyManagementStrategy.mqh>
+#include <enums/OrderSide.mqh>
+
+// Entry strategy v1.1
 
 #ifndef IEntryStrategy_IMP
 #define IEntryStrategy_IMP

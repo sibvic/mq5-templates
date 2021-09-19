@@ -1,21 +1,21 @@
-#include <../enums/TakeProfitType.mqh>
-#include <../enums/StopLossType.mqh>
-#include <../enums/PositionSizeType.mqh>
-#include <IStopLossStrategy.mqh>
-#include <DefaultStopLossStrategy.mqh>
+#include <enums/TakeProfitType.mqh>
+#include <enums/StopLossType.mqh>
+#include <enums/PositionSizeType.mqh>
+#include <MoneyManagement/IStopLossStrategy.mqh>
+#include <MoneyManagement/DefaultStopLossStrategy.mqh>
 // #include <HighLowStopLossStrategy.mqh>
-#include <MoneyManagementStrategy.mqh>
+#include <MoneyManagement/MoneyManagementStrategy.mqh>
 // #include <ATRStopLossStrategy.mqh>
-#include <RiskBalanceStopLossStrategy.mqh>
-#include <ILotsProvider.mqh>
-#include <RiskLotsProvider.mqh>
-#include <DefaultLotsProvider.mqh>
-#include <DollarStopLossStrategy.mqh>
-#include <ITakeProfitStrategy.mqh>
-#include <DefaultTakeProfitStrategy.mqh>
-#include <RiskToRewardTakeProfitStrategy.mqh>
+#include <MoneyManagement/RiskBalanceStopLossStrategy.mqh>
+#include <MoneyManagement/ILotsProvider.mqh>
+#include <MoneyManagement/RiskLotsProvider.mqh>
+#include <MoneyManagement/DefaultLotsProvider.mqh>
+#include <MoneyManagement/DollarStopLossStrategy.mqh>
+#include <MoneyManagement/ITakeProfitStrategy.mqh>
+#include <MoneyManagement/DefaultTakeProfitStrategy.mqh>
+#include <MoneyManagement/RiskToRewardTakeProfitStrategy.mqh>
 // #include <ATRTakeProfitStrategy.mqh>
-#include <../TradingCalculator.mqh>
+#include <TradingCalculator.mqh>
 
 #ifndef MoneyManagementFunctions_IMP
 #define MoneyManagementFunctions_IMP

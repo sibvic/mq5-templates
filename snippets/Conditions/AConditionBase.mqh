@@ -1,9 +1,10 @@
+#include <Conditions/ICondition.mqh>
+
 // Condition base v2.1
 
 #ifndef ACondition_IMP
 #define ACondition_IMP
 
-#include <ICondition.mqh>
 class AConditionBase : public ICondition
 {
    int _references;

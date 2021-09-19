@@ -24,6 +24,8 @@
 #include <Trade\Trade.mqh>
 CTrade tradeManager;
 #endif
+#include <enums/DayOfWeek.mqh>
+#include <enums/MartingaleLotSizingType.mqh>
 
 enum TradingMode
 {
@@ -104,12 +106,6 @@ enum MartingaleType
    MartingaleDoNotUse, // Do not use
    MartingaleOnLoss // Open another position on loss
 };
-enum MartingaleLotSizingType
-{
-   MartingaleLotSizingNo, // No lot sizing
-   MartingaleLotSizingMultiplicator, // Using miltiplicator
-   MartingaleLotSizingAdd // Addition
-};
 enum MartingaleStepSizeType
 {
    MartingaleStepSizePips, // Pips
@@ -125,17 +121,6 @@ enum MartingaleStepSizeType
    input int max_longs = 5; // Max long positions
    input int max_shorts = 5; // Max short positions
 #endif
-
-enum DayOfWeek
-{
-   DayOfWeekSunday = 0, // Sunday
-   DayOfWeekMonday = 1, // Monday
-   DayOfWeekTuesday = 2, // Tuesday
-   DayOfWeekWednesday = 3, // Wednesday
-   DayOfWeekThursday = 4, // Thursday
-   DayOfWeekFriday = 5, // Friday
-   DayOfWeekSaturday = 6 // Saturday
-};
 
 input string OtherSection            = ""; // == Other ==
 input int magic_number        = 42; // Magic number
@@ -349,7 +334,7 @@ void CreateMartingale(TradingCalculator* tradingCalculator, string symbol, ENUM_
    IAction* openShortAction = new EntryAction(entryStrategy, SellSide, shortMoneyManagement, "", orderHandlers, true);
 
    CreateMartingaleAction* martingaleAction = new CreateMartingaleAction(lots, martingale_lot_sizing_type, martingale_lot_value, 
-      martingale_step, openLongAction, openShortAction, max_longs, max_shorts, actions);
+      martingale_step, openLongAction, openShortAction, max_longs, max_shorts, actions, magic_number);
    openLongAction.Release();
    openShortAction.Release();
    
