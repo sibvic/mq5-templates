@@ -1,6 +1,6 @@
-// Lowest low stream v1.0
+#include <Streams/AOnStream.mqh>
 
-#include <AOnStream.mqh>
+// Lowest low stream v1.1
 
 class LowestLowStream : public AOnStream
 {
@@ -10,6 +10,7 @@ public:
    LowestLowStream(IStream* source, int loopback)
       :AOnStream(source)
    {
+      _loopback = loopback;
       ArrayResize(_values, loopback);
    }
 

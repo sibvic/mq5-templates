@@ -1,6 +1,6 @@
-// Highest high stream v1.0
+#include <Streams/AOnStream.mqh>
 
-#include <AOnStream.mqh>
+// Highest high stream v1.1
 
 class HighestHighStream : public AOnStream
 {
@@ -10,6 +10,7 @@ public:
    HighestHighStream(IStream* source, int loopback)
       :AOnStream(source)
    {
+      _loopback = loopback;
       ArrayResize(_values, loopback);
    }
 
