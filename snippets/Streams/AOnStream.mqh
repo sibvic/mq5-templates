@@ -1,4 +1,4 @@
-#include <IStream.mqh>
+#include <Streams/IStream.mqh>
 
 //AOnStream v2.0
 class AOnStream : public IStream

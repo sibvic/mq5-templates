@@ -1,4 +1,4 @@
-#include <ABaseStream.mqh>
+#include <Streams/ABaseStream.mqh>
 
 // IndicatorOutputStream v3.0
 

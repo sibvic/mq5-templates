@@ -1,4 +1,4 @@
-#include <../AOnStream.mqh>
+#include <Streams/AOnStream.mqh>
 
 //RmaOnStream v2.1
 class RmaOnStream : public AOnStream
