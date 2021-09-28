@@ -1,4 +1,4 @@
-#include <ABaseStream.mqh>
+#include <Streams/ABaseStream.mqh>
 
 #ifndef TrueRangeStream_IMP
 #define TrueRangeStream_IMP
@@ -16,9 +16,9 @@ public:
       int size = Size();
       for (int i = 0; i < count; ++i)
       {
-         double hl = MathAbs(iHigh(_symbol, _timeframe, size - 1 - period - i) - iLow(_symbol, _timeframe, size - 1 - period - i));
-         double hc = MathAbs(iHigh(_symbol, _timeframe, size - 1 - period - i) - iClose(_symbol, _timeframe, size - 1 - period - i - 1));
-         double lc = MathAbs(iLow(_symbol, _timeframe, size - 1 - period - i) - iClose(_symbol, _timeframe, size - 1 - period - i - 1));
+         double hl = MathAbs(iHigh(_symbol, _timeframe, period + i) - iLow(_symbol, _timeframe, period + i));
+         double hc = MathAbs(iHigh(_symbol, _timeframe, period + i) - iClose(_symbol, _timeframe, period - i + 1));
+         double lc = MathAbs(iLow(_symbol, _timeframe, period + i) - iClose(_symbol, _timeframe, period - i + 1));
 
          val[i] = MathMax(lc, MathMax(hl, hc));
       }
