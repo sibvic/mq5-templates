@@ -115,3 +115,7 @@ Calculates highest value
 ## LowestLowStream
 
 Calculates lowest value
+
+## SumOnStream
+
+Sum on stream
