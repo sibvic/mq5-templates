@@ -63,3 +63,7 @@ Returns true when all conditions returns true.
 ## OrCondition
 
 Return true when at least one of the conditions returns true.
+
+## MinDistanceSinceLastTradeCondition
+
+Condition is true when there is enoght distance since last trade
