@@ -1,4 +1,4 @@
-// Trades iterator v 1.3
+// Trades iterator v 1.4
 
 #include <enums/CompareType.mqh>
 
@@ -65,6 +65,7 @@ public:
    double GetSwap() { return PositionGetDouble(POSITION_SWAP); }
    double GetProfit() { return PositionGetDouble(POSITION_PROFIT); }
    double GetOpenPrice() { return PositionGetDouble(POSITION_PRICE_OPEN); }
+   double GetOpenTime() { return PositionGetInteger(POSITION_TIME); }
    double GetStopLoss() { return PositionGetDouble(POSITION_SL); }
    double GetTakeProfit() { return PositionGetDouble(POSITION_TP); }
    ENUM_POSITION_TYPE GetPositionType() { return (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE); }
