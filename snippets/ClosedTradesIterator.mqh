@@ -1,4 +1,4 @@
-// Closed trades iterator v 1.3
+// Closed trades iterator v 2.0
 #ifndef ClosedTradesIterator_IMP
 class ClosedTradesIterator
 {
@@ -7,11 +7,19 @@ class ClosedTradesIterator
    ulong _currentTicket;
    string _symbol;
    int _magicNumber;
+   bool _useEntry;
+   ENUM_DEAL_ENTRY _entry;
 public:
    ClosedTradesIterator()
    {
       _lastIndex = INT_MIN;
       _magicNumber = 0;
+   }
+
+   void WhenEntry(ENUM_DEAL_ENTRY entry)
+   {
+      _useEntry = entry;
+      _entry = entry;
    }
 
    void WhenSymbol(string symbol)
@@ -26,8 +34,9 @@ public:
 
    ulong GetTicket() { return _currentTicket; }
    ENUM_DEAL_TYPE GetPositionType() { return (ENUM_DEAL_TYPE)HistoryDealGetInteger(_currentTicket, DEAL_TYPE); }
+   ENUM_DEAL_ENTRY GetEntryType() { return (ENUM_DEAL_ENTRY)HistoryDealGetInteger(_currentTicket, DEAL_ENTRY); }
    string GetSymbol() { return HistoryDealGetString(_currentTicket, DEAL_SYMBOL); }
-   datetime GetCloseTime() { return (datetime)HistoryDealGetInteger(_currentTicket, DEAL_TIME); }
+   datetime GetTime() { return (datetime)HistoryDealGetInteger(_currentTicket, DEAL_TIME); }
    int GetMagicNumber() { return HistoryDealGetInteger(_currentTicket, DEAL_MAGIC); }
    double GetProfit() { return HistoryDealGetDouble(_currentTicket, DEAL_PROFIT); }
    double GetLots() { return HistoryDealGetDouble(_currentTicket, DEAL_VOLUME); }
@@ -96,6 +105,10 @@ private:
          return false;
       }
       if (_magicNumber != 0 && GetMagicNumber() != _magicNumber)
+      {
+         return false;
+      }
+      if (_useEntry && GetEntryType() != _entry)
       {
          return false;
       }
