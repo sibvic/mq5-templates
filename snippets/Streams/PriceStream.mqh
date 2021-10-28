@@ -1,5 +1,6 @@
-#include <ABaseStream.mqh>
-#include <IBarStream.mqh>
+#include <enums/PriceType.mqh>
+#include <streams/ABaseStream.mqh>
+#include <streams/IBarStream.mqh>
 
 // PriceStream v2.0
 
@@ -119,13 +120,13 @@ public:
 
 class SimplePriceStream : public ABaseStream
 {
-   ENUM_APPLIED_PRICE _price;
+   PriceType _price;
    double _pipSize;
 public:
-   SimplePriceStream(string symbol, const ENUM_TIMEFRAMES timeframe, const ENUM_APPLIED_PRICE price)
+   SimplePriceStream(const string symbol, const ENUM_TIMEFRAMES timeframe, const PriceType __price)
       :ABaseStream(symbol, timeframe)
    {
-      _price = price;
+      _price = __price;
 
       double point = SymbolInfoDouble(symbol, SYMBOL_POINT);
       int digit = (int)SymbolInfoInteger(symbol, SYMBOL_DIGITS); 
@@ -139,26 +140,44 @@ public:
       {
          switch (_price)
          {
-            case PRICE_CLOSE:
+            case PriceClose:
                val[i] = iClose(_symbol, _timeframe, period + i);
                break;
-            case PRICE_OPEN:
+            case PriceOpen:
                val[i] = iOpen(_symbol, _timeframe, period + i);
                break;
-            case PRICE_HIGH:
+            case PriceHigh:
                val[i] = iHigh(_symbol, _timeframe, period + i);
                break;
-            case PRICE_LOW:
+            case PriceLow:
                val[i] = iLow(_symbol, _timeframe, period + i);
                break;
-            case PRICE_MEDIAN:
+            case PriceMedian:
                val[i] = (iHigh(_symbol, _timeframe, period + i) + iLow(_symbol, _timeframe, period + i)) / 2.0;
                break;
-            case PRICE_TYPICAL:
+            case PriceTypical:
                val[i] = (iHigh(_symbol, _timeframe, period + i) + iLow(_symbol, _timeframe, period + i) + iClose(_symbol, _timeframe, period + i)) / 3.0;
                break;
-            case PRICE_WEIGHTED:
-               val[i] = (iHigh(_symbol, _timeframe, period + i) + iLow(_symbol, _timeframe, period + i) + iClose(_symbol, _timeframe, period + i) * 2) / 4.0;
+            case PriceWeighted:
+               val[i] = (iHigh(_symbol, _timeframe, period) + iLow(_symbol, _timeframe, period) + iClose(_symbol, _timeframe, period) * 2) / 4.0;
+               break;
+            case PriceMedianBody:
+               val[i] = (iOpen(_symbol, _timeframe, period) + iClose(_symbol, _timeframe, period)) / 2.0;
+               break;
+            case PriceAverage:
+               val[i] = (iHigh(_symbol, _timeframe, period) + iLow(_symbol, _timeframe, period) + iClose(_symbol, _timeframe, period) + iOpen(_symbol, _timeframe, period)) / 4.0;
+               break;
+            case PriceTrendBiased:
+               {
+                  double close = iClose(_symbol, _timeframe, period);
+                  if (iOpen(_symbol, _timeframe, period) > iClose(_symbol, _timeframe, period))
+                     val[i] = (iHigh(_symbol, _timeframe, period) + close) / 2.0;
+                  else
+                     val[i] = (iLow(_symbol, _timeframe, period) + close) / 2.0;
+               }
+               break;
+            case PriceVolume:
+               val[i] = (double)iVolume(_symbol, _timeframe, period);
                break;
          }
          val[i] += _shift * _pipSize;
