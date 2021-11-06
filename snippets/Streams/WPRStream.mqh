@@ -1,14 +1,14 @@
-// WPR stream v1.0
+// WPR stream v1.1
 
 #ifndef WPRStream_IMP
 #define WPRStream_IMP
 
-class WPRStream : public ABaseStream
+class WPRStream : public AStream
 {
    int _indi;
 public:
    WPRStream(string symbol, ENUM_TIMEFRAMES timeframe, int period)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       _indi = iWPR(symbol, timeframe, period);
    }

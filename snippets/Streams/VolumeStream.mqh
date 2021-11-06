@@ -1,10 +1,10 @@
-// VolumeStream v1.0
+// VolumeStream v1.1
 
-class VolumeStream : public ABaseStream
+class VolumeStream : public AStream
 {
 public:
    VolumeStream(string symbol, const ENUM_TIMEFRAMES timeframe)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
    }
 

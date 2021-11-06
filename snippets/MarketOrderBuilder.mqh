@@ -1,4 +1,4 @@
-// Market order builder v1.7
+// Market order builder v1.8
 #include <enums/OrderSide.mqh>
 #include <Logic/ActionOnConditionLogic.mqh>
 
@@ -71,7 +71,7 @@ public:
       int digits = (int)SymbolInfoInteger(_instrument, SYMBOL_DIGITS);
       double rate = _orderSide == BuySide ? SymbolInfoDouble(_instrument, SYMBOL_ASK) : SymbolInfoDouble(_instrument, SYMBOL_BID);
       double ticksize = SymbolInfoDouble(_instrument, SYMBOL_TRADE_TICK_SIZE);
-      int fillingMode = SymbolInfoInteger(_instrument, SYMBOL_FILLING_MODE);
+      ulong fillingMode = SymbolInfoInteger(_instrument, SYMBOL_FILLING_MODE);
       
       MqlTradeRequest request;
       ZeroMemory(request);

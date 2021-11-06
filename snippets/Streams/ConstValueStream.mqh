@@ -1,14 +1,14 @@
-// Constant value stream v1.0
+// Constant value stream v1.1
 
 #ifndef ConstValueStream_IMP
 #define ConstValueStream_IMP
 
-class ConstValueStream : public ABaseStream
+class ConstValueStream : public AStream
 {
    double _value;
 public:
    ConstValueStream(string symbol, const ENUM_TIMEFRAMES timeframe, double value)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       _value = value;
    }

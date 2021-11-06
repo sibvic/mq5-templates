@@ -1,8 +1,8 @@
 #include <enums/PriceType.mqh>
-#include <streams/ABaseStream.mqh>
+#include <streams/AStream.mqh>
 #include <streams/IBarStream.mqh>
 
-// PriceStream v2.0
+// PriceStream v2.1
 
 #ifndef PriceStream_IMP
 #define PriceStream_IMP
@@ -118,13 +118,13 @@ public:
    }
 };
 
-class SimplePriceStream : public ABaseStream
+class SimplePriceStream : public AStream
 {
    PriceType _price;
    double _pipSize;
 public:
    SimplePriceStream(const string symbol, const ENUM_TIMEFRAMES timeframe, const PriceType __price)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       _price = __price;
 

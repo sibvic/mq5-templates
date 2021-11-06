@@ -1,15 +1,15 @@
-// Condition stream v1.0
+// Condition stream v1.1
 
 #ifndef ConditionStream_IMP
 #define ConditionStream_IMP
 
-class ConditionStream : public ABaseStream
+class ConditionStream : public AStream
 {
    ICondition* _conditions[];
    double _weights[];
 public:
    ConditionStream(string symbol, ENUM_TIMEFRAMES timeframe)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       
    }

@@ -1,17 +1,17 @@
-#include <Streams/ABaseStream.mqh>
+#include <Streams/AStream.mqh>
 
-// IndicatorOutputStream v3.0
+// IndicatorOutputStream v3.1
 
 #ifndef IndicatorOutputStream_IMP
 #define IndicatorOutputStream_IMP
 
-class IndicatorOutputStream : public ABaseStream
+class IndicatorOutputStream : public AStream
 {
 public:
    double _data[];
 
    IndicatorOutputStream(string symbol, const ENUM_TIMEFRAMES timeframe)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
    }
 

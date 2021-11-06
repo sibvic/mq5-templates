@@ -1,8 +1,6 @@
-// ABaseStream v1.1
-#ifndef ABaseStream_IMP
-#define ABaseStream_IMP
+// AStream v1.1
 #include <Streams/IStream.mqh>
-class ABaseStream : public IStream
+class AStream : public IStream
 {
 protected:
    int _references;
@@ -10,14 +8,14 @@ protected:
    ENUM_TIMEFRAMES _timeframe;
    double _shift;
 public:
-   ABaseStream(string symbol, ENUM_TIMEFRAMES timeframe)
+   AStream(string symbol, ENUM_TIMEFRAMES timeframe)
    {
       _symbol = symbol;
       _timeframe = timeframe;
       _references = 1;
    }
 
-   ~ABaseStream()
+   ~AStream()
    {
    }
 
@@ -50,4 +48,3 @@ public:
       return GetSeriesValues(oldIndex, count, val);
    }
 };
-#endif

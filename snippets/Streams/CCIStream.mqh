@@ -1,14 +1,14 @@
-// CCI stream v1.0
+// CCI stream v1.1
 
 #ifndef CCIStream_IMP
 #define CCIStream_IMP
 
-class CCIStream : public ABaseStream
+class CCIStream : public AStream
 {
    int _indi;
 public:
    CCIStream(string symbol, ENUM_TIMEFRAMES timeframe, int period, ENUM_APPLIED_PRICE price)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       _indi = iCCI(symbol, timeframe, period, price);
    }

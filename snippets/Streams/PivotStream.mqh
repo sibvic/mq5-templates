@@ -1,6 +1,6 @@
-//Pivot stream v1.0
+//Pivot stream v1.1
 
-#include <ABaseStream.mqh>
+#include <AStream.mqh>
 
 enum PivotStreamType
 {
@@ -13,13 +13,13 @@ enum PivotStreamType
    PivotStreamR3
 };
 
-class PivotStream : public ABaseStream
+class PivotStream : public AStream
 {
    ENUM_TIMEFRAMES _chartTimeframe;
    PivotStreamType _stream;
 public:
    PivotStream(string symbol, ENUM_TIMEFRAMES timeframe, ENUM_TIMEFRAMES chartTimeframe, PivotStreamType stream)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       _chartTimeframe = chartTimeframe;
       _stream = stream;

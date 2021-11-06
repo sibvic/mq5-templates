@@ -1,14 +1,14 @@
-// MACD stream v1.0
+// MACD stream v1.1
 
 #ifndef MACDStream_IMP
 #define MACDStream_IMP
 
-class MACDStream : public ABaseStream
+class MACDStream : public AStream
 {
    int _indi;
 public:
    MACDStream(string symbol, ENUM_TIMEFRAMES timeframe, int fast_ema_period, int slow_ema_period, int signal_period, ENUM_APPLIED_PRICE price)
-      :ABaseStream(symbol, timeframe)
+      :AStream(symbol, timeframe)
    {
       _indi = iMACD(symbol, timeframe, fast_ema_period, slow_ema_period, signal_period, PRICE_CLOSE);
    }

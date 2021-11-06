@@ -1,5 +1,5 @@
 #include <Actions/AOrderAction.mqh>
-// Order handlers v1.0
+// Order handlers v1.1
 
 #ifndef OrderHandlers_IMP
 #define OrderHandlers_IMP
@@ -48,7 +48,7 @@ public:
       orderAction.AddRef();
    }
 
-   void DoAction(int order)
+   void DoAction(ulong order)
    {
       for (int orderHandlerIndex = 0; orderHandlerIndex < ArraySize(_orderHandlers); ++orderHandlerIndex)
       {
