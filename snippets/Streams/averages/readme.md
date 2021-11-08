@@ -45,3 +45,7 @@ Linear regression on stream.
 ## WMAOnStream
 
 WMA on stream.
+
+## EMAOnStream
+
+Exponential moving average stream.

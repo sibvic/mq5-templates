@@ -1,12 +1,11 @@
-#include <../AOnStream.mqh>
-#include <../CustomStream.mqh>
-#include <RmaOnStream.mqh>
+#include <Streams/AOnStream.mqh>
+#include <Streams/CustomStream.mqh>
+#include <Streams/averages/RmaOnStream.mqh>
 
 // DEMAOnStream v1.0
 class DEMAOnStream : public AOnStream
 {
    double _alpha;
-   IStream* _source;
    CustomStream* _buffer;
    CustomStream* _buffer2;
 public:

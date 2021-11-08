@@ -11,3 +11,7 @@ Position size type.
 ## StopLimitType
 
 Stop/limit type
+
+## MATypes
+
+Moving average types

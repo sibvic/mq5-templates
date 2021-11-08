@@ -1,6 +1,6 @@
-#include <../AOnStream.mqh>
-#include <../CustomStream.mqh>
-#include <RmaOnStream.mqh>
+#include <Streams/AOnStream.mqh>
+#include <Streams/CustomStream.mqh>
+#include <Streams/averages/RmaOnStream.mqh>
 
 // HullOnStream v2.0
 class HullOnStream : public AOnStream

@@ -1,4 +1,4 @@
-#include <../AOnStream.mqh>
+#include <Streams/AOnStream.mqh>
 // TemaOnStream v2.0
 
 class TemaOnStream : public AOnStream

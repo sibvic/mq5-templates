@@ -1,4 +1,4 @@
-#include <../AOnStream.mqh>
+#include <Streams/AOnStream.mqh>
 // VwmaOnStream v2.0
 class VwmaOnStream : public AOnStream
 {
