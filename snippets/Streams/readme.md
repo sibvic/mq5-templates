@@ -119,3 +119,7 @@ Calculates lowest value
 ## SumOnStream
 
 Sum on stream
+
+## BarsSinceStream
+
+Counts number of bars since last condition pass.
