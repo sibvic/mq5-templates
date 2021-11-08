@@ -1,8 +1,7 @@
 #include <enums/TwoStreamsConditionType.mqh>
+#include <conditions/ACondition.mqh>
+#include <streams/IStream.mqh>
 // Stream level condition v1.0
-
-#ifndef StreamLevelCondition_IMP
-#define StreamLevelCondition_IMP
 
 class StreamLevelCondition : public ACondition
 {
@@ -62,5 +61,3 @@ public:
       return _name + ": " + (result ? "true" : "false");
    }
 };
-
-#endif

@@ -1,4 +1,4 @@
-#include <IBarStream.mqh>
+#include <Streams/IBarStream.mqh>
 
 // Standard timeframe bar stream v1.0
 

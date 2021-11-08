@@ -1,4 +1,4 @@
-#include <AStandardTimeframeBarStream.mqh>
+#include <Streams/AStandardTimeframeBarStream.mqh>
 
 // HA bar steam v1.0
 // More templates and snippets on https://github.com/sibvic/mq4-templates
