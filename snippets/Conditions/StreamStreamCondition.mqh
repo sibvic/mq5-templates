@@ -1,7 +1,8 @@
-// Stream-stream condition v1.0
+#include <Conditions/ACondition.mqh>
+#include <enums/TwoStreamsConditionType.mqh>
+#include <streams/IStream.mqh>
 
-#ifndef StreamStreamCondition_IMP
-#define StreamStreamCondition_IMP
+// Stream-stream condition v1.0
 
 class StreamStreamCondition : public ACondition
 {
@@ -10,7 +11,7 @@ class StreamStreamCondition : public ACondition
    string _name;
    IStream* _stream2;
 public:
-   StreamLevelCondition(const string symbol, ENUM_TIMEFRAMES timeframe, TwoStreamsConditionType condition, IStream* stream1, IStream* stream2, string name)
+   StreamStreamCondition(const string symbol, ENUM_TIMEFRAMES timeframe, TwoStreamsConditionType condition, IStream* stream1, IStream* stream2, string name)
       :ACondition(symbol, timeframe)
    {
       _name = name;
@@ -19,7 +20,7 @@ public:
       _stream2 = stream2;
       _stream2.AddRef();
    }
-   ~StreamLevelCondition()
+   ~StreamStreamCondition()
    {
       _stream1.Release();
       _stream2.Release();
@@ -68,5 +69,3 @@ public:
       return _name + ": " + (result ? "true" : "false");
    }
 };
-
-#endif
