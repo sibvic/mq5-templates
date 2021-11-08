@@ -18,7 +18,9 @@ Returns true when profit of the order in the specified range.
 
 ## TradingTimeCondition
 
-Trading time condition.
+Trading time condition. You need to create it using factory: TradingTimeFactory::Create.
+
+Requeres time in be HHMM format (TradingView-like). Checks, whether the time is in specified range. Supports multiple ranges separated by "," (comma). From-to time separated by a dash "-".
 
 ## NotCondition
 

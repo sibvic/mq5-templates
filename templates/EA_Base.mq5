@@ -127,12 +127,11 @@ input int magic_number        = 42; // Magic number
 input PositionDirection logic_direction = DirectLogic; // Logic type
 
 #ifdef TRADING_TIME_FEATURE
-   input string start_time = "000000"; // Start time in hhmmss format
-   input string stop_time = "000000"; // Stop time in hhmmss format
+   input string TradingTimeSection = "In hhmm. You can put several ranges separated by ,"; // == Trading time ==
+   input string trading_time = "0000-0000"; // Time range to trade
    input bool mandatory_closing = false; // Mandatory closing for non-trading time
 #else
-   string start_time = "000000"; // Start time in hhmmss format
-   string stop_time = "000000"; // Stop time in hhmmss format
+   string trading_time = "0000-0000";
    bool mandatory_closing = false;
 #endif
 #ifdef WEEKLY_TRADING_TIME_FEATURE
@@ -210,6 +209,9 @@ public:
       :ACondition(symbol, timeframe)
    {
    }
+   ~EntryLongCondition()
+   {
+   }
 
    virtual bool IsPass(const int period, const datetime date)
    {
@@ -223,6 +225,9 @@ class EntryShortCondition : public ACondition
 public:
    EntryShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
       :ACondition(symbol, timeframe)
+   {
+   }
+   ~EntryShortCondition()
    {
    }
 
@@ -389,11 +394,11 @@ AOrderAction* CreateTrailing(const string symbol, const ENUM_TIMEFRAMES timefram
 TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timeframe, string &error)
 {
    #ifdef TRADING_TIME_FEATURE
-      ICondition* tradingTimeCondition = CreateTradingTimeCondition(start_time, stop_time, use_weekly_timing,
-         week_start_day, week_start_time, week_stop_day, 
-         week_stop_time, error);
+      ICondition* tradingTimeCondition = TradingTimeFactory::Create(trading_time, error);
       if (tradingTimeCondition == NULL)
+      {
          return NULL;
+      }
    #endif
 
    TradingCalculator* tradingCalculator = TradingCalculator::Create(symbol);
