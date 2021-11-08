@@ -123,3 +123,7 @@ Sum on stream
 ## BarsSinceStream
 
 Counts number of bars since last condition pass.
+
+## SimplePriceStream
+
+Price stream based on symbol/timeframe parameters. Uses default price calls
