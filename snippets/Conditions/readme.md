@@ -67,3 +67,7 @@ Return true when at least one of the conditions returns true.
 ## MinDistanceSinceLastTradeCondition
 
 Condition is true when there is enoght distance since last trade
+
+## MaxDistanceBetweenConditionsCondition
+
+Passes only if between two conditions not more that x bars
