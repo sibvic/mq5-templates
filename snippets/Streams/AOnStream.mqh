@@ -1,15 +1,14 @@
-#include <Streams/IStream.mqh>
+#include <Streams/AStreamBase.mqh>
 
 //AOnStream v2.0
-class AOnStream : public IStream
+class AOnStream : public AStreamBase
 {
 protected:
    IStream *_source;
-   int _references;
 public:
    AOnStream(IStream *source)
+      :AStreamBase()
    {
-      _references = 1;
       _source = source;
       _source.AddRef();
    }
@@ -19,18 +18,6 @@ public:
       _source.Release();
    }
    
-   void AddRef()
-   {
-      ++_references;
-   }
-
-   void Release()
-   {
-      --_references;
-      if (_references == 0)
-         delete &this;
-   }
-
    virtual bool GetSeriesValue(const int period, double &val) = 0;
 
    virtual bool GetSeriesValues(const int period, const int count, double &val[])

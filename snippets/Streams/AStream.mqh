@@ -1,18 +1,17 @@
 // AStream v1.1
-#include <Streams/IStream.mqh>
-class AStream : public IStream
+#include <Streams/AStreamBase.mqh>
+class AStream : public AStreamBase
 {
 protected:
-   int _references;
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
    double _shift;
 public:
    AStream(string symbol, ENUM_TIMEFRAMES timeframe)
+      :AStreamBase()
    {
       _symbol = symbol;
       _timeframe = timeframe;
-      _references = 1;
    }
 
    ~AStream()
@@ -29,18 +28,6 @@ public:
       return iBars(_symbol, _timeframe);
    }
    
-   void AddRef()
-   {
-      ++_references;
-   }
-
-   void Release()
-   {
-      --_references;
-      if (_references == 0)
-         delete &this;
-   }
-
    virtual bool GetValues(const int period, const int count, double &val[])
    {
       int bars = iBars(_symbol, _timeframe);
