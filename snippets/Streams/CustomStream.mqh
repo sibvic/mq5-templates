@@ -1,36 +1,29 @@
-// CustomStream v1.0
+#include <Streams/AStream.mqh>
+// CustomStream v2.0
 
-class CustomStream : public IStream
+class CustomStream : public AStream
 {
-protected:
-   int _references;
-public:
    double _data[];
-
-   CustomStream()
+public:
+   CustomStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
+      :AStream(symbol, timeframe)
    {
-      _references = 1;
    }
 
    virtual int Size()
    {
-      return ArrayRange(_data, 0);
+      return iBars(_symbol, _timeframe);
+   }
+
+   virtual void SetValue(int period, double value)
+   {
+      EnsureStreamHasProperSize(Size());
+      _data[period] = value;
    }
    
-   void AddRef()
-   {
-      ++_references;
-   }
-
-   void Release()
-   {
-      --_references;
-      if (_references == 0)
-         delete &this;
-   }
-
    virtual bool GetSeriesValues(const int period, const int count, double &val[])
    {
+      EnsureStreamHasProperSize(Size());
       int size = Size();
       for (int i = 0; i < count; ++i)
       {
@@ -43,14 +36,18 @@ public:
 
    virtual bool GetValues(const int period, const int count, double &val[])
    {
+      EnsureStreamHasProperSize(Size());
       int bars = iBars(_Symbol, (ENUM_TIMEFRAMES)_Period);
       int oldIndex = bars - period - 1;
       return GetSeriesValues(oldIndex, count, val);
    }
 
-   void SetSize(int size)
+private:
+   void EnsureStreamHasProperSize(int size)
    {
-      if (ArrayRange(_data, 0) < size) 
+      if (ArrayRange(_data, 0) != size) 
+      {
          ArrayResize(_data, size);
+      }
    }
 };
