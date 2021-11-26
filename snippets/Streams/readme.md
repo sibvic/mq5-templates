@@ -127,3 +127,7 @@ Counts number of bars since last condition pass.
 ## SimplePriceStream
 
 Price stream based on symbol/timeframe parameters. Uses default price calls
+
+## AStreamBase
+
+Base stream implementation: implements reference counting.
