@@ -1,15 +1,13 @@
-#include <../AOnStream.mqh>
+// WMA on stream v1.1
 
-// WMA on stream v1.0
-
-#ifndef WMAOnStream_IMP
-#define WMAOnStream_IMP
+#include <Streams/AOnStream.mqh>
+#include <Streams/StreamBuffer.mqh>
 
 class WMAOnStream : public AOnStream
 {
    int _length;
    double _k;
-   double _buffer[];
+   StreamBuffer _buffer;
 public:
    WMAOnStream(IStream *source, const int length)
       :AOnStream(source)
@@ -21,11 +19,7 @@ public:
    virtual bool GetSeriesValue(const int period, double &val)
    {
       int totalBars = _source.Size();
-      if (ArrayRange(_buffer, 0) != totalBars) 
-      {
-         ArrayResize(_buffer, totalBars);
-      }
-      
+      _buffer.EnsureSize(totalBars);
       if (period > totalBars - _length)
       {
          return false;
@@ -38,11 +32,10 @@ public:
          return false;
       }
       
-      double last = _buffer[bufferIndex - 1] != EMPTY_VALUE ? _buffer[bufferIndex - 1] : current[0];
+      double last = _buffer._data[bufferIndex - 1] != EMPTY_VALUE ? _buffer._data[bufferIndex - 1] : current[0];
 
-      _buffer[bufferIndex] = (current[0] - last) * _k + last;
-      val = _buffer[bufferIndex];
+      _buffer._data[bufferIndex] = (current[0] - last) * _k + last;
+      val = _buffer._data[bufferIndex];
       return true;
    }
 };
-#endif
