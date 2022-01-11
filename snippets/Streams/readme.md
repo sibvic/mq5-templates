@@ -135,3 +135,7 @@ Base stream implementation: implements reference counting.
 ## CrossStream
 
 Puts 1 when two streams cross and 0 otherwise.
+
+## StreamBuffer
+
+Used for internal implementation of streams.
