@@ -131,3 +131,7 @@ Price stream based on symbol/timeframe parameters. Uses default price calls
 ## AStreamBase
 
 Base stream implementation: implements reference counting.
+
+## CrossStream
+
+Puts 1 when two streams cross and 0 otherwise.
