@@ -1,20 +1,22 @@
 #include <Streams/AOnStream.mqh>
-//LinearRegressionOnStream v1.0
+//LinearRegressionOnStream v1.1
 
 class LinearRegressionOnStream : public AOnStream
 {
    double _length;
    double _buffer[];
+   int _offset;
 public:
-   LinearRegressionOnStream(IStream *source, const int length)
+   LinearRegressionOnStream(IStream *source, const int length, int offset = 0)
       :AOnStream(source)
    {
+      _offset = offset;
       _length = length;
    }
 
    bool GetSeriesValue(const int period, double &val)
    {
-      if (period < 0)
+      if (period - _offset < 0)
       {
          return false;
       }
@@ -24,7 +26,7 @@ public:
          ArrayResize(_buffer, size);
 
       double price[1];
-      if (!_source.GetSeriesValues(period, 1, price))
+      if (!_source.GetSeriesValues(period - _offset, 1, price))
       {
          return false;
       }
