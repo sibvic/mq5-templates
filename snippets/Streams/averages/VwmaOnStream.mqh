@@ -1,5 +1,7 @@
 #include <Streams/AOnStream.mqh>
-// VwmaOnStream v2.0
+#include <Streams/SimplePriceStream.mqh>
+#include <Enums/PriceType.mqh>
+// VwmaOnStream v2.1
 class VwmaOnStream : public AOnStream
 {
    IStream *_volumeSource;
@@ -9,7 +11,20 @@ public:
       :AOnStream(source)
    {
       _volumeSource = volumeSource;
+      _volumeSource.AddRef();
       _length = length;
+   }
+
+   VwmaOnStream(string symbol, ENUM_TIMEFRAMES timeframe, IStream *source, const int length)
+      :AOnStream(source)
+   {
+      _volumeSource = new SimplePriceStream(symbol, timeframe, PriceVolume);
+      _length = length;
+   }
+
+   ~VwmaOnStream()
+   {
+      _volumeSource.Release();
    }
 
    bool GetSeriesValue(const int period, double &val)
