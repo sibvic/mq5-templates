@@ -143,3 +143,7 @@ Used for internal implementation of streams.
 ## StDevStream
 
 Standard deviation.
+
+## ACustomStreamBase
+
+Base class for custom streams.
