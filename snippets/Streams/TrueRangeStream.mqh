@@ -1,12 +1,12 @@
 #include <Streams/AStream.mqh>
 
-//True range stream v1.0
+//True range stream v1.1
 
 class TrueRangeStream : public AStream
 {
    bool _handleNa;
 public:
-   TrueRangeStream(const string symbol, ENUM_TIMEFRAMES timeframe, bool handleNa)
+   TrueRangeStream(const string symbol, ENUM_TIMEFRAMES timeframe, bool handleNa = false)
       :AStream(symbol, timeframe)
    {
       _handleNa = handleNa;
