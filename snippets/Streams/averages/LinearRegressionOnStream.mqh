@@ -1,9 +1,9 @@
 #include <Streams/AOnStream.mqh>
-//LinearRegressionOnStream v1.1
+//LinearRegressionOnStream v1.2
 
 class LinearRegressionOnStream : public AOnStream
 {
-   double _length;
+   int _length;
    double _buffer[];
    int _offset;
 public:
@@ -30,7 +30,7 @@ public:
       {
          return false;
       }
-      if (index < _length)
+      if (index < _length || _buffer[index + 1 - _length] == 0)
       {
          _buffer[index] = price[0];
          return false;
@@ -39,7 +39,7 @@ public:
       double lwmw = _length;
       double lwma = lwmw * price[0];
       double sma  = price[0];
-      for (int i = 0; i < _length; ++i)
+      for (int i = 1; i < _length; ++i)
       {
          double weight = _length - i;
          lwmw += weight;
