@@ -9,8 +9,6 @@ public:
       return iBars(_Symbol, (ENUM_TIMEFRAMES)_Period);
    }
 
-   virtual bool GetValue(const int period, double &val) = 0;
-
    virtual bool GetValues(const int period, const int count, double &val[])
    {
       int oldIndex = Size() - period - 1;
@@ -22,12 +20,24 @@ public:
       for (int i = 0; i < count; ++i)
       {
          double v;
-         if (!GetValue(period + i, v))
+         if (!GetSeriesValue(period + i, v))
          {
             return false;
          }
          val[i] = v;
       }
       return true;
+   }
+protected:
+   virtual bool GetValue(const int period, double &val) = 0;
+   virtual bool GetSeriesValue(const int period, double &val)
+   {
+      int index = SeriesIndexToArray(period);
+      return GetValue(index, val);
+   }
+   
+   int SeriesIndexToArray(int index)
+   {
+      return Size() - 1 - index;
    }
 };
