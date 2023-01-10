@@ -1,4 +1,4 @@
-// Arrows indicator v2.1
+// Arrows indicator v2.2
 
 #property copyright ""
 #property link      ""
@@ -21,6 +21,7 @@ input string   Sound_File               = ""; // Sound file
 #ifdef ADVANCED_ALERTS
 input bool     Advanced_Alert           = false; // Advanced alert
 input string   Advanced_Key             = ""; // Advanced alert key
+input string   Advanced_Server          = "https://profitrobots.com"; // Advanced alert server url
 input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
 input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
 input string   Comment4                 = "- Install AdvancedNotificationsLib using ProfitRobots installer -";
@@ -111,6 +112,7 @@ int OnInit(void)
    mainSignaler.SetNotificationAlert(Notification_Alert);
    #ifdef ADVANCED_ALERTS
    mainSignaler.SetAdvancedAlert(Advanced_Alert, Advanced_Key);
+   mainSignaler.SetAdvancedAlertServer(Advanced_Server);
    #endif
    mainSignaler.SetMessagePrefix(_Symbol + "/" + mainSignaler.GetTimeframeStr() + ": ");
    {

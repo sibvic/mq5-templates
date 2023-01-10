@@ -161,6 +161,7 @@ input string   Sound_File               = ""; // Sound file
 #ifdef ADVANCED_ALERTS
 input bool     Advanced_Alert           = false; // Advanced alert
 input string   Advanced_Key             = ""; // Advanced alert key
+input string   advanced_Server          = "https://profitrobots.com"; // Advanced alert server url
 input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
 input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
 input string   Comment4                 = "- Install AdvancedNotificationsLib using ProfitRobots installer -";
@@ -168,6 +169,7 @@ input string   Comment4                 = "- Install AdvancedNotificationsLib us
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
 #import "AdvancedNotificationsLib.dll"
 void AdvancedAlert(string key, string text, string instrument, string timeframe);
+void AdvancedAlertCustom(string key, string text, string instrument, string timeframe, string url);
 #import
 #endif
 
@@ -418,6 +420,7 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    signaler.SetNotificationAlert(Notification_Alert);
    #ifdef ADVANCED_ALERTS
    signaler.SetAdvancedAlert(Advanced_Alert, Advanced_Key);
+   signaler.SetAdvancedAlertServer(advanced_Server);
    #endif
    signaler.SetMessagePrefix(symbol + "/" + signaler.GetTimeframeStr() + ": ");
    

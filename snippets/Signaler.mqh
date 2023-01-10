@@ -1,9 +1,10 @@
-//Signaler v 4.0
+//Signaler v 4.1
 
 #ifdef ADVANCED_ALERTS
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
 #import "AdvancedNotificationsLib.dll"
 void AdvancedAlert(string key, string text, string instrument, string timeframe);
+void AdvancedAlertCustom(string key, string text, string instrument, string timeframe, string url);
 #import
 #endif
 
@@ -19,6 +20,7 @@ class Signaler
    bool _notificationAlert;
    bool _advancedAlert;
    string _advancedKey;
+   string _advancedAlertServer;
 public:
    Signaler(const string symbol, ENUM_TIMEFRAMES timeframe)
    {
@@ -29,6 +31,7 @@ public:
       _playSound = false;
       _notificationAlert = false;
       _advancedAlert = false;
+      _advancedAlertServer = "https://profitrobots.com";
    }
 
    void SetPopupAlert(bool isEnabled) { _popupAlert = isEnabled; }
@@ -43,6 +46,10 @@ public:
    {
       _advancedAlert = isEnabled;
       _advancedKey = key;
+   }
+   void SetAdvancedAlertServer(string server)
+   {
+      _advancedAlertServer = server;
    }
 
    void SendNotifications(string message, string subject = NULL, string symbol = NULL, string timeframe = NULL)
@@ -67,7 +74,7 @@ public:
          SendNotification(message);
 #ifdef ADVANCED_ALERTS
       if (_advancedAlert && _advancedKey != "")
-         AdvancedAlert(_advancedKey, message, symbol, timeframe);
+         AdvancedAlertCustom(_advancedKey, message, symbol, timeframe, _advancedAlertServer);
 #endif
    }
 
