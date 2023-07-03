@@ -103,3 +103,7 @@ Creates actions for new orders.
 ## HeatMapValueCalculator
 
 Logic for displaying heatmap value.
+
+## PlotChar
+
+Implementation of plotchart from PineScript (TradingView)
