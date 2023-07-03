@@ -1,5 +1,5 @@
 #include <Streams/AOnStream.mqh>
-//LinearRegressionOnStream v1.2
+//LinearRegressionOnStream v1.3
 
 class LinearRegressionOnStream : public AOnStream
 {
@@ -22,8 +22,15 @@ public:
       }
       int size = Size();
       int index = size - 1 - period;
-      if (ArrayRange(_buffer, 0) < size) 
+      int range = ArrayRange(_buffer, 0);
+      if (range < size)
+      {
          ArrayResize(_buffer, size);
+         for (int i = range; i < Bars; ++i)
+         {
+            _buffer[i] = EMPTY_VALUE;
+         }
+      }
 
       double price[1];
       if (!_source.GetSeriesValues(period - _offset, 1, price))
@@ -41,6 +48,11 @@ public:
       double sma  = price[0];
       for (int i = 1; i < _length; ++i)
       {
+         if (_buffer[index - i] == EMPTY_VALUE)
+         {
+            _buffer[index] = price[0];
+            return false;
+         }
          double weight = _length - i;
          lwmw += weight;
          lwma += weight * _buffer[index - i];  
