@@ -147,3 +147,7 @@ Standard deviation.
 ## ACustomStreamBase
 
 Base class for custom streams.
+
+## HighestBarsStream
+
+Equivalent to highestbars from TradingView.
