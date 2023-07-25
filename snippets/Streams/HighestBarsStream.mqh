@@ -2,7 +2,7 @@
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Highest bars stream v1.0
+// Highest bars stream v1.1
 
 class HighestBarsStream : public AOnStream
 {
@@ -19,7 +19,6 @@ public:
    HighestBarsStream(IStream* source, int loopback)
       :AOnStream(source)
    {
-      _loopback = loopback;
       _loopback = loopback;
       ArrayResize(_values, loopback);
    }
