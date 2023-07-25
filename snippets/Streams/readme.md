@@ -151,3 +151,7 @@ Base class for custom streams.
 ## HighestBarsStream
 
 Equivalent to highestbars from TradingView.
+
+## LowestBarsStream
+
+Equivalent to lowestbars from TradingView.
