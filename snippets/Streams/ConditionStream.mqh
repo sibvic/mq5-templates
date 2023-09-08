@@ -1,7 +1,9 @@
-// Condition stream v1.1
+// Condition stream v1.2
 
 #ifndef ConditionStream_IMP
 #define ConditionStream_IMP
+#include <Streams/AStream.mqh>
+#include <Conditions/ICondition.mqh>
 
 class ConditionStream : public AStream
 {
