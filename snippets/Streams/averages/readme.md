@@ -49,3 +49,7 @@ WMA on stream.
 ## EMAOnStream
 
 Exponential moving average stream.
+
+## SwmaOnStream
+
+SWMA average.

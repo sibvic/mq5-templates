@@ -1,4 +1,18 @@
-//Signaler v 4.1
+//Signaler v5.0
+input string   AlertsSection            = ""; // == Alerts ==
+input bool     popup_alert              = false; // Popup message
+input bool     notification_alert       = false; // Push notification
+input bool     email_alert              = false; // Email
+input bool     play_sound               = false; // Play sound on alert
+input string   sound_file               = ""; // Sound file
+input bool     start_program            = false; // Start external program
+input string   program_path             = ""; // Path to the external program executable
+input bool     advanced_alert           = false; // Advanced alert (Telegram/Discord/other platform (like another MT4))
+input string   advanced_key             = ""; // Advanced alert key
+input string   advanced_server          = "https://profitrobots.com"; // Advanced alert server url
+input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
+input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
+input string   Comment4                 = "- Install AdvancedNotificationsLib.dll -";
 
 #ifdef ADVANCED_ALERTS
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
@@ -6,76 +20,43 @@
 void AdvancedAlert(string key, string text, string instrument, string timeframe);
 void AdvancedAlertCustom(string key, string text, string instrument, string timeframe, string url);
 #import
+#import "shell32.dll"
+int ShellExecuteW(int hwnd,string Operation,string File,string Parameters,string Directory,int ShowCmd);
+#import
 #endif
+
+enum SignalerFrequency
+{
+   SignalsAll,
+   SignalsOncePerBarClose,
+   SignalsOncePerBar
+};
 
 class Signaler
 {
-   string _symbol;
-   ENUM_TIMEFRAMES _timeframe;
    string _prefix;
-   bool _popupAlert;
-   bool _emailAlert;
-   bool _playSound;
-   string _soundFile;
-   bool _notificationAlert;
-   bool _advancedAlert;
-   string _advancedKey;
-   string _advancedAlertServer;
+   SignalerFrequency _frequency;
+   datetime _lastSignal;
 public:
-   Signaler(const string symbol, ENUM_TIMEFRAMES timeframe)
+   Signaler(string frequency)
    {
-      _symbol = symbol;
-      _timeframe = timeframe;
-      _popupAlert = false;
-      _emailAlert = false;
-      _playSound = false;
-      _notificationAlert = false;
-      _advancedAlert = false;
-      _advancedAlertServer = "https://profitrobots.com";
+      if (frequency == "all")
+      {
+         _frequency = SignalsAll;
+      }
+      else if (frequency == "once_per_bar_close")
+      {
+         _frequency = SignalsOncePerBarClose;
+      }
+      else if (frequency == "once_per_bar")
+      {
+         _frequency = SignalsOncePerBar;
+      }
+      _lastSignal = 0;
    }
-
-   void SetPopupAlert(bool isEnabled) { _popupAlert = isEnabled; }
-   void SetEmailAlert(bool isEnabled) { _emailAlert = isEnabled; }
-   void SetPlaySound(bool isEnabled, string fileName) 
-   { 
-      _playSound = isEnabled;
-      _soundFile = fileName;
-   }
-   void SetNotificationAlert(bool isEnabled) { _notificationAlert = isEnabled; }
-   void SetAdvancedAlert(bool isEnabled, string key)
+   Signaler()
    {
-      _advancedAlert = isEnabled;
-      _advancedKey = key;
-   }
-   void SetAdvancedAlertServer(string server)
-   {
-      _advancedAlertServer = server;
-   }
-
-   void SendNotifications(string message, string subject = NULL, string symbol = NULL, string timeframe = NULL)
-   {
-      if (subject == NULL)
-         subject = message;
-
-      if (_prefix != "" && _prefix != NULL)
-         message = _prefix + message;
-      if (symbol == NULL)
-         symbol = _symbol;
-      if (timeframe == NULL)
-         timeframe = GetTimeframeStr();
-
-      if (_popupAlert)
-         Alert(message);
-      if (_emailAlert)
-         SendMail(subject, message);
-      if (_playSound)
-         PlaySound(_soundFile);
-      if (_notificationAlert)
-         SendNotification(message);
-#ifdef ADVANCED_ALERTS
-      if (_advancedAlert && _advancedKey != "")
-         AdvancedAlertCustom(_advancedKey, message, symbol, timeframe, _advancedAlertServer);
-#endif
+      _lastSignal = 0;
    }
 
    void SetMessagePrefix(string prefix)
@@ -83,42 +64,45 @@ public:
       _prefix = prefix;
    }
 
-   string GetSymbol()
+   void Alert(string message, int position, datetime time)
    {
-      return _symbol;
-   }
-
-   ENUM_TIMEFRAMES GetTimeframe()
-   {
-      return _timeframe;
-   }
-
-   string GetTimeframeStr()
-   {
-      switch (_timeframe)
+      if (position != 0)
       {
-         case PERIOD_M1: return "M1";
-         case PERIOD_M2: return "M2";
-         case PERIOD_M3: return "M3";
-         case PERIOD_M4: return "M4";
-         case PERIOD_M5: return "M5";
-         case PERIOD_M6: return "M6";
-         case PERIOD_M10: return "M10";
-         case PERIOD_M12: return "M12";
-         case PERIOD_M15: return "M15";
-         case PERIOD_M20: return "M20";
-         case PERIOD_M30: return "M30";
-         case PERIOD_D1: return "D1";
-         case PERIOD_H1: return "H1";
-         case PERIOD_H2: return "H2";
-         case PERIOD_H3: return "H3";
-         case PERIOD_H4: return "H4";
-         case PERIOD_H6: return "H6";
-         case PERIOD_H8: return "H8";
-         case PERIOD_H12: return "H12";
-         case PERIOD_MN1: return "MN1";
-         case PERIOD_W1: return "W1";
+         return;
       }
-      return "M1";
+      if (_frequency != SignalsAll)
+      {
+         if (_lastSignal == time)
+         {
+            return;
+         }
+      }
+      _lastSignal = time;
+      SendNotifications("", message);
+   }
+
+   void SendNotifications(const string subject, string message = NULL)
+   {
+      if (message == NULL)
+         message = subject;
+      if (_prefix != "" && _prefix != NULL)
+         message = _prefix + message;
+
+#ifdef ADVANCED_ALERTS
+      if (start_program)
+         ShellExecuteW(0, "open", program_path, "", "", 1);
+#endif
+      if (popup_alert)
+         Alert(message);
+      if (email_alert)
+         SendMail(subject, message);
+      if (play_sound)
+         PlaySound(sound_file);
+      if (notification_alert)
+         SendNotification(message);
+#ifdef ADVANCED_ALERTS
+      if (advanced_alert && advanced_key != "" && !IsTesting())
+         AdvancedAlertCustom(advanced_key, message, "", "", advanced_server);
+#endif
    }
 };

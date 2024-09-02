@@ -1,55 +1,49 @@
 #include <Conditions/ACondition.mqh>
-#include <enums/TwoStreamsConditionType.mqh>
 #include <streams/IStream.mqh>
+#include <streams/IBarStream.mqh>
+#include <enums/TwoStreamsConditionType.mqh>
 
-// Stream-stream condition v1.0
+// Stream-stream condition v2.0
+
+#ifndef StreamStreamCondition_IMP
+#define StreamStreamCondition_IMP
 
 class StreamStreamCondition : public ACondition
 {
-   TwoStreamsConditionType _condition;
    IStream* _stream1;
-   string _name;
    IStream* _stream2;
+   int _periodShift1;
+   int _periodShift2;
+   string _name1;
+   string _name2;
+   TwoStreamsConditionType _condition;
 public:
-   StreamStreamCondition(const string symbol, ENUM_TIMEFRAMES timeframe, TwoStreamsConditionType condition, IStream* stream1, IStream* stream2, string name)
+   StreamStreamCondition(const string symbol, 
+      ENUM_TIMEFRAMES timeframe, 
+      TwoStreamsConditionType condition,
+      IStream* stream1,
+      IStream* stream2,
+      string name1,
+      string name2,
+      int streamPeriodShift1 = 0,
+      int streamPeriodShift2 = 0)
       :ACondition(symbol, timeframe)
    {
-      _name = name;
+      _name1 = name1;
+      _name2 = name2;
       _stream1 = stream1;
       _stream1.AddRef();
       _stream2 = stream2;
       _stream2.AddRef();
+      _condition = condition;
+      _periodShift1 = streamPeriodShift1;
+      _periodShift2 = streamPeriodShift2;
    }
+
    ~StreamStreamCondition()
    {
       _stream1.Release();
       _stream2.Release();
-   }
-
-   bool IsPass(const int period, const datetime date)
-   {
-      double values1[2];
-      if (!_stream1.GetSeriesValues(period, 2, values1))
-      {
-         return false;
-      }
-      double values2[2];
-      if (!_stream2.GetSeriesValues(period, 2, values2))
-      {
-         return false;
-      }
-      switch (_condition)
-      {
-         case FirstAboveSecond:
-            return values1[0] > values2[0];
-         case FirstBelowSecond:
-            return values1[0] < values2[0];
-         case FirstCrossOverSecond:
-            return values1[0] >= values2[0] && values1[1] < values2[1];
-         case FirstCrossUnderSecond:
-            return values1[0] <= values2[0] && values1[1] > values2[1];
-      }
-      return false;
    }
 
    virtual string GetLogMessage(const int period, const datetime date)
@@ -58,14 +52,41 @@ public:
       switch (_condition)
       {
          case FirstAboveSecond:
-            return _name + ": " + (result ? "true" : "false");
+            return _name1 + " > " + _name2 + ": " + (result ? "true" : "false");
          case FirstBelowSecond:
-            return _name + ": " + (result ? "true" : "false");
+            return _name1 + " < " + _name2 + ": " + (result ? "true" : "false");
          case FirstCrossOverSecond:
-            return _name + ": " + (result ? "true" : "false");
+            return _name1 + " co " + _name2 + ": " + (result ? "true" : "false");
          case FirstCrossUnderSecond:
-            return _name + ": " + (result ? "true" : "false");
+            return _name1 + " cu " + _name2 + ": " + (result ? "true" : "false");
       }
-      return _name + ": " + (result ? "true" : "false");
+      return _name1 + "-" + _name2 + ": " + (result ? "true" : "false");
+   }
+   
+   bool IsPass(const int period, const datetime date)
+   {
+      double value1[2];
+      if (!_stream1.GetValues(period - _periodShift1, 2, value1))
+      {
+         return false;
+      }
+      double value2[2];
+      if (!_stream2.GetValues(period - _periodShift2, 2, value2))
+      {
+         return false;
+      }
+      switch (_condition)
+      {
+         case FirstAboveSecond:
+            return value1[0] > value2[0];
+         case FirstBelowSecond:
+            return value1[0] < value2[0];
+         case FirstCrossOverSecond:
+            return value1[0] >= value2[0] && value1[1] < value2[1];
+         case FirstCrossUnderSecond:
+            return value1[0] <= value2[0] && value1[1] > value2[1];
+      }
+      return value1[0] >= value2[0] && value1[1] < value2[1];
    }
 };
+#endif

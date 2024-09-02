@@ -155,3 +155,7 @@ Equivalent to highestbars from TradingView.
 ## LowestBarsStream
 
 Equivalent to lowestbars from TradingView.
+
+## ColoredFill
+
+Multi-colored PS-like Fill()
