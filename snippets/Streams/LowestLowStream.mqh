@@ -2,39 +2,58 @@
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Lowest low stream v1.1
+// Lowest low stream v1.5
 
 class LowestLowStream : public AOnStream
 {
    int _loopback;
-   double _values[];
 public:
    LowestLowStream(string symbol, ENUM_TIMEFRAMES timeframe, int loopback)
       :AOnStream(new SimplePriceStream(symbol, timeframe, PriceLow))
    {
-      _source.Release();
       _loopback = loopback;
-      ArrayResize(_values, loopback);
+      _source.Release();
    }
    LowestLowStream(IStream* source, int loopback)
       :AOnStream(source)
    {
       _loopback = loopback;
-      ArrayResize(_values, loopback);
    }
 
-   virtual bool GetSeriesValue(const int period, double &val)
+   static bool GetValue(const int period, double &val, IStream* source, int loopback)
    {
-      if (!_source.GetSeriesValues(period, _loopback, _values))
+      double values[];
+      ArrayResize(values, loopback);
+      if (!source.GetValues(period, loopback, values))
       {
          return false;
       }
-      val = _values[0];
+      val = values[0];
 
-      for (int i = 1; i < _loopback; ++i)
+      for (int i = 1; i < loopback; ++i)
       {
-         val = MathMin(val, _values[i]);
+         val = MathMin(val, values[i]);
       }
       return true;
+   }
+   
+   static bool GetValues(const int period, int count, double &val[], IStream* source, int loopback)
+   {
+      for (int i = 0; i < count; ++i)
+      {
+         double v;
+         if (!GetValue(period - i, v, source, loopback))
+         {
+            return false;
+         }
+         val[i] = v;
+      }
+      return true;
+   }
+   
+   virtual bool GetSeriesValue(const int period, double &val)
+   {
+      int oldPos = Size() - period - 1;
+      return LowestLowStream::GetValue(period, val, _source, _loopback);
    }
 };
