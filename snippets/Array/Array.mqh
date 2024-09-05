@@ -9,6 +9,11 @@
 class Array
 {
 public:
+   //static void Sort(IIntArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
+   static void Sort(IFloatArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
+   static void Sort(ILineArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
+   static void Sort(IBoxArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
+   
    //static void Unshift(IIntArray* array, int value) { if (array == NULL) { return; } array.Unshift(value); }
    static void Unshift(IFloatArray* array, double value) { if (array == NULL) { return; } array.Unshift(value); }
    static void Unshift(ILineArray* array, Line* value) { if (array == NULL) { return; } array.Unshift(value); }

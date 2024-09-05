@@ -13,4 +13,5 @@ public:
    virtual IFloatArray* Clear() = 0;
    virtual double Shift() = 0;
    virtual double Remove(int index) = 0;
+   virtual void Sort(bool ascending) = 0;
 };

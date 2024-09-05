@@ -82,6 +82,15 @@ public:
    {
       return NULL; //TODO;
    }
+   
+   void Sort(bool ascending)
+   {
+      ArraySort(_array);
+      if (!ascending)
+      {
+         ArrayReverse(_array);
+      }
+   }
 
    double Remove(int index)
    {
