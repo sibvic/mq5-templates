@@ -65,3 +65,11 @@ Grid row
 ## GridTextCell
 
 Grid text cell
+
+## ACell
+
+Base class for cells
+
+## RowSize
+
+Contains information about row size
