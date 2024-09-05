@@ -159,3 +159,7 @@ Equivalent to lowestbars from TradingView.
 ## ColoredFill
 
 Multi-colored PS-like Fill()
+
+## CandleStreams
+
+Stream of candles
