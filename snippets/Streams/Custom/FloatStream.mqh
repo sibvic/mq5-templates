@@ -2,7 +2,7 @@
 #define FloatStream_IMPL
 
 #include <Streams/AStreamBase.mqh>
-// Float stream v1.0
+// Float stream v1.1
 
 class FloatStream : public AStreamBase
 {
@@ -23,7 +23,7 @@ public:
 
    virtual int Size()
    {
-      return iBars(_symbol, _timeframe);
+      return Bars(_symbol, _timeframe);
    }
 
    void SetValue(const int period, double value)
