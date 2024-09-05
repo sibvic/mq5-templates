@@ -1,16 +1,16 @@
-#ifndef FloatStream_IMPL
-#define FloatStream_IMPL
+#ifndef IntStream_IMPL
+#define IntStream_IMPL
 
-#include <Streams/Abstract/AFloatStream.mqh>
-// Float stream v2.0
+#include <Streams/Abstract/AIntStream.mqh>
+// Int stream v1.0
 
-class FloatStream : public AFloatStream
+class IntStream : public AIntStream
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
-   double _stream[];
+   int _stream[];
 public:
-   FloatStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
+   IntStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
    {
       _symbol = symbol;
       _timeframe = timeframe;
@@ -26,7 +26,7 @@ public:
       return Bars(_symbol, _timeframe);
    }
 
-   void SetValue(const int period, double value)
+   void SetValue(const int period, int value)
    {
       int totalBars = Size();
       if (period < 0 || totalBars <= period)
@@ -37,7 +37,7 @@ public:
       _stream[period] = value;
    }
 
-   virtual bool GetValues(const int period, const int count, double &val[])
+   virtual bool GetValues(const int period, const int count, int &val[])
    {
       int totalBars = Size();
       if (period - count + 1 < 0 || totalBars <= period)
@@ -57,7 +57,7 @@ public:
       return true;
    }
    
-   virtual bool GetSeriesValues(const int period, const int count, double &val[])
+   virtual bool GetSeriesValues(const int period, const int count, int &val[])
    {
       return GetValues(Size() - period - 1, count, val);
    }
