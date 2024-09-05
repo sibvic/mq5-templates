@@ -21,3 +21,7 @@ Collection of lines. Imitates behavior of PineScript lines.
 ## Line
 
 Default implementation of a line.
+
+## Table
+
+PineScript-like table
