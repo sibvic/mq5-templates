@@ -1,4 +1,4 @@
-// Line object v1.2
+// Line object v1.3
 
 class Line
 {
@@ -103,12 +103,14 @@ public:
    double GetY2() { return _y2; }
    static double GetY2(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetY2(); }
 
+   static Line* SetColor(Line* line, color clr) { if (line == NULL) { return NULL; } return line.SetColor(clr); }
    Line* SetColor(color clr)
    {
       _clr = clr;
       return &this;
    }
 
+   static Line* SetWidth(Line* line, int width) { if (line == NULL) { return NULL; } return line.SetWidth(width); }
    Line* SetWidth(int width)
    {
       _width = width;
