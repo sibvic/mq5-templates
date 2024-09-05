@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 
-//RmaOnStream v2.2
+//RmaOnStream v2.3
 class RmaOnStream : public AOnStream
 {
    double _length;
@@ -30,7 +30,7 @@ public:
       }
 
       int index = size - 1 - period;
-      if (index == 0)
+      if (index == 0 || _buffer[index - 1] == EMPTY_VALUE)
       {
          _buffer[index] = price[0];
       }
