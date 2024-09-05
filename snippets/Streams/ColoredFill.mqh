@@ -1,4 +1,4 @@
-// Colored fill v1.0
+// Colored fill v1.1
 
 #ifndef ColoredFill_IMP
 #define ColoredFill_IMP
@@ -10,16 +10,26 @@ class ColoredFill
    color upColor;
    color dnColor;
    int streamIndex;
+   double top;
+   double bottom;
 public:
    ColoredFill(int streamIndex)
    {
       this.streamIndex = streamIndex;
       colorsCount = 0;
+      top = EMPTY_VALUE;
+      bottom = EMPTY_VALUE;
    }
    void Init()
    {
       ArrayInitialize(p1, 0);
       ArrayInitialize(p2, 0);
+   }
+   
+   void SetTopBottom(double top, double bottom)
+   {
+      this.top = top;
+      this.bottom = bottom;
    }
    
    void AddColor(color clr)
@@ -55,6 +65,8 @@ public:
          p2[period] = 0;
          return;
       }
+      value1 = LimitValue(value1);
+      value2 = LimitValue(value2);
       if (upColor == clr)
       {
          p1[period] = MathMin(value1, value2);
@@ -64,5 +76,22 @@ public:
       p1[period] = MathMax(value1, value2);
       p2[period] = MathMin(value1, value2);
    }
+private:
+   double LimitValue(double value)
+   {
+      if (top == EMPTY_VALUE || bottom == EMPTY_VALUE)
+      {
+         return value;
+      }
+      if (value > top)
+      {
+         return top;
+      }
+      if (value < bottom)
+      {
+         return bottom;
+      }
+      return value;
+   }   
 };
 #endif
