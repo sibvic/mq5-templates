@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 
-//RmaOnStream v2.1
+//RmaOnStream v2.2
 class RmaOnStream : public AOnStream
 {
    double _length;
@@ -19,8 +19,15 @@ public:
       if (!_source.GetSeriesValues(period, 1, price))
          return false;
 
-      if (ArrayRange(_buffer, 0) < size) 
+      int currentBufferSize = ArrayRange(_buffer, 0);
+      if (currentBufferSize != size) 
+      {
          ArrayResize(_buffer, size);
+         for (int i = currentBufferSize; i < size; ++i)
+         {
+            _buffer[i] = EMPTY_VALUE;
+         }
+      }
 
       int index = size - 1 - period;
       if (index == 0)

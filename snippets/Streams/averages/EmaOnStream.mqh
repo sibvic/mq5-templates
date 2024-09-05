@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 
-// EMA on stream v1.0
+// EMA on stream v1.1
 
 class EMAOnStream : public AOnStream
 {
@@ -18,9 +18,14 @@ public:
    bool GetSeriesValue(const int period, double &val)
    {
       int totalBars = _source.Size();
-      if (ArrayRange(_buffer, 0) != totalBars) 
+      int currentBufferSize = ArrayRange(_buffer, 0);
+      if (currentBufferSize != totalBars) 
       {
          ArrayResize(_buffer, totalBars);
+         for (int i = currentBufferSize; i < totalBars; ++i)
+         {
+            _buffer[i] = EMPTY_VALUE;
+         }
       }
       
       if (period > totalBars - _length)

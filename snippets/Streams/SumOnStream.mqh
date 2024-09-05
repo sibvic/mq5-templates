@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 
-// Sum on stream v1.0
+// Sum on stream v1.1
 
 class SumOnStream : public AOnStream
 {
@@ -16,8 +16,15 @@ public:
    bool GetSeriesValue(const int period, double &val)
    {
       int totalBars = Size();
-      if (ArrayRange(_buffer, 0) != totalBars) 
+      int currentBufferSize = ArrayRange(_buffer, 0);
+      if (currentBufferSize != totalBars) 
+      {
          ArrayResize(_buffer, totalBars);
+         for (int i = currentBufferSize; i < totalBars; ++i)
+         {
+            _buffer[i] = EMPTY_VALUE;
+         }
+      }
 
       double sum = 0;
       for (int i = 0; i < _length; ++i)
