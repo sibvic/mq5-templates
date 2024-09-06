@@ -53,3 +53,7 @@ Exponential moving average stream.
 ## SwmaOnStream
 
 SWMA average.
+
+## MfiOnStream
+
+Money flow index on stream
