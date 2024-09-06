@@ -1,4 +1,5 @@
 // Colored fill v1.1
+#include <PineScriptUtils.mqh>
 
 #ifndef ColoredFill_IMP
 #define ColoredFill_IMP
@@ -32,8 +33,14 @@ public:
       this.bottom = bottom;
    }
    
-   void AddColor(color clr)
+   void AddColor(uint clr)
    {
+      int transp = GetTranparency(clr);
+      if (transp == 100)
+      {
+         return;
+      }
+      clr = GetColorOnly(clr);
       dnColor = colorsCount == 0 ? clr : upColor;
       upColor = clr;
       colorsCount++;
@@ -44,7 +51,7 @@ public:
       {
          return;
       }
-      AddColor((color)clr);
+      AddColor((uint)clr);
    }
    int RegisterStreams(int id)
    {
@@ -57,9 +64,10 @@ public:
       return id + 2;
    }
    
-   void Set(int period, double value1, double value2, color clr)
+   void Set(int period, double value1, double value2, uint clr)
    {
-      if (clr == EMPTY_VALUE || value1 == EMPTY_VALUE || value2 == EMPTY_VALUE)
+      int transp = GetTranparency(clr);
+      if (clr == EMPTY_VALUE || value1 == EMPTY_VALUE || value2 == EMPTY_VALUE || transp == 100)
       {
          p1[period] = 0;
          p2[period] = 0;
