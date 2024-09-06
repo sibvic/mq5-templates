@@ -167,3 +167,7 @@ Stream of candles
 ## BarsSinceStreamV2
 
 Counts number of bars since last condition.
+
+## ValueWhenSimpleStream
+
+PineScript-like valuewhen.
