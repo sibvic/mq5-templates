@@ -1,4 +1,11 @@
-#define ColorRGB(red, green, blue, transp) red + (green << 8) + (blue << 16)
+#define ColorRGB(red, green, blue, transp) (uint)(red + (green << 8) + (blue << 16) + ((uint)(transp * 2.55) << 24))
+#define GetColorOnly(clr) (clr & 0xFFFFFF)
+#define GetTranparency(clr) (int)MathRound(((clr & 0xFF000000) >> 24) / 2.55)
+
+uint AddTransparency(color clr, int transp)
+{
+   return clr + ((uint)(transp * 2.55) << 24);
+}
 
 bool NumberToBool(double number)
 {
