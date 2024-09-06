@@ -1,6 +1,6 @@
 #include <streams/AOnStream.mqh>
 
-//ChangeStream v1.0
+//ChangeStream v1.1
 class ChangeStream : public AOnStream
 {
    int _period;
@@ -13,7 +13,7 @@ public:
 
    bool GetSeriesValue(const int period, double &val)
    {
-      if (period < 1)
+      if (period >= Size() - 2)
       {
          return false;
       }
