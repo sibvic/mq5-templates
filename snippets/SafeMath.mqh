@@ -1,5 +1,5 @@
 // Pine-script like safe operations
-// v1.0
+// v1.1
 
 double Nz(double val, double defaultValue = 0)
 {
@@ -257,4 +257,12 @@ double SafeArctan(double value)
       return EMPTY_VALUE;
    }
    return MathArctan(value);
+}
+double InvertSign(double value)
+{
+   if (value == EMPTY_VALUE)
+   {
+      return EMPTY_VALUE;
+   }
+   return -value;
 }
