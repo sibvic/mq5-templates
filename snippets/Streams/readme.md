@@ -163,3 +163,7 @@ Multi-colored PS-like Fill()
 ## CandleStreams
 
 Stream of candles
+
+## BarsSinceStreamV2
+
+Counts number of bars since last condition.
