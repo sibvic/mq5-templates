@@ -171,3 +171,11 @@ Counts number of bars since last condition.
 ## ValueWhenSimpleStream
 
 PineScript-like valuewhen.
+
+## PivotLowStream
+
+PineScript-like pivotlow
+
+## PivotHighStream
+
+PineScript-like pivothigh
