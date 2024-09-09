@@ -2,7 +2,7 @@
 #include <Streams/ChangeStream.mqh>
 #include <Streams/AStreamBase.mqh>
 
-// RSI stream v1.1
+// RSI stream v1.2
 
 #ifndef RSIStream_IMP
 #define RSIStream_IMP
@@ -46,6 +46,10 @@ public:
    bool GetValue(const int period, double &val)
    {
       int totalBars = _source.Size();
+      if (totalBars == 0)
+      {
+         return false;
+      }
       if (ArrayRange(_pos, 0) != totalBars) 
       {
          ArrayResize(_pos, totalBars);
