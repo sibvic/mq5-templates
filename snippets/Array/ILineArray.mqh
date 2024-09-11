@@ -14,5 +14,4 @@ public:
    virtual ILineArray* Clear() = 0;
    virtual Line* Shift() = 0;
    virtual Line* Remove(int index) = 0;
-   virtual void Sort(bool ascending) = 0;
 };

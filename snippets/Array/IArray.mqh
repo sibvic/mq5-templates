@@ -3,3 +3,4 @@
 #include <Array/IBoxArray.mqh>
 #include <Array/ILineArray.mqh>
 #include <Array/IFloatArray.mqh>
+#include <Array/IIntArray.mqh>
