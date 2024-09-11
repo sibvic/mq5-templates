@@ -1,4 +1,4 @@
-// Line object v1.3
+// Line object v1.4
 
 class Line
 {
@@ -51,12 +51,6 @@ public:
       return _collectionId;
    }
 
-   Line* SetStyle(string style)
-   {
-      _style = style;
-      return &this;
-   }
-
    void SetXY1(int x, double y)
    {
       _x1 = x;
@@ -107,6 +101,13 @@ public:
    Line* SetColor(color clr)
    {
       _clr = clr;
+      return &this;
+   }
+
+   static Line* SetStyle(Line* line, string style) { if (line == NULL) { return NULL; } return line.SetStyle(style); }
+   Line* SetStyle(string style)
+   {
+      _style = style;
       return &this;
    }
 
