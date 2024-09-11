@@ -1,4 +1,4 @@
-// Line object v1.4
+// Line object v1.5
 
 class Line
 {
@@ -27,6 +27,13 @@ public:
       _timeframe = (ENUM_TIMEFRAMES)_Period;
       _window = window;
       _collectionId = collectionId;
+   }
+   ~Line()
+   {
+      if (ObjectFind(0, _id) >= 0)
+      {
+         ObjectDelete(0, _id);
+      }
    }
    void AddRef()
    {
@@ -120,10 +127,9 @@ public:
 
    void Redraw()
    {
-      int pos1 = iBars(_Symbol, _timeframe) - _x1 - 1;
-      datetime x1 = iTime(_Symbol, _timeframe, pos1);
-      int pos2 = iBars(_Symbol, _timeframe) - _x2 - 1;
-      datetime x2 = iTime(_Symbol, _timeframe, pos2);
+      int totalBars = iBars(_Symbol, _timeframe);
+      datetime x1 = GetTime(_x1, totalBars);
+      datetime x2 = GetTime(_x2, totalBars);
       if (ObjectFind(0, _id) == -1 && ObjectCreate(0, _id, OBJ_TREND, 0, x1, _y1, x2, _y2))
       {
          ObjectSetInteger(0, _id, OBJPROP_COLOR, _clr);
@@ -135,5 +141,11 @@ public:
       ObjectSetDouble(0, _id, OBJPROP_PRICE, 1, _y2);
       ObjectSetInteger(0, _id, OBJPROP_TIME, 0, x1);
       ObjectSetInteger(0, _id, OBJPROP_TIME, 1, x2);
+   }
+private:
+   datetime GetTime(int x, int totalBars)
+   {
+      int pos = totalBars - x - 1;
+      return pos < 0 ? iTime(_Symbol, _timeframe, 0) + MathAbs(pos) * PeriodSeconds(_timeframe) : iTime(_Symbol, _timeframe, pos);
    }
 };
