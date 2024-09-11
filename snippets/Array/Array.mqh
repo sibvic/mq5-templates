@@ -259,5 +259,38 @@ public:
       }
       return sum / array1.Size();
    }
+   
+   static double Stdev(IIntArray* array)
+   {
+      if (array == NULL)
+      {
+         return EMPTY_VALUE;
+      }
+      double sum = 0;
+      double ssum = 0;
+      int size = array.Size();
+      for (int i = 0; i < size; i++)
+      {
+         sum += array.Get(i);
+         ssum += MathPow(size, 2);
+      }
+      return MathSqrt((ssum * size - sum * sum) / (size * (size - 1)));
+   }
+   static double Stdev(IFloatArray* array)
+   {
+      if (array == NULL)
+      {
+         return EMPTY_VALUE;
+      }
+      double sum = 0;
+      double ssum = 0;
+      int size = array.Size();
+      for (int i = 0; i < size; i++)
+      {
+         sum += array.Get(i);
+         ssum += MathPow(size, 2);
+      }
+      return MathSqrt((ssum * size - sum * sum) / (size * (size - 1)));
+   }
 };
 
