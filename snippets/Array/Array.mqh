@@ -181,5 +181,22 @@ public:
       }
       return sum;
    }
+   
+   static double Avg(IIntArray* array)
+   {
+      if (array == NULL)
+      {
+         return EMPTY_VALUE;
+      }
+      return Sum(array) / array.Size();
+   }
+   static double Avg(IFloatArray* array)
+   {
+      if (array == NULL)
+      {
+         return EMPTY_VALUE;
+      }
+      return Sum(array) / array.Size();
+   }
 };
 
