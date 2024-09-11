@@ -198,5 +198,66 @@ public:
       }
       return Sum(array) / array.Size();
    }
+   
+   static double Covariance(IIntArray* array1, IIntArray* array2)
+   {
+      if (array1 == NULL || array2 == NULL || array1.Size() != array2.Size())
+      {
+         return 0;
+      }
+      double avg1 = Avg(array1);
+      double avg2 = Avg(array2);
+      double sum = 0;
+      for (int i = 0; i < array1.Size(); ++i)
+      {
+         sum = sum + (array1.Get(i) - avg1) * (array2.Get(i) - avg2);
+      }
+      return sum / array1.Size();
+   }
+   static double Covariance(IFloatArray* array1, IFloatArray* array2)
+   {
+      if (array1 == NULL || array2 == NULL || array1.Size() != array2.Size())
+      {
+         return 0;
+      }
+      double avg1 = Avg(array1);
+      double avg2 = Avg(array2);
+      double sum = 0;
+      for (int i = 0; i < array1.Size(); ++i)
+      {
+         sum = sum + (array1.Get(i) - avg1) * (array2.Get(i) - avg2);
+      }
+      return sum / array1.Size();
+   }
+   static double Covariance(IIntArray* array1, IFloatArray* array2)
+   {
+      if (array1 == NULL || array2 == NULL || array1.Size() != array2.Size())
+      {
+         return 0;
+      }
+      double avg1 = Avg(array1);
+      double avg2 = Avg(array2);
+      double sum = 0;
+      for (int i = 0; i < array1.Size(); ++i)
+      {
+         sum = sum + (array1.Get(i) - avg1) * (array2.Get(i) - avg2);
+      }
+      return sum / array1.Size();
+   }
+   static double Covariance(IFloatArray* array1, IIntArray* array2)
+   {
+      if (array1 == NULL || array2 == NULL || array1.Size() != array2.Size())
+      {
+         return 0;
+      }
+      double avg1 = Avg(array1);
+      double avg2 = Avg(array2);
+      double sum = 0;
+      for (int i = 0; i < array1.Size(); ++i)
+      {
+         sum = sum + (array1.Get(i) - avg1) * (array2.Get(i) - avg2);
+      }
+      return sum / array1.Size();
+   }
 };
 
