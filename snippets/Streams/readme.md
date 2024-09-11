@@ -179,3 +179,7 @@ PineScript-like pivotlow
 ## PivotHighStream
 
 PineScript-like pivothigh
+
+## CumOnStream
+
+Calculates cumulative value. Similar to cum() in PineScript
