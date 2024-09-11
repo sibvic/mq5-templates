@@ -84,7 +84,6 @@ public:
          + IntegerToString(date.hour) + "_"
          + IntegerToString(date.min) + "_"
          + IntegerToString(date.sec);
-         Print(lineId + " _ " + IntegerToString(x1));
       
       Line* line = new Line(x1, y1, x2, y2, lineId, id, ChartWindowOnDropped());
       LinesCollection* collection = FindCollection(id);
