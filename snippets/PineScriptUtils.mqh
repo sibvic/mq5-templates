@@ -46,3 +46,9 @@ color FromGradient(double value, double bottomValue, double topValue, color bott
       ? bottomColor
       : topColor;
 }
+
+double SetStream(double &stream[], int pos, double value, double defaultValue)
+{
+   stream[pos] = value == EMPTY_VALUE ? defaultValue : value;
+   return stream[pos];
+}
