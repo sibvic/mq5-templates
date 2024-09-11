@@ -292,5 +292,36 @@ public:
       }
       return MathSqrt((ssum * size - sum * sum) / (size * (size - 1)));
    }
+   
+   static double Variance(IIntArray* array, bool biased)
+   {
+      if (array == NULL || !biased)
+      {
+         return EMPTY_VALUE;
+      }
+      double avg = Avg(array);
+      double sum = 0;
+      int size = array.Size();
+      for (int i = 0; i < size; i++)
+      {
+         sum += MathPow(array.Get(i) - avg, 2);
+      }
+      return sum / size;
+   }
+   static double Variance(IFloatArray* array, bool biased)
+   {
+      if (array == NULL || !biased)
+      {
+         return EMPTY_VALUE;
+      }
+      double avg = Avg(array);
+      double sum = 0;
+      int size = array.Size();
+      for (int i = 0; i < size; i++)
+      {
+         sum += MathPow(array.Get(i) - avg, 2);
+      }
+      return sum / size;
+   }
 };
 
