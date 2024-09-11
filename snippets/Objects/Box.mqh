@@ -1,7 +1,7 @@
 #ifndef Box_IMPL
 #define Box_IMPL
 
-// Box object v1.0
+// Box object v1.1
 
 class Box
 {
@@ -38,6 +38,13 @@ public:
       _window = window;
       _extend = "none";
       _timeframe = (ENUM_TIMEFRAMES)_Period;
+   }
+   ~Box()
+   {
+      if (ObjectFind(0, _id) >= 0)
+      {
+         ObjectDelete(0, _id);
+      }
    }
    void AddRef()
    {
@@ -115,26 +122,25 @@ public:
 
    void Redraw()
    {
-      int pos1 = 0;
+      int totalBars = iBars(_Symbol, _timeframe);
+      datetime left;
       if (_extend == "left" || _extend == "both")
       {
-         pos1 = iBars(_Symbol, _timeframe) - 1;
+         left = iTime(_Symbol, _timeframe, iBars(_Symbol, _timeframe) - 1);
       }
       else
       {
-         pos1 = iBars(_Symbol, _timeframe) - _left - 1;
+         left = GetTime(_left, totalBars);
       }
-      datetime left = iTime(_Symbol, _timeframe, MathMax(0, pos1));
-      int pos2 = 0;
+      datetime right;
       if (_extend == "right" || _extend == "both")
       {
-         pos2 = 0;
+         right = iTime(_Symbol, _timeframe, 0);
       }
       else
       {
-         pos2 = iBars(_Symbol, _timeframe) - _right - 1;
+         right = GetTime(_right, totalBars);
       }
-      datetime right = iTime(_Symbol, _timeframe, MathMax(0, pos2));
       if (ObjectFind(0, _id) == -1 && ObjectCreate(0, _id, OBJ_RECTANGLE, _window, left, _top, right, _bottom))
       {
          ObjectSetInteger(0, _id, OBJPROP_COLOR, _bgcolor);
@@ -146,6 +152,12 @@ public:
       ObjectSetDouble(0, _id, OBJPROP_PRICE, 1, _bottom);
       ObjectSetInteger(0, _id, OBJPROP_TIME, 0, left);
       ObjectSetInteger(0, _id, OBJPROP_TIME, 1, right);
+   }
+private:
+   datetime GetTime(int x, int totalBars)
+   {
+      int pos = totalBars - x - 1;
+      return pos < 0 ? iTime(_Symbol, _timeframe, 0) + MathAbs(pos) * PeriodSeconds(_timeframe) : iTime(_Symbol, _timeframe, pos);
    }
 };
 
