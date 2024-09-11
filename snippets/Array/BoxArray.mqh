@@ -1,14 +1,75 @@
 #ifndef BoxArray_IMPL
 #define BoxArray_IMPL
-// Box array v1.4
+// Box array v1.5
 #include <Array/IBoxArray.mqh>
 #include <Objects/BoxesCollection.mqh>
+
+class BoxArraySlice : public IBoxArray
+{
+   IBoxArray* array;
+   int from;
+   int to;
+public:
+   BoxArraySlice(IBoxArray* array, int from, int to)
+   {
+      this.array = array;
+      this.from = from;
+      this.to = to;
+   }
+   int GetFrom() { return from; }
+   int GetTo() { return to; }
+   virtual void Unshift(Box* value)
+   {
+      //do nothing
+   }
+   virtual int Size()
+   {
+      return to - from + 1;
+   }
+   virtual void Push(Box* value)
+   {
+      //do nothing
+   }
+   virtual Box* Pop()
+   {
+      return NULL;
+   }
+   virtual Box* Get(int index)
+   {
+      return array.Get(index + from);
+   }
+   virtual void Set(int index, Box* value)
+   {
+      //do nothing
+   }
+   virtual IBoxArray* Slice(int from, int to)
+   {
+      return NULL;
+   }
+   virtual IBoxArray* Clear()
+   {
+      return NULL;
+   }
+   virtual Box* Shift()
+   {
+      return NULL;
+   }
+   virtual Box* Remove(int index)
+   {
+      return NULL;
+   }
+   virtual void Sort(bool ascending)
+   {
+      //do nothing
+   }
+};
 
 class BoxArray : public IBoxArray
 {
    Box* _array[];
    int _defaultSize;
    Box* _defaultValue;
+   BoxArraySlice* slices[];
 public:
    BoxArray(int size, Box* defaultValue)
    {
@@ -24,8 +85,7 @@ public:
    IBoxArray* Clear()
    {
       int size = ArraySize(_array);
-      int i;
-      for (i = 0; i < size; i++)
+      for (int i = 0; i < size; i++)
       {
          if (_array[i] != NULL)
          {
@@ -34,10 +94,16 @@ public:
          }
       }
       ArrayResize(_array, _defaultSize);
-      for (i = 0; i < _defaultSize; ++i)
+      for (int i = 0; i < _defaultSize; ++i)
       {
          _array[i] = _defaultValue;
       }
+      size = ArraySize(slices);
+      for (int i = 0; i < size; i++)
+      {
+         delete slices[i];
+      }
+      ArrayResize(slices, 0);
       return &this;
    }
 
@@ -117,7 +183,17 @@ public:
    
    IBoxArray* Slice(int from, int to)
    {
-      return NULL; //TODO;
+      int size = ArraySize(slices);
+      for (int i = 0; i < size; ++i)
+      {
+         if (slices[i].GetFrom() == from && slices[i].GetTo() == to)
+         {
+            return slices[i];
+         }
+      }
+      ArrayResize(slices, size + 1);
+      slices[size] = new BoxArraySlice(&this, from, to);
+      return slices[size];
    }
 
    Box* Remove(int index)
