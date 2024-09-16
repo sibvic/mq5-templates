@@ -111,3 +111,7 @@ Implementation of plotchart from PineScript (TradingView)
 ## PineScriptUtils
 
 Utilities for converting Pine Script into MQL5.
+
+## Syminfo
+
+syminfo.* functions from PineScript
