@@ -2,7 +2,7 @@
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Highest high stream v1.5
+// Highest high stream v1.6
 
 class HighestHighStream : public AOnStream
 {
@@ -54,6 +54,6 @@ public:
    virtual bool GetSeriesValue(const int period, double &val)
    {
       int oldPos = Size() - period - 1;
-      return HighestHighStream::GetValue(period, val, _source, _loopback);
+      return HighestHighStream::GetValue(oldPos, val, _source, _loopback);
    }
 };

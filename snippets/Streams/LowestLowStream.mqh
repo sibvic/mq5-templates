@@ -2,7 +2,7 @@
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Lowest low stream v1.5
+// Lowest low stream v1.6
 
 class LowestLowStream : public AOnStream
 {
@@ -54,6 +54,6 @@ public:
    virtual bool GetSeriesValue(const int period, double &val)
    {
       int oldPos = Size() - period - 1;
-      return LowestLowStream::GetValue(period, val, _source, _loopback);
+      return LowestLowStream::GetValue(oldPos, val, _source, _loopback);
    }
 };

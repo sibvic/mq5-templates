@@ -1,4 +1,4 @@
-// WMA on stream v1.1
+// WMA on stream v1.2
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/StreamBuffer.mqh>
@@ -20,12 +20,12 @@ public:
    {
       int totalBars = _source.Size();
       _buffer.EnsureSize(totalBars);
-      if (period > totalBars - _length)
+      int bufferIndex = totalBars - 1 - period;
+      if (bufferIndex < 0)
       {
          return false;
       }
 
-      int bufferIndex = totalBars - 1 - period;
       double current[1];
       if (!_source.GetSeriesValues(period, 1, current))
       {
