@@ -1,4 +1,4 @@
-// Label v1.2
+// Label v1.3
 
 #ifndef Label_IMPL
 #define Label_IMPL
@@ -16,6 +16,7 @@ class Label
    string _style;
    string _size;
    string _yloc;
+   string _textAlign;
    ENUM_TIMEFRAMES _timeframe;
    int _refs;
    int _window;
@@ -30,6 +31,7 @@ public:
       _labelId = labelId;
       _collectionId = collectionId;
       _font = "Arial";
+      _textAlign = "";
       _timeframe = (ENUM_TIMEFRAMES)_Period;
    }
    void AddRef()
@@ -104,6 +106,19 @@ public:
       }
       label.SetY(y);
    }
+   void SetXY(int x, double y)
+   {
+      SetX(x);
+      SetY(y);
+   }
+   static void SetXY(Label* label, int x, double y)
+   {
+      if (label == NULL)
+      {
+         return;
+      }
+      label.SetXY(x, y);
+   }
 
    Label* SetSize(string size)
    {
@@ -139,6 +154,14 @@ public:
       return &this;
    }
    
+   static void SetTextColor(Label* label, color clr)
+   {
+      if (label == NULL)
+      {
+         return;
+      }
+      label.SetTextColor(clr);
+   }
    Label* SetTextColor(color clr)
    {
       _textColor = clr;
@@ -179,6 +202,20 @@ public:
       {
          _font = "Arial";
       }
+      return &this;
+   }
+   
+   static void SetTextAlign(Label* label, string textAlign)
+   {
+      if (label == NULL)
+      {
+         return;
+      }
+      label.SetTextAlign(textAlign);
+   }
+   Label* SetTextAlign(string textAlign)
+   {
+      _textAlign = textAlign;
       return &this;
    }
 
