@@ -1,6 +1,11 @@
-#include <streams/AOnStream.mqh>
+#ifndef ChangeStream_IMPL
+#define ChangeStream_IMPL
 
-//ChangeStream v1.1
+#include <Streams/AOnStream.mqh>
+#include <Streams/interfaces/IBoolStream.mqh>
+#include <Streams/Custom/BoolToFloatStream.mqh>
+
+//ChangeStream v1.2
 class ChangeStream : public AOnStream
 {
    int _period;
@@ -27,3 +32,22 @@ public:
       return true;
    }
 };
+
+class ChangeStreamFactory
+{
+public:
+   static IStream* Create(IStream* stream, int period = 1)
+   {
+      return new ChangeStream(stream, period);
+   }
+   
+   static IStream* Create(IBoolStream* stream, int period = 1)
+   {
+      BoolToFloatStream* wrapper = new BoolToFloatStream(stream);
+      ChangeStream* change = new ChangeStream(wrapper, period);
+      wrapper.Release();
+      return change;
+   }
+};
+
+#endif 
