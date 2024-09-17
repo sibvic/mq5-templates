@@ -13,3 +13,7 @@ Int stream
 ## BoolStream
 
 Stream of booleans
+
+## BoolToFloatStream
+
+Converts bool stream to float stream. true = 1, false = 0
