@@ -1,4 +1,4 @@
-// Table v1.0
+// Table v1.1
 #include <Grid/Grid.mqh>
 #include <Grid/LabelCell.mqh>
 
@@ -72,10 +72,10 @@ class Table
    int _rows;
 
    int _borderWidth;
-   color _borderColor;
+   uint _borderColor;
    
    int _frameWidth;
-   color _frameColor;
+   uint _frameColor;
    Grid* _grid;
 public:
    Table(string prefix, string position, int columns, int rows)
@@ -211,6 +211,21 @@ public:
       if (cell.SetTextHAlign(halign))
       {
       }
+   }
+   
+   static void CellBGColor(Table* table, int column, int row, uint clr)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.CellBGColor(column, row, clr);
+   }
+   void CellBGColor(int column, int row, uint clr)
+   {
+      Row* gridRow = _grid.GetRow(row);
+      LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
+      cell.SetBgColor(clr);
    }
    
    void Redraw()

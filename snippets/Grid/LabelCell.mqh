@@ -1,6 +1,6 @@
 #include <Grid/ACell.mqh>
 
-// Label cell v3.0
+// Label cell v4.0
 
 #ifndef LabelCell_IMP
 #define LabelCell_IMP
@@ -54,7 +54,7 @@ public:
       height = _height;
    }
 
-   virtual void Draw(int x, int y) 
+   virtual void Draw(int x, int y, int width)
    {
       if (_withBackground)
       {
@@ -62,7 +62,7 @@ public:
          ObjectSetInteger(0, _id + "rect", OBJPROP_XDISTANCE, x);
          ObjectSetInteger(0, _id + "rect", OBJPROP_YDISTANCE, y);
          ObjectSetInteger(0, _id + "rect", OBJPROP_BGCOLOR, _bgColor); 
-         ObjectSetInteger(0, _id + "rect", OBJPROP_XSIZE, _width);
+         ObjectSetInteger(0, _id + "rect", OBJPROP_XSIZE, width);
          ObjectSetInteger(0, _id + "rect", OBJPROP_YSIZE, _height);
          ObjectSetInteger(0, _id + "rect", OBJPROP_COLOR, _color);
          ObjectSetInteger(0, _id + "rect", OBJPROP_CORNER, _corner);
@@ -74,11 +74,11 @@ public:
          int lineX = x;
          if (_textHAlign == "center")
          {
-            lineX += (_width - _linesWidths[i]) / 2;
+            lineX += (width - _linesWidths[i]) / 2;
          }
          else if (_textHAlign == "right")
          {
-            lineX += _width - _linesWidths[i];
+            lineX += width - _linesWidths[i];
          }
          ObjectMakeLabel(_id + "line" + i, lineX, y, lines[i], _color, _corner, _windowNumber, "Arial", _fontSize); 
          y += _linesHeights[i];
