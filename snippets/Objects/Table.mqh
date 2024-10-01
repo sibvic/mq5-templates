@@ -1,4 +1,4 @@
-// Table v1.1
+// Table v1.3
 #include <Grid/Grid.mqh>
 #include <Grid/LabelCell.mqh>
 
@@ -10,7 +10,22 @@ public:
    static void Clear();
    static void Add(Table* table);
    static void Redraw();
+   static Table* Create(string prefix, string tableIndex, string position, int columns, int rows);
 };
+
+Table* TableManager::Create(string prefix, string tableIndex, string position, int columns, int rows)
+{
+   string id = prefix + "_" + tableIndex;
+   int tablesCount = ArraySize(tables);
+   for (int i = 0; i < tablesCount; ++i)
+   {
+      if (tables[i].GetId() == id)
+      {
+         return tables[i];
+      }
+   }
+   return new Table(id, position, columns, rows);
+}
 
 Table* TableManager::tables[];
 void TableManager::Clear()
@@ -111,6 +126,11 @@ public:
    {
       delete _grid;
    }
+   
+   string GetId()
+   {
+      return _prefix;
+   }
 
    Table* SetBorderColor(color clr)
    {
@@ -157,6 +177,10 @@ public:
    void CellText(int column, int row, string text)
    {
       Row* gridRow = _grid.GetRow(row);
+      if (gridRow == NULL)
+      {
+         return;
+      }
       LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
       if (cell.SetText(text))
       {
@@ -174,6 +198,10 @@ public:
    void CellTextColor(int column, int row, color clr)
    {
       Row* gridRow = _grid.GetRow(row);
+      if (gridRow == NULL)
+      {
+         return;
+      }
       LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
       if (cell.SetColor(clr))
       {
@@ -190,6 +218,10 @@ public:
    void CellTextSize(int column, int row, string size)
    {
       Row* gridRow = _grid.GetRow(row);
+      if (gridRow == NULL)
+      {
+         return;
+      }
       LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
       if (cell.SetFontSize(GetFontSize(size)))
       {
@@ -207,6 +239,10 @@ public:
    void CellTextHAlign(int column, int row, string halign)
    {
       Row* gridRow = _grid.GetRow(row);
+      if (gridRow == NULL)
+      {
+         return;
+      }
       LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
       if (cell.SetTextHAlign(halign))
       {
@@ -224,6 +260,10 @@ public:
    void CellBGColor(int column, int row, uint clr)
    {
       Row* gridRow = _grid.GetRow(row);
+      if (gridRow == NULL)
+      {
+         return;
+      }
       LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
       cell.SetBgColor(clr);
    }
@@ -243,14 +283,14 @@ public:
             x = GetScreenWidth() - GetGridWidth();
             break;
          case TablePositionMiddleLeft:
-            y = (GetScreenHeight() - GetGridHeight()) / 2;
+            y = GetScreenHeight() / 2 - GetGridHeight() / 2;
             break;
          case TablePositionMiddleCenter:
-            y = (GetScreenHeight() - GetGridHeight()) / 2;
+            y = GetScreenHeight() / 2 - GetGridHeight() / 2;
             x = (GetScreenWidth() - GetGridWidth()) / 2;
             break;
          case TablePositionMiddleRight:
-            y = (GetScreenHeight() - GetGridHeight()) / 2;
+            y = GetScreenHeight() / 2 - GetGridHeight() / 2;
             x = GetScreenWidth() - GetGridWidth();
             break;
          case TablePositionBottomLeft:
@@ -324,7 +364,7 @@ private:
       {
          RowSize* rowSizes = new RowSize();
          _grid.GetRow(i).Measure(rowSizes);
-         height = MathMax(height, rowSizes.GetMaxHeight());
+         height += rowSizes.GetMaxHeight();
          delete rowSizes;
       }
       return height;

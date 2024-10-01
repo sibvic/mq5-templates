@@ -1,7 +1,7 @@
 #include <Grid/Row.mqh>
 #include <Grid/RowSize.mqh>
 
-// Grid v2.0
+// Grid v2.1
 
 #ifndef Grid_IMP
 #define Grid_IMP
@@ -29,6 +29,10 @@ public:
    
    Row *GetRow(const int index)
    {
+      if (index == INT_MIN)
+      {
+         return NULL;
+      }
       return _rows[index];
    }
    

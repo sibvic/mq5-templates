@@ -1,6 +1,7 @@
 #include <Grid/ACell.mqh>
+#include <PineScriptUtils.mqh>
 
-// Label cell v4.0
+// Label cell v4.1
 
 #ifndef LabelCell_IMP
 #define LabelCell_IMP
@@ -11,17 +12,17 @@ class LabelCell : public ACell
    string _text; 
    ENUM_BASE_CORNER _corner;
    int _fontSize;
-   color _color;
+   uint _color;
    int _windowNumber;
    string _textHAlign;
    bool _withBackground;
-   color _bgColor;
+   uint _bgColor;
    int _width;
    int _height;
    int _linesHeights[];
    int _linesWidths[];
 public:
-   LabelCell(const string id, const string text, ENUM_BASE_CORNER corner, int fontSize, color clr, int windowNumber)
+   LabelCell(const string id, const string text, ENUM_BASE_CORNER corner, int fontSize, uint clr, int windowNumber)
    { 
       _withBackground = false;
       _textHAlign = "cental";
@@ -29,7 +30,7 @@ public:
       _id = id; 
       _text = text;
       _fontSize = fontSize;
-      _color = clr;
+      _color = GetColorOnly(clr);
       _windowNumber = windowNumber;
    }
 
@@ -58,14 +59,18 @@ public:
    {
       if (_withBackground)
       {
-         ObjectCreate(0, _id + "rect", OBJ_RECTANGLE_LABEL, 0, 0, 0);
+         if (ObjectFind(0, _id + "rect") == -1 && !ObjectCreate(0, _id + "rect", OBJ_RECTANGLE_LABEL, 0, 0, 0))
+         {
+            return;
+         }
          ObjectSetInteger(0, _id + "rect", OBJPROP_XDISTANCE, x);
          ObjectSetInteger(0, _id + "rect", OBJPROP_YDISTANCE, y);
-         ObjectSetInteger(0, _id + "rect", OBJPROP_BGCOLOR, _bgColor); 
+         ObjectSetInteger(0, _id + "rect", OBJPROP_BGCOLOR, _bgColor);
          ObjectSetInteger(0, _id + "rect", OBJPROP_XSIZE, width);
          ObjectSetInteger(0, _id + "rect", OBJPROP_YSIZE, _height);
          ObjectSetInteger(0, _id + "rect", OBJPROP_COLOR, _color);
          ObjectSetInteger(0, _id + "rect", OBJPROP_CORNER, _corner);
+         ObjectSetInteger(0, _id + "rect", OBJPROP_BACK, true);
       }
       string lines[];
       int linesCount = StringSplit(_text, '\n', lines);
@@ -85,8 +90,9 @@ public:
       }
    }
    
-   bool SetBgColor(color clr)
+   bool SetBgColor(uint clr)
    {
+      clr = GetColorOnly(clr);
       if (_bgColor == clr)
       {
          return false;
@@ -101,8 +107,9 @@ public:
       
    }
    
-   bool SetColor(color clr)
+   bool SetColor(uint clr)
    {
+      clr = GetColorOnly(clr);
       if (_color == clr)
       {
          return false;
