@@ -15,3 +15,7 @@ Abstract implementation of a IIntStream
 ## ADateTimeStream
 
 Abstract implementation of a IDateTimeStream
+
+## AColorStream
+
+Abstract implementation of a IColorStream
