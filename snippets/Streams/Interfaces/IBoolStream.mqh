@@ -1,4 +1,4 @@
-// Boolean Stream v.1.0
+// Boolean Stream v.1.1
 
 #ifndef IBoolStream_IMPL
 #define IBoolStream_IMPL
@@ -12,6 +12,8 @@ public:
 
    virtual bool GetValues(const int period, const int count, bool &val[]) = 0;
    virtual bool GetSeriesValues(const int period, const int count, bool &val[]) = 0;
+   virtual bool GetValues(const int period, const int count, int &val[]) = 0;
+   virtual bool GetSeriesValues(const int period, const int count, int &val[]) = 0;
 };
 
 #endif

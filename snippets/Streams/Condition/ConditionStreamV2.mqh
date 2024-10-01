@@ -3,7 +3,7 @@
 #include <Streams/Abstract/ABoolStream.mqh>
 #include <Conditions/ICondition.mqh>
 
-//ConditionStreamV2 v1.0
+//ConditionStreamV2 v1.1
 
 class ConditionStreamV2 : public ABoolStream
 {
@@ -44,6 +44,25 @@ public:
       return true;
    }
    virtual bool GetSeriesValues(const int period, const int count, bool &val[])
+   {
+      int pos = Size() - period - 1;
+      return GetValues(pos, count, val);
+   }
+   virtual bool GetValues(const int period, const int count, int &val[])
+   {
+      bool values[];
+      ArrayResize(values, count);
+      if (!GetValues(period, count, values))
+      {
+         return false;
+      }
+      for (int i = 0; i < count; ++i)
+      {
+         val[i] = values[i];
+      }
+      return true;
+   }
+   virtual bool GetSeriesValues(const int period, const int count, int &val[])
    {
       int pos = Size() - period - 1;
       return GetValues(pos, count, val);
