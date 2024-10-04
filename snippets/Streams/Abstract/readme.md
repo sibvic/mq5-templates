@@ -19,3 +19,7 @@ Abstract implementation of a IDateTimeStream
 ## AColorStream
 
 Abstract implementation of a IColorStream
+
+## AStringStream
+
+Abstract implementation of a IStringStream

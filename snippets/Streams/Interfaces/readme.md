@@ -13,3 +13,7 @@ Interface for datetime stream. Similar to IStream located in the directory above
 ## IColorStream
 
 Interface for color stream. Similar to IStream located in the directory above, but returns datetime
+
+## IStringStream
+
+Interface for string stream. Similar to IStream located in the directory above, but returns datetime
