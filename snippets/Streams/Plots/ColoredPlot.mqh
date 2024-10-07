@@ -64,7 +64,7 @@ public:
       ArrayInitialize(buffer, EMPTY_VALUE);
    }
    
-   void Set(int pos, double value, uint clr)
+   double Set(int pos, double value, uint clr)
    {
       int transp = GetTranparency(clr);
       buffer[pos] = value;
@@ -75,12 +75,12 @@ public:
          values[pos] = EMPTY_VALUE;
          colors[pos] = EMPTY_VALUE;
          buffer[pos] = EMPTY_VALUE;
-         return;
+         return EMPTY_VALUE;
       }
       int prevValueIndex = FindPrevValueIndex(pos);
       if (prevValueIndex == -1)
       {
-         return;
+         return EMPTY_VALUE;
       }
       int length = pos - prevValueIndex + 1;
       if (colors[pos] == -1)
@@ -90,7 +90,7 @@ public:
             values[prevValueIndex + i] = EMPTY_VALUE;
             colors[prevValueIndex + i] = EMPTY_VALUE;
          }
-         return;
+         return EMPTY_VALUE;
       }
       double diff = buffer[pos] - buffer[prevValueIndex];
       double step = diff / (length - 1);
@@ -99,6 +99,7 @@ public:
          values[prevValueIndex + i] = buffer[prevValueIndex] + step * i;
          colors[prevValueIndex + i] = colors[pos];
       }
+      return value;
    }
 private:
    int FindPrevValueIndex(int pos)
