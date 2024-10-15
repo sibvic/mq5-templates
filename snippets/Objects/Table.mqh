@@ -132,7 +132,7 @@ public:
       return _prefix;
    }
 
-   Table* SetBorderColor(color clr)
+   Table* SetBorderColor(uint clr)
    {
       _borderColor = clr;
       return &this;
@@ -142,7 +142,7 @@ public:
       _borderWidth = borderWidth;
       return &this;
    }
-   Table* SetBGColor(color clr)
+   Table* SetBGColor(uint clr)
    {
       for (int row = 0; row < _grid.GetRowsCount(); ++row)
       {
@@ -156,7 +156,7 @@ public:
       return &this;
    }
    
-   Table* SetFrameColor(color clr)
+   Table* SetFrameColor(uint clr)
    {
       _frameColor = clr;
       return &this;
@@ -187,7 +187,7 @@ public:
          Redraw();
       }
    }
-   static void CellTextColor(Table* table, int column, int row, color clr)
+   static void CellTextColor(Table* table, int column, int row, uint clr)
    {
       if (table == NULL)
       {
@@ -195,7 +195,7 @@ public:
       }
       table.CellTextColor(column, row, clr);
    }
-   void CellTextColor(int column, int row, color clr)
+   void CellTextColor(int column, int row, uint clr)
    {
       Row* gridRow = _grid.GetRow(row);
       if (gridRow == NULL)
