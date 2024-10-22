@@ -1,5 +1,5 @@
 // Pine-script like safe operations
-// v1.1
+// v1.2
 
 double Nz(double val, double defaultValue = 0)
 {
@@ -127,6 +127,15 @@ double SafeMathMax(double left, double right)
    return MathMax(left, right);
 }
 
+double SafeMathMax(double param1, double param2, double param3)
+{
+   if (param1 == EMPTY_VALUE || param2 == EMPTY_VALUE || param3 == EMPTY_VALUE)
+   {
+      return EMPTY_VALUE;
+   }
+   return MathMax(MathMax(param1, param2), param3);
+}
+
 double SafeMathMin(double left, double right)
 {
    if (left == EMPTY_VALUE || right == EMPTY_VALUE)
@@ -134,6 +143,15 @@ double SafeMathMin(double left, double right)
       return EMPTY_VALUE;
    }
    return MathMin(left, right);
+}
+
+double SafeMathMin(double param1, double param2, double param3)
+{
+   if (param1 == EMPTY_VALUE || param2 == EMPTY_VALUE || param3 == EMPTY_VALUE)
+   {
+      return EMPTY_VALUE;
+   }
+   return MathMin(MathMin(param1, param2), param3);
 }
 
 double SafeMathPow(double value, double power)
