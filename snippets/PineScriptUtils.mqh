@@ -31,7 +31,7 @@ public:
    }
 };
 
-color FromGradient(double value, double bottomValue, double topValue, uint bottomColor, uint topColor)
+uint FromGradient(double value, double bottomValue, double topValue, uint bottomColor, uint topColor)
 {
    if (value == EMPTY_VALUE || topValue == EMPTY_VALUE)
    {
@@ -45,18 +45,18 @@ color FromGradient(double value, double bottomValue, double topValue, uint botto
    double rate = (value - bottomValue) / range;
    if (rate > 1)
    {
-      return bottomValue;
+      return bottomColor;
    }
    if (rate < 0)
    {
-      return topValue;
+      return topColor;
    }
-   int bottomR = ColorR(bottomColor);
-   int bottomG = ColorG(bottomColor);
-   int bottomB = ColorB(bottomColor);
-   int topR = ColorR(topColor);
-   int topG = ColorG(topColor);
-   int topB = ColorB(topColor);
+   uint bottomR = ColorR(bottomColor);
+   uint bottomG = ColorG(bottomColor);
+   uint bottomB = ColorB(bottomColor);
+   uint topR = ColorR(topColor);
+   uint topG = ColorG(topColor);
+   uint topB = ColorB(topColor);
    return ColorRGB(bottomR + int(rate * (topR - bottomR)), bottomG + int(rate * (topG - bottomG)), bottomB + int(rate * (topB - bottomB)), 0);
 }
 
