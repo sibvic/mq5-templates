@@ -1,7 +1,7 @@
 #ifndef Box_IMPL
 #define Box_IMPL
 
-// Box object v1.1
+// Box object v1.2
 
 class Box
 {
@@ -88,9 +88,9 @@ public:
    double GetTop() { return _top; }
    static double GetBottom(Box* box) { if (box == NULL) { return EMPTY_VALUE; } return box.GetBottom(); }
    double GetBottom() { return _bottom; }
-   static int GetLeft(Box* box) { if (box == NULL) { return EMPTY_VALUE; } return box.GetLeft(); }
+   static int GetLeft(Box* box) { if (box == NULL) { return INT_MIN; } return box.GetLeft(); }
    int GetLeft() { return _left; }
-   static int GetRight(Box* box) { if (box == NULL) { return EMPTY_VALUE; } return box.GetRight(); }
+   static int GetRight(Box* box) { if (box == NULL) { return INT_MIN; } return box.GetRight(); }
    int GetRight() { return _right; }
 
    static void SetTop(Box* box, double value) { if (box == NULL) { return; } box.SetTop(value); }
