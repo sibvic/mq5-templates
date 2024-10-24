@@ -1,5 +1,6 @@
-// Colored fill v1.1
+// Colored fill v1.2
 #include <PineScriptUtils.mqh>
+#include <Streams/IStream.mqh>
 
 #ifndef ColoredFill_IMP
 #define ColoredFill_IMP
@@ -11,15 +12,26 @@ class ColoredFill
    color upColor;
    color dnColor;
    int streamIndex;
-   double top;
-   double bottom;
+   IStream* top;
+   IStream* bottom;
 public:
    ColoredFill(int streamIndex)
    {
       this.streamIndex = streamIndex;
       colorsCount = 0;
-      top = EMPTY_VALUE;
-      bottom = EMPTY_VALUE;
+      top = NULL;
+      bottom = NULL;
+   }
+   ~ColoredFill()
+   {
+      if (top != NULL)
+      {
+         top.Release();
+      }
+      if (bottom != NULL)
+      {
+         bottom.Release();
+      }
    }
    void Init()
    {
@@ -27,10 +39,12 @@ public:
       ArrayInitialize(p2, 0);
    }
    
-   void SetTopBottom(double top, double bottom)
+   void SetTopBottom(IStream* top, IStream* bottom)
    {
       this.top = top;
+      top.AddRef();
       this.bottom = bottom;
+      bottom.AddRef();
    }
    
    void AddColor(uint clr)
@@ -73,8 +87,8 @@ public:
          p2[period] = 0;
          return;
       }
-      value1 = LimitValue(value1);
-      value2 = LimitValue(value2);
+      value1 = LimitValue(period, value1);
+      value2 = LimitValue(period, value2);
       if (upColor == clr)
       {
          p1[period] = MathMin(value1, value2);
@@ -85,19 +99,29 @@ public:
       p2[period] = MathMin(value1, value2);
    }
 private:
-   double LimitValue(double value)
+   double LimitValue(int pos, double value)
    {
-      if (top == EMPTY_VALUE || bottom == EMPTY_VALUE)
+      if (top == NULL || bottom == NULL)
       {
          return value;
       }
-      if (value > top)
+      double topValue[1];
+      if (!top.GetValues(pos, 1, topValue))
       {
-         return top;
+         return value;
       }
-      if (value < bottom)
+      double bottomValue[1];
+      if (!bottom.GetValues(pos, 1, bottomValue))
       {
-         return bottom;
+         return value;
+      }
+      if (value > topValue[0])
+      {
+         return topValue[0];
+      }
+      if (value < bottomValue[0])
+      {
+         return bottomValue[0];
       }
       return value;
    }   

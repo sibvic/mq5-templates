@@ -1,13 +1,13 @@
-// Float array v1.4
-#include <Array/IFloatArray.mqh>
+// Int array v1.4
+#include <PineScript/Array/IIntArray.mqh>
 
-class FloatArraySlice : public IFloatArray
+class IntArraySlice : public IIntArray
 {
-   IFloatArray* array;
+   IIntArray* array;
    int from;
    int to;
 public:
-   FloatArraySlice(IFloatArray* array, int from, int to)
+   IntArraySlice(IIntArray* array, int from, int to)
    {
       this.array = array;
       this.from = from;
@@ -15,7 +15,7 @@ public:
    }
    int GetFrom() { return from; }
    int GetTo() { return to; }
-   virtual void Unshift(double value)
+   virtual void Unshift(int value)
    {
       //do nothing
    }
@@ -23,35 +23,35 @@ public:
    {
       return to - from + 1;
    }
-   virtual void Push(double value)
+   virtual void Push(int value)
    {
       //do nothing
    }
-   virtual double Pop()
+   virtual int Pop()
    {
       return NULL;
    }
-   virtual double Get(int index)
+   virtual int Get(int index)
    {
       return array.Get(index + from);
    }
-   virtual void Set(int index, double value)
+   virtual void Set(int index, int value)
    {
       //do nothing
    }
-   virtual IFloatArray* Slice(int from, int to)
+   virtual IIntArray* Slice(int from, int to)
    {
       return NULL;
    }
-   virtual IFloatArray* Clear()
+   virtual IIntArray* Clear()
    {
       return NULL;
    }
-   virtual double Shift()
+   virtual int Shift()
    {
       return NULL;
    }
-   virtual double Remove(int index)
+   virtual int Remove(int index)
    {
       return NULL;
    }
@@ -61,25 +61,25 @@ public:
    }
 };
 
-class FloatArray : public IFloatArray
+class IntArray : public IIntArray
 {
-   double _array[];
+   int _array[];
    int _defaultSize;
-   double _defaultValue;
-   FloatArraySlice* slices[];
+   int _defaultValue;
+   IntArraySlice* slices[];
 public:
-   FloatArray(int size, double defaultValue)
+   IntArray(int size, int defaultValue)
    {
       _defaultSize = size;
       _defaultValue = defaultValue;
       Clear();
    }
-   ~FloatArray()
+   ~IntArray()
    {
       Clear();
    }
 
-   IFloatArray* Clear()
+   IIntArray* Clear()
    {
       ArrayResize(_array, _defaultSize);
       for (int i = 0; i < _defaultSize; ++i)
@@ -95,7 +95,7 @@ public:
       return &this;
    }
 
-   void Unshift(double value)
+   void Unshift(int value)
    {
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);
@@ -111,22 +111,22 @@ public:
       return ArraySize(_array);
    }
 
-   void Push(double value)
+   void Push(int value)
    {
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);
       _array[size] = value;
    }
 
-   double Pop()
+   int Pop()
    {
       int size = ArraySize(_array);
-      double value = _array[size - 1];
+      int value = _array[size - 1];
       ArrayResize(_array, size - 1);
       return value;
    }
 
-   double Get(int index)
+   int Get(int index)
    {
       if (index < 0 || index >= Size())
       {
@@ -135,7 +135,7 @@ public:
       return _array[index];
    }
    
-   void Set(int index, double value)
+   void Set(int index, int value)
    {
       if (index < 0 || index >= Size())
       {
@@ -144,12 +144,12 @@ public:
       _array[index] = value;
    }
 
-   double Shift()
+   int Shift()
    {
       return Remove(0);
    }
    
-   IFloatArray* Slice(int from, int to)
+   IIntArray* Slice(int from, int to)
    {
       int size = ArraySize(slices);
       for (int i = 0; i < size; ++i)
@@ -160,7 +160,7 @@ public:
          }
       }
       ArrayResize(slices, size + 1);
-      slices[size] = new FloatArraySlice(&this, from, to);
+      slices[size] = new IntArraySlice(&this, from, to);
       return slices[size];
    }
    
@@ -173,10 +173,10 @@ public:
       }
    }
 
-   double Remove(int index)
+   int Remove(int index)
    {
       int size = ArraySize(_array);
-      double value = _array[index];
+      int value = _array[index];
       for (int i = index; i < size - 1; ++i)
       {
          _array[i] = _array[i + 1];

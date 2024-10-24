@@ -1,16 +1,13 @@
-#ifndef LineArray_IMPL
-#define LineArray_IMPL
-// Line array v1.4
-#include <Array/ILineArray.mqh>
-#include <Objects/LinesCollection.mqh>
+// Float array v1.4
+#include <PineScript/Array/IFloatArray.mqh>
 
-class LineArraySlice : public ILineArray
+class FloatArraySlice : public IFloatArray
 {
-   ILineArray* array;
+   IFloatArray* array;
    int from;
    int to;
 public:
-   LineArraySlice(ILineArray* array, int from, int to)
+   FloatArraySlice(IFloatArray* array, int from, int to)
    {
       this.array = array;
       this.from = from;
@@ -18,7 +15,7 @@ public:
    }
    int GetFrom() { return from; }
    int GetTo() { return to; }
-   virtual void Unshift(Line* value)
+   virtual void Unshift(double value)
    {
       //do nothing
    }
@@ -26,35 +23,35 @@ public:
    {
       return to - from + 1;
    }
-   virtual void Push(Line* value)
+   virtual void Push(double value)
    {
       //do nothing
    }
-   virtual Line* Pop()
+   virtual double Pop()
    {
       return NULL;
    }
-   virtual Line* Get(int index)
+   virtual double Get(int index)
    {
       return array.Get(index + from);
    }
-   virtual void Set(int index, Line* value)
+   virtual void Set(int index, double value)
    {
       //do nothing
    }
-   virtual ILineArray* Slice(int from, int to)
+   virtual IFloatArray* Slice(int from, int to)
    {
       return NULL;
    }
-   virtual ILineArray* Clear()
+   virtual IFloatArray* Clear()
    {
       return NULL;
    }
-   virtual Line* Shift()
+   virtual double Shift()
    {
       return NULL;
    }
-   virtual Line* Remove(int index)
+   virtual double Remove(int index)
    {
       return NULL;
    }
@@ -64,41 +61,32 @@ public:
    }
 };
 
-class LineArray : public ILineArray
+class FloatArray : public IFloatArray
 {
-   Line* _array[];
+   double _array[];
    int _defaultSize;
-   Line* _defaultValue;
-   LineArraySlice* slices[];
+   double _defaultValue;
+   FloatArraySlice* slices[];
 public:
-   LineArray(int size, Line* defaultValue)
+   FloatArray(int size, double defaultValue)
    {
       _defaultSize = size;
+      _defaultValue = defaultValue;
       Clear();
    }
-
-   ~LineArray()
+   ~FloatArray()
    {
       Clear();
    }
 
-   ILineArray* Clear()
+   IFloatArray* Clear()
    {
-      int size = ArraySize(_array);
-      for (int i = 0; i < size; i++)
-      {
-         if (_array[i] != NULL)
-         {
-            LinesCollection::Delete(_array[i]);
-            _array[i].Release();
-         }
-      }
       ArrayResize(_array, _defaultSize);
       for (int i = 0; i < _defaultSize; ++i)
       {
          _array[i] = _defaultValue;
       }
-      size = ArraySize(slices);
+      int size = ArraySize(slices);
       for (int i = 0; i < size; i++)
       {
          delete slices[i];
@@ -107,7 +95,7 @@ public:
       return &this;
    }
 
-   void Unshift(Line* value)
+   void Unshift(double value)
    {
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);
@@ -116,10 +104,6 @@ public:
          _array[i + 1] = _array[i];
       }
       _array[0] = value;
-      if (value != NULL)
-      {
-         value.AddRef();
-      }
    }
 
    int Size()
@@ -127,61 +111,45 @@ public:
       return ArraySize(_array);
    }
 
-   void Push(Line* value)
+   void Push(double value)
    {
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);
       _array[size] = value;
-      if (value != NULL)
-      {
-         value.AddRef();
-      }
    }
 
-   Line* Pop()
+   double Pop()
    {
       int size = ArraySize(_array);
-      Line* value = _array[size - 1];
+      double value = _array[size - 1];
       ArrayResize(_array, size - 1);
-      if (value.Release() == 0)
-      {
-         return NULL;
-      }
       return value;
    }
 
-   Line* Shift()
-   {
-      return Remove(0);
-   }
-
-   Line* Get(int index)
+   double Get(int index)
    {
       if (index < 0 || index >= Size())
       {
-         return NULL;
+         return EMPTY_VALUE;
       }
       return _array[index];
    }
    
-   void Set(int index, Line* value)
+   void Set(int index, double value)
    {
       if (index < 0 || index >= Size())
       {
          return;
       }
-      if (_array[index] != NULL)
-      {
-         _array[index].Release();
-      }
       _array[index] = value;
-      if (value != NULL)
-      {
-         value.AddRef();
-      }
+   }
+
+   double Shift()
+   {
+      return Remove(0);
    }
    
-   ILineArray* Slice(int from, int to)
+   IFloatArray* Slice(int from, int to)
    {
       int size = ArraySize(slices);
       for (int i = 0; i < size; ++i)
@@ -192,24 +160,28 @@ public:
          }
       }
       ArrayResize(slices, size + 1);
-      slices[size] = new LineArraySlice(&this, from, to);
+      slices[size] = new FloatArraySlice(&this, from, to);
       return slices[size];
    }
+   
+   void Sort(bool ascending)
+   {
+      ArraySort(_array);
+      if (!ascending)
+      {
+         ArrayReverse(_array);
+      }
+   }
 
-   Line* Remove(int index)
+   double Remove(int index)
    {
       int size = ArraySize(_array);
-      Line* value = _array[index];
+      double value = _array[index];
       for (int i = index; i < size - 1; ++i)
       {
          _array[i] = _array[i + 1];
       }
       ArrayResize(_array, size - 1);
-      if (value.Release() == 0)
-      {
-         return NULL;
-      }
       return value;
    }
 };
-#endif

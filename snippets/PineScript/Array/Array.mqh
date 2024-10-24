@@ -1,10 +1,10 @@
 // Array v1.3
-#include <Array/IArray.mqh>
-#include <Array/LineArray.mqh>
-#include <Array/IntArray.mqh>
-#include <Array/FloatArray.mqh>
-#include <Array/BoxArray.mqh>
-#include <Array/LineArray.mqh>
+#include <PineScript/Array/IArray.mqh>
+#include <PineScript/Array/LineArray.mqh>
+#include <PineScript/Array/IntArray.mqh>
+#include <PineScript/Array/FloatArray.mqh>
+#include <PineScript/Array/BoxArray.mqh>
+#include <PineScript/Array/LineArray.mqh>
 
 class Array
 {
