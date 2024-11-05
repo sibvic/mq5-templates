@@ -1,4 +1,4 @@
-// Table v1.3
+// Table v1.2
 #include <Grid/Grid.mqh>
 #include <Grid/LabelCell.mqh>
 
@@ -7,7 +7,7 @@ class TableManager
 {
    static Table* tables[];
 public:
-   static void Clear();
+   static void Clear(bool forced = false);
    static void Add(Table* table);
    static void Redraw();
    static Table* Create(string prefix, string tableIndex, string position, int columns, int rows);
@@ -28,13 +28,22 @@ Table* TableManager::Create(string prefix, string tableIndex, string position, i
 }
 
 Table* TableManager::tables[];
-void TableManager::Clear()
+void TableManager::Clear(bool forced = false)
 {
+   int movedIndex = 0;
    for (int i = 0; i < ArraySize(TableManager::tables); ++i)
    {
-      delete tables[i];
+      if (!tables[i].IsLocked())
+      {
+         delete tables[i];
+      }
+      else
+      {
+         tables[movedIndex] = tables[i];
+         ++movedIndex;
+      }
    }
-   ArrayResize(tables, 0);
+   ArrayResize(tables, movedIndex);
 }
 
 void TableManager::Add(Table* table)
@@ -92,9 +101,11 @@ class Table
    int _frameWidth;
    uint _frameColor;
    Grid* _grid;
+   bool locked;
 public:
    Table(string prefix, string position, int columns, int rows)
    {
+      locked = false;
       if (columns == EMPTY_VALUE)
       {
          columns = 0;
@@ -125,6 +136,19 @@ public:
    ~Table()
    {
       delete _grid;
+   }
+   
+   void Lock()
+   {
+      locked = true;
+   }
+   void Unlock()
+   {
+      locked = false;
+   }
+   bool IsLocked()
+   {
+      return locked;
    }
    
    string GetId()
@@ -283,14 +307,14 @@ public:
             x = GetScreenWidth() - GetGridWidth();
             break;
          case TablePositionMiddleLeft:
-            y = GetScreenHeight() / 2 - GetGridHeight() / 2;
+            y = (GetScreenHeight() - GetGridHeight()) / 2;
             break;
          case TablePositionMiddleCenter:
-            y = GetScreenHeight() / 2 - GetGridHeight() / 2;
+            y = (GetScreenHeight() - GetGridHeight()) / 2;
             x = (GetScreenWidth() - GetGridWidth()) / 2;
             break;
          case TablePositionMiddleRight:
-            y = GetScreenHeight() / 2 - GetGridHeight() / 2;
+            y = (GetScreenHeight() - GetGridHeight()) / 2;
             x = GetScreenWidth() - GetGridWidth();
             break;
          case TablePositionBottomLeft:
@@ -364,7 +388,7 @@ private:
       {
          RowSize* rowSizes = new RowSize();
          _grid.GetRow(i).Measure(rowSizes);
-         height += rowSizes.GetMaxHeight();
+         height = MathMax(height, rowSizes.GetMaxHeight());
          delete rowSizes;
       }
       return height;
