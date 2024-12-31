@@ -1,6 +1,6 @@
 #include <enums/TwoStreamsConditionType.mqh>
-#include <conditions/ACondition.mqh>
-#include <streams/IStream.mqh>
+#include <Conditions/ACondition.mqh>
+#include <Streams/IStream.mqh>
 // Stream level condition v1.0
 
 class StreamLevelCondition : public ACondition

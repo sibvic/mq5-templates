@@ -1,6 +1,6 @@
 #include <Conditions/ACondition.mqh>
-#include <streams/IStream.mqh>
-#include <streams/IBarStream.mqh>
+#include <Streams/IStream.mqh>
+#include <Streams/IBarStream.mqh>
 #include <enums/TwoStreamsConditionType.mqh>
 
 // Stream-stream condition v2.0
