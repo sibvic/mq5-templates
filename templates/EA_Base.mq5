@@ -413,17 +413,15 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       return NULL;
    }
 
-   Signaler* signaler = new Signaler(symbol, timeframe);
-   signaler.SetPopupAlert(Popup_Alert);
-   signaler.SetEmailAlert(Email_Alert);
-   signaler.SetPlaySound(Play_Sound, Sound_File);
-   signaler.SetNotificationAlert(Notification_Alert);
+   Signaler* signaler = new Signaler();
+   signaler.EnablePopupAlert(Popup_Alert);
+   signaler.EnableEmailAlert(Email_Alert);
+   signaler.EnableSound(Play_Sound, Sound_File);
+   signaler.EnableNotificationAlert(Notification_Alert);
    #ifdef ADVANCED_ALERTS
-   signaler.SetAdvancedAlert(Advanced_Alert, Advanced_Key);
-   signaler.SetAdvancedAlertServer(advanced_Server);
+   signaler.EnableAdvanced(Advanced_Alert, Advanced_Key, advanced_Server);
    #endif
-   signaler.SetMessagePrefix(symbol + "/" + signaler.GetTimeframeStr() + ": ");
-   
+ 
    ActionOnConditionLogic* actions = new ActionOnConditionLogic();
    TradingController* controller = new TradingController(tradingCalculator, timeframe, timeframe, actions, signaler);
    //controller.SetECNBroker(ecn_broker);

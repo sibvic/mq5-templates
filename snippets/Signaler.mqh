@@ -1,19 +1,4 @@
-//Signaler v5.0
-input string   AlertsSection            = ""; // == Alerts ==
-input bool     popup_alert              = false; // Popup message
-input bool     notification_alert       = false; // Push notification
-input bool     email_alert              = false; // Email
-input bool     play_sound               = false; // Play sound on alert
-input string   sound_file               = ""; // Sound file
-input bool     start_program            = false; // Start external program
-input string   program_path             = ""; // Path to the external program executable
-input bool     advanced_alert           = false; // Advanced alert (Telegram/Discord/other platform (like another MT4))
-input string   advanced_key             = ""; // Advanced alert key
-input string   advanced_server          = "https://profitrobots.com"; // Advanced alert server url
-input string   Comment2                 = "- You can get a key via @profit_robots_bot Telegram Bot. Visit ProfitRobots.com for discord/other platform keys -";
-input string   Comment3                 = "- Allow use of dll in the indicator parameters window -";
-input string   Comment4                 = "- Install AdvancedNotificationsLib.dll -";
-
+//Signaler v5.1
 #ifdef ADVANCED_ALERTS
 // AdvancedNotificationsLib.dll could be downloaded here: http://profitrobots.com/Home/TelegramNotificationsMT4
 #import "AdvancedNotificationsLib.dll"
@@ -37,9 +22,22 @@ class Signaler
    string _prefix;
    SignalerFrequency _frequency;
    datetime _lastSignal;
+   bool startProgram;
+   string startProgramPath;
+   bool popup_alert;
+   bool email_alert;
+   bool play_sound;
+   string sound_file;
+   bool notification_alert;
+   bool advanced_alert;
+   string advanced_key;
+   string advanced_server;
 public:
    Signaler(string frequency)
    {
+      startProgram = false;
+      popup_alert = true;
+      email_alert = false;
       if (frequency == "all")
       {
          _frequency = SignalsAll;
@@ -59,6 +57,35 @@ public:
       _lastSignal = 0;
    }
 
+   void EnablePopupAlert(bool enable)
+   {
+      popup_alert = enable;
+   }
+   void EnableEmailAlert(bool enable)
+   {
+      email_alert = enable;
+   }
+   void SetStartProgram(bool start, string path)
+   {
+      startProgram = start;
+      startProgramPath = path;
+   }
+   void EnableSound(bool enabled, string soundFile)
+   {
+      play_sound = enabled;
+      sound_file = soundFile;
+   }
+   void EnableNotificationAlert(bool enabled)
+   {
+      notification_alert = enabled;
+   }
+   void EnableAdvanced(bool enabled, string key, string server)
+   {
+      advanced_alert = enabled;
+      advanced_key = key;
+      advanced_server = server;
+   }
+   
    void SetMessagePrefix(string prefix)
    {
       _prefix = prefix;
@@ -80,7 +107,6 @@ public:
       _lastSignal = time;
       SendNotifications("", message);
    }
-
    void SendNotifications(const string subject, string message = NULL)
    {
       if (message == NULL)
@@ -89,8 +115,8 @@ public:
          message = _prefix + message;
 
 #ifdef ADVANCED_ALERTS
-      if (start_program)
-         ShellExecuteW(0, "open", program_path, "", "", 1);
+      if (startProgram)
+         ShellExecuteW(0, "open", startProgramPath, "", "", 1);
 #endif
       if (popup_alert)
          Alert(message);
@@ -101,7 +127,7 @@ public:
       if (notification_alert)
          SendNotification(message);
 #ifdef ADVANCED_ALERTS
-      if (advanced_alert && advanced_key != "" && !IsTesting())
+      if (advanced_alert && advanced_key != "")
          AdvancedAlertCustom(advanced_key, message, "", "", advanced_server);
 #endif
    }
