@@ -2,7 +2,7 @@
 #define BoolStream_IMPL
 
 #include <Streams/Abstract/ABoolStream.mqh>
-// Bool stream v2.0
+// Bool stream v2.1
 
 class BoolStream : public ABoolStream
 {
@@ -58,6 +58,31 @@ public:
    }
    
    virtual bool GetSeriesValues(const int period, const int count, bool &val[])
+   {
+      return GetValues(Size() - period - 1, count, val);
+   }
+   
+   virtual bool GetValues(const int period, const int count, int &val[])
+   {
+      int totalBars = Size();
+      if (period - count + 1 < 0 || totalBars <= period)
+      {
+         return false;
+      }
+      EnsureStreamHasProperSize(totalBars);
+      
+      for (int i = 0; i < count; ++i)
+      {
+         val[i] = _stream[period - i];
+         if (val[i] == EMPTY_VALUE)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+   
+   virtual bool GetSeriesValues(const int period, const int count, int &val[])
    {
       return GetValues(Size() - period - 1, count, val);
    }
