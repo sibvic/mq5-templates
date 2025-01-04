@@ -2,7 +2,7 @@
 #define ChangeStream_IMPL
 
 #include <Streams/AOnStream.mqh>
-#include <Streams/interfaces/IBoolStream.mqh>
+#include <Streams/Interfaces/IBoolStream.mqh>
 #include <Streams/Custom/BoolToFloatStream.mqh>
 
 //ChangeStream v1.2

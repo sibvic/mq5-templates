@@ -2,7 +2,7 @@
 #define BoolToFloatStream_IMPL
 
 #include <Streams/Abstract/AFloatStream.mqh>
-#include <Streams/interfaces/IBoolStream.mqh>
+#include <Streams/Interfaces/IBoolStream.mqh>
 // Bool to float stream v1.0
 
 class BoolToFloatStream : public AFloatStream
