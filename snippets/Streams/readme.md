@@ -187,3 +187,7 @@ Calculates cumulative value. Similar to cum() in PineScript
 ## DateTimeStream
 
 Return date/time of the specified symbol/timeframe for the specified bar of the current chart.
+
+## OBVStream
+
+On balance volume stream
