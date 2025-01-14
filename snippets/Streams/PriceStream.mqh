@@ -3,7 +3,7 @@
 #include <Streams/IBarStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Price stream v3.0
+// Price stream v3.1
 
 #ifndef PriceStream_IMP
 #define PriceStream_IMP
@@ -33,7 +33,8 @@ public:
 
    virtual bool GetSeriesValues(const int period, const int count, double &values[])
    {
-      return false;
+      int pos = Size() - 1 - period;
+      return GetValues(pos, count, values);
    }
 
    virtual bool GetValues(const int period, const int count, double &values[])
