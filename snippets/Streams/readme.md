@@ -191,3 +191,11 @@ Return date/time of the specified symbol/timeframe for the specified bar of the 
 ## OBVStream
 
 On balance volume stream
+
+## RisingStream
+
+Returns true when value > than previous (length). Similar to ta.rising from Pine Script
+
+## FallingStream
+
+Returns true when value < than previous (length). Similar to ta.falling from Pine Script
