@@ -13,3 +13,7 @@ Boilinger Band Width.
 ## WilliamsRStream
 
 Williams %R oscillator.
+
+## CorrelationStream
+
+Correlation stream.
