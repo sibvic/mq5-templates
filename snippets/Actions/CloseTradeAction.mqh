@@ -1,7 +1,7 @@
 // Close trade action v1.0
 
-#include <../Trade.mqh>
-#include <../TradingCommands.mqh>
+#include <Trade.mqh>
+#include <TradingCommands.mqh>
 
 #ifndef CloseTradeAction_IMP
 #define CloseTradeAction_IMP

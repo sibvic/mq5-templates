@@ -5,7 +5,7 @@
 
 #ifndef tradeManager_INSTANCE
 #define tradeManager_INSTANCE
-#include <Trade\Trade.mqh>
+#include /**/ <Trade\Trade.mqh>
 CTrade tradeManager;
 #endif
 

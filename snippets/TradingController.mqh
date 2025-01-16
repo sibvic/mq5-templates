@@ -1,6 +1,6 @@
 // Trade controller v3.0
 
-#include <Trade\Trade.mqh>
+#include /**/ <Trade\Trade.mqh>
 #include <BreakevenController.mqh>
 #include <Logic/ActionOnConditionLogic.mqh>
 #include <ICloseOnOppositeStrategy.mqh>

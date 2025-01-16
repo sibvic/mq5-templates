@@ -1,4 +1,4 @@
-#include <conditions/ProfitInRangeCondition.mqh>
+#include <Conditions/ProfitInRangeCondition.mqh>
 #include <Actions/TrailingPipsAction.mqh>
 #include <Logic/ActionOnConditionLogic.mqh>
 #include <Actions/AOrderAction.mqh>
