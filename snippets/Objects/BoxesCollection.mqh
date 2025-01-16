@@ -1,4 +1,4 @@
-// Collection of boxes v1.0
+// Collection of boxes v1.1
 
 #ifndef BoxesCollection_IMPL
 #define BoxesCollection_IMPL
@@ -50,6 +50,15 @@ public:
       return _array[0];
    }
 
+   Box* Get(int index)
+   {
+      int size = ArraySize(_array);
+      if (index < 0 || index >= size)
+      {
+         return NULL;
+      }
+      return _array[index];
+   }
    Box* GetByIndex(int index)
    {
       int size = ArraySize(_array);

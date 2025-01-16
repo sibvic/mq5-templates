@@ -1,4 +1,4 @@
-// Collection of lines v1.1
+// Collection of lines v1.2
 
 #ifndef LinesCollection_IMPL
 #define LinesCollection_IMPL
@@ -152,6 +152,15 @@ private:
       return _array[0];
    }
 
+   Line* Get(int index)
+   {
+      int size = ArraySize(_array);
+      if (index < 0 || index >= size)
+      {
+         return NULL;
+      }
+      return _array[index];
+   }
    Line* GetByIndex(int index)
    {
       int size = ArraySize(_array);
@@ -197,8 +206,6 @@ private:
    
    void Add(Line* line)
    {
-      int index = FindIndex(line);
-      
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);
       _array[size] = line;
