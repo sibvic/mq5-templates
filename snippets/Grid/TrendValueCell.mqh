@@ -1,6 +1,6 @@
-#include <../conditions/ICondition.mqh>
+#include <conditions/ICondition.mqh>
 #include <IValueFormatter.mqh>
-#include <../Signaler.mqh>
+#include <Signaler.mqh>
 
 // Trend value cell v2.1
 

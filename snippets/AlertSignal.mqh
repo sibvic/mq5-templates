@@ -4,7 +4,7 @@
 #ifndef AlertSignal_IMP
 #define AlertSignal_IMP
 
-#include <Conditions/ICondition.mqh>
+#include <conditions/ICondition.mqh>
 #include <Streams/IStream.mqh>
 #include <Signaler.mqh>
 
