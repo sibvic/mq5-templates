@@ -204,15 +204,45 @@ void AdvancedAlertCustom(string key, string text, string instrument, string time
 #include <EntryPositionController.mqh>
 #include <MoneyManagement/functions.mqh>
 
+class EntryStreamData
+{
+   int refs;
+public:
+   EntryStreamData(const string symbol, const ENUM_TIMEFRAMES timeframe)
+   {
+      refs = 1;
+      //create common indicators here
+   }
+   ~EntryStreamData()
+   {
+      //delete common indicators here
+   }
+   void AddRef()
+   {
+      ++refs;
+   }
+   void Release()
+   {
+      if (--refs == 0)
+      {
+         delete &this;
+      }
+   }
+};
+
 class EntryLongCondition : public ACondition
 {
+   EntryStreamData* data;
 public:
-   EntryLongCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+   EntryLongCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryStreamData* data)
       :ACondition(symbol, timeframe)
    {
+      this.data = data;
+      data.AddRef();
    }
    ~EntryLongCondition()
    {
+      data.Release();
    }
 
    virtual bool IsPass(const int period, const datetime date)
@@ -224,13 +254,17 @@ public:
 
 class EntryShortCondition : public ACondition
 {
+   EntryStreamData* data;
 public:
-   EntryShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+   EntryShortCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryStreamData* data)
       :ACondition(symbol, timeframe)
    {
+      this.data = data;
+      data.AddRef();
    }
    ~EntryShortCondition()
    {
+      data.Release();
    }
 
    virtual bool IsPass(const int period, const datetime date)
@@ -240,7 +274,7 @@ public:
    }
 };
 
-ICondition* CreateLongCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+ICondition* CreateLongCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryStreamData* data)
 {
    if (trading_side == ShortSideOnly)
    {
@@ -248,7 +282,7 @@ ICondition* CreateLongCondition(string symbol, ENUM_TIMEFRAMES timeframe)
    }
 
    AndCondition* condition = new AndCondition();
-   condition.Add(new EntryLongCondition(symbol, timeframe), false);
+   condition.Add(new EntryLongCondition(symbol, timeframe, data), false);
    #ifdef ACT_ON_SWITCH_CONDITION
       ActOnSwitchCondition* switchCondition = new ActOnSwitchCondition(symbol, timeframe, (ICondition*) condition);
       condition.Release();
@@ -269,7 +303,7 @@ ICondition* CreateLongFilterCondition(string symbol, ENUM_TIMEFRAMES timeframe)
    return condition;
 }
 
-ICondition* CreateShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+ICondition* CreateShortCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryStreamData* data)
 {
    if (trading_side == LongSideOnly)
    {
@@ -277,7 +311,7 @@ ICondition* CreateShortCondition(string symbol, ENUM_TIMEFRAMES timeframe)
    }
 
    AndCondition* condition = new AndCondition();
-   condition.Add(new EntryShortCondition(symbol, timeframe), false);
+   condition.Add(new EntryShortCondition(symbol, timeframe, data), false);
    #ifdef ACT_ON_SWITCH_CONDITION
       ActOnSwitchCondition* switchCondition = new ActOnSwitchCondition(symbol, timeframe, (ICondition*) condition);
       condition.Release();
@@ -461,10 +495,12 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
       }
    #endif
 
+   EntryStreamData* data = new EntryStreamData(symbol, timeframe);
    AndCondition* longCondition = new AndCondition();
-   longCondition.Add(CreateLongCondition(symbol, timeframe), false);
+   longCondition.Add(CreateLongCondition(symbol, timeframe, data), false);
    AndCondition* shortCondition = new AndCondition();
-   shortCondition.Add(CreateShortCondition(symbol, timeframe), false);
+   shortCondition.Add(CreateShortCondition(symbol, timeframe, data), false);
+   data.Release();
    #ifdef TRADING_TIME_FEATURE
       longCondition.Add(tradingTimeCondition, true);
       shortCondition.Add(tradingTimeCondition, true);
