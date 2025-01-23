@@ -25,7 +25,7 @@ int SafePlus(int left, int right)
 {
    if (left == EMPTY_VALUE || right == EMPTY_VALUE)
    {
-      return EMPTY_VALUE;
+      return INT_MIN;
    }
    return left + right;
 }
@@ -203,7 +203,7 @@ int SafeSign(double value)
 {
    if (value == EMPTY_VALUE)
    {
-      return EMPTY_VALUE;
+      return INT_MIN;
    }
    if (value == 0)
    {
