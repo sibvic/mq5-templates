@@ -1,6 +1,7 @@
 // Grid builder v2.0
 
-#include <ICellFactory.mqh>
+#include <Grid/ICellFactory.mqh>
+#include <Grid/Grid.mqh>
 
 #ifndef GridBuilder_IMP
 #define GridBuilder_IMP
@@ -10,25 +11,24 @@ class GridBuilder
    string _symbols[];
    int _symbolsCount;
    Grid *grid;
-   int _originalX;
-   int _originalY;
-   Iterator _xIterator;
-   Iterator _yIterator;
    bool _verticalMode;
    int _cellHeight;
    int _headerHeight;
    ICellFactory* _cellFactory[];
    ENUM_BASE_CORNER _corner;
+   int _fontSize;
+   color _headerColor;
+   int _windowNumber;
 public:
-   GridBuilder(int x, int y, int headerHeight, int cellHeight, bool verticalMode, ENUM_BASE_CORNER __corner)
-      :_xIterator(x, -cell_width), _yIterator(y, cellHeight)
+   GridBuilder(int headerHeight, int cellHeight, bool verticalMode, ENUM_BASE_CORNER __corner, int fontSize, color headerColor, int windowNumber)
    {
+      _windowNumber = windowNumber;
+      _fontSize = fontSize;
       _corner = __corner;
       _cellHeight = cellHeight;
       _headerHeight = headerHeight;
       _verticalMode = verticalMode;
-      _originalY = y;
-      _originalX = x;
+      _headerColor = headerColor;
       grid = new Grid();
    }
 
@@ -48,7 +48,7 @@ public:
       _cellFactory[size] = cellFactory;
    }
 
-   void SetSymbols(const string symbols)
+   void SetSymbols(const string symbols, int x, int y)
    {
       StringSplit(symbols, ',', _symbols);
       _symbolsCount = ArraySize(_symbols);
@@ -56,7 +56,7 @@ public:
       int cellFactorySize = ArraySize(_cellFactory);
       if (_verticalMode)
       {
-         Iterator yIterator(_originalY, _cellHeight);
+         Iterator yIterator(y, _cellHeight);
          if (cellFactorySize > 1)
          {
             yIterator.GetNext();
@@ -66,19 +66,19 @@ public:
          for (int i = 0; i < _symbolsCount; i++)
          {
             string id = IndicatorObjPrefix + _symbols[i] + "_Name";
-            row.Add(new LabelCell(id, _symbols[i], _originalX + cell_width, yIterator.GetNext(), _corner));
+            row.Add(new LabelCell(id, _symbols[i], _corner, _fontSize, _headerColor, _windowNumber));
          }
       }
       else
       {
          //TODO: add support of multiple values
-         Iterator xIterator(_originalX - cell_width, -cell_width);
+         Iterator xIterator(x - cell_width, -cell_width);
          Row* row = grid.AddRow();
          row.Add(new EmptyCell());
          for (int i = 0; i < _symbolsCount; i++)
          {
             string id = IndicatorObjPrefix + _symbols[i] + "_Name";
-            row.Add(new LabelCell(id, _symbols[i], xIterator.GetNext(), _originalY - _headerHeight, _corner));
+            row.Add(new LabelCell(id, _symbols[i], _corner, _fontSize, _headerColor, _windowNumber));
          }
       }
    }
@@ -88,13 +88,6 @@ public:
       int cellFactorySize = ArraySize(_cellFactory);
       if (_verticalMode)
       {
-         int x[];
-         ArrayResize(x, cellFactorySize);
-         for (int ii = 0; ii < cellFactorySize; ++ii)
-         {
-            x[ii] = _xIterator.GetNext();
-         }
-
          Row* column[];
          ArrayResize(column, cellFactorySize);
          for (int ii = 0; ii < cellFactorySize; ++ii)
@@ -107,53 +100,42 @@ public:
             }
             else
             {
-               column[ii].Add(new LabelCell(IndicatorObjPrefix + label + "_h", label, x[0], _headerHeight, _corner));
+               column[ii].Add(new LabelCell(IndicatorObjPrefix + label + "_h", label, _corner, _fontSize, _headerColor, _windowNumber));
             }
             #endif
          }
          
-         Iterator yIterator(_originalY, _cellHeight);
          if (cellFactorySize > 1)
          {
-            int y = yIterator.GetNext();
             for (int ii = 0; ii < cellFactorySize; ++ii)
             {
                string index = IntegerToString(ii + 1);
-               column[ii].Add(new LabelCell(IndicatorObjPrefix + label + "_sh" + index, _cellFactory[ii].GetHeader(), x[ii], y, _corner));
+               column[ii].Add(new LabelCell(IndicatorObjPrefix + label + "_sh" + index, _cellFactory[ii].GetHeader(), _corner, _fontSize, _headerColor, _windowNumber));
             }
          }
 
          for (int i = 0; i < _symbolsCount; i++)
          {
-            int y = yIterator.GetNext();
             for (int ii = 0; ii < cellFactorySize; ++ii)
             {
                string id = IndicatorObjPrefix + _symbols[i] + "_" + label + IntegerToString(ii);
-               column[ii].Add(_cellFactory[ii].Create(id, x[ii], y, _corner, _symbols[i], timeframe));
+               column[ii].Add(_cellFactory[ii].Create(id, _corner, _symbols[i], timeframe));
             }
          }
       }
       else
       {
          //TODO: add support of multiple values
-         int y[];
-         ArrayResize(y, cellFactorySize);
-         for (int ii = 0; ii < cellFactorySize; ++ii)
-         {
-            y[ii] = _yIterator.GetNext();
-         }
          Row* row = grid.AddRow();
          #ifndef EXCLUDE_PERIOD_HEADER
-            row.Add(new LabelCell(IndicatorObjPrefix + label + "_Label", label, _originalX, y[0], _corner));
+            row.Add(new LabelCell(IndicatorObjPrefix + label + "_Label", label, _corner, _fontSize, _headerColor, _windowNumber));
          #endif
-         Iterator xIterator(_originalX - cell_width, -cell_width);
          for (int i = 0; i < _symbolsCount; i++)
          {
             string id = IndicatorObjPrefix + _symbols[i] + "_" + label;
-            int x = xIterator.GetNext();
             for (int ii = 0; ii < cellFactorySize; ++ii)
             {
-               row.Add(_cellFactory[ii].Create(id, x, y[ii], _corner, _symbols[i], timeframe));
+               row.Add(_cellFactory[ii].Create(id, _corner, _symbols[i], timeframe));
             }
          }
       }

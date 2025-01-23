@@ -139,12 +139,12 @@ int OnInit(void)
    IndicatorSetString(INDICATOR_SHORTNAME, "...");
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
 
-   GridBuilder builder(x_shift, 50, cell_height, cell_height, display_mode == Vertical, corner);
+   GridBuilder builder(cell_height, cell_height, display_mode == Vertical, corner, font_size, neutral_color, ChartWindowFind());
    TrendValueCellFactory* factory = new TrendValueCellFactory(alert_on_close ? 1 : 0, Up_Color, Dn_Color, historical_Up_Color, historical_Dn_Color);
    factory.SetNeutralColor(neutral_color);
    factory.SetButtonTextColor(button_text_color);
    builder.AddCell(factory);
-   builder.SetSymbols(Pairs);
+   builder.SetSymbols(Pairs, x_shift, 50);
 
    if (Include_M1)
       builder.AddTimeframe("M1", PERIOD_M1);
@@ -188,7 +188,7 @@ int OnCalculate(const int rates_total,
                 const long &volume[],
                 const int &spread[])
 {
-   grid.Draw();
+   grid.Draw(x_shift, 50);
    
    return 0;
 }

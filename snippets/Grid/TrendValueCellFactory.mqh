@@ -1,8 +1,8 @@
 // Trend value cell factory v2.0
 
-#include <ICellFactory.mqh>
-#include <TrendValueCell.mqh>
-#include <FixedTextFormatter.mqh>
+#include <Grid/ICellFactory.mqh>
+#include <Grid/TrendValueCell.mqh>
+#include <Grid/FixedTextFormatter.mqh>
 
 #ifndef TrendValueCellFactory_IMP
 #define TrendValueCellFactory_IMP
@@ -17,9 +17,13 @@ class TrendValueCellFactory : public ICellFactory
    color _neutralColor;
    color _buttonTextColor;
    OutputMode _outputMode;
+   int _fontSize;
+   int _cellWidth;
 public:
-   TrendValueCellFactory(int alertShift = 0, color upColor = Green, color downColor = Red, color historicalUpColor = Lime, color historicalDownColor = Pink)
+   TrendValueCellFactory(int alertShift = 0, color upColor = Green, color downColor = Red, color historicalUpColor = Lime, color historicalDownColor = Pink, int fontSize = 10, int cellWidth = 80)
    {
+      _fontSize = fontSize;
+      _cellWidth = cellWidth;
       _outputMode = OutputLabels;
       _alertShift = alertShift;
       _upColor = upColor;
@@ -43,10 +47,10 @@ public:
       return "Value";
    }
 
-   virtual ICell* Create(const string id, const int x, const int y, ENUM_BASE_CORNER __corner, const string symbol, const ENUM_TIMEFRAMES timeframe)
+   virtual ICell* Create(const string id, ENUM_BASE_CORNER corner, const string symbol, const ENUM_TIMEFRAMES timeframe)
    {
       IValueFormatter* defaultValue = new FixedTextFormatter("-", GetTextColor(_neutralColor), GetBackgroundColor(_neutralColor));
-      TrendValueCell* cell = new TrendValueCell(id, x, y, __corner, symbol, timeframe, _alertShift, defaultValue, _outputMode);
+      TrendValueCell* cell = new TrendValueCell(id, corner, symbol, timeframe, _alertShift, defaultValue, _outputMode, _fontSize, _cellWidth);
       defaultValue.Release();
 
       ICondition* upCondition = new UpCondition(symbol, timeframe);
