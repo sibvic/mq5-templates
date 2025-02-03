@@ -17,3 +17,7 @@ Williams %R oscillator.
 ## CorrelationStream
 
 Correlation stream.
+
+## DevStream
+
+Deviation stream.
