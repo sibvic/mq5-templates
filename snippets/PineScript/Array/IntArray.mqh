@@ -1,4 +1,4 @@
-// Int array v1.4
+// Int array v1.5
 #include <PineScript/Array/IIntArray.mqh>
 
 class IntArraySlice : public IIntArray
@@ -130,7 +130,7 @@ public:
    {
       if (index < 0 || index >= Size())
       {
-         return EMPTY_VALUE;
+         return INT_MIN;
       }
       return _array[index];
    }

@@ -1,4 +1,4 @@
-// Line object v1.5
+// Line object v1.6
 
 class Line
 {
@@ -96,9 +96,9 @@ public:
    static void SetY2(Line* line, double y) { if (line == NULL) { return; } line.SetY2(y); }
 
    int GetX1() { return _x1; }
-   static int GetX1(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetX1(); }
+   static int GetX1(Line* line) { if (line == NULL) { return INT_MIN; } return line.GetX1(); }
    int GetX2() { return _x2; }
-   static int GetX2(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetX2(); }
+   static int GetX2(Line* line) { if (line == NULL) { return INT_MIN; } return line.GetX2(); }
    double GetY1() { return _y1; }
    static double GetY1(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetY1(); }
    double GetY2() { return _y2; }

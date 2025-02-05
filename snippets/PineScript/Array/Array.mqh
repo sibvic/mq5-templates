@@ -1,4 +1,4 @@
-// Array v1.3
+// Array v1.4
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
@@ -22,12 +22,12 @@ public:
    static void Unshift(ILineArray* array, Line* value) { if (array == NULL) { return; } array.Unshift(value); }
    static void Unshift(IBoxArray* array, Box* value) { if (array == NULL) { return; } array.Unshift(value); }
    
-   static int Size(IIntArray* array) { if (array == NULL) { return EMPTY_VALUE;} return array.Size(); }
-   static int Size(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE;} return array.Size(); }
-   static int Size(ILineArray* array) { if (array == NULL) { return EMPTY_VALUE;} return array.Size(); }
-   static int Size(IBoxArray* array) { if (array == NULL) { return EMPTY_VALUE;} return array.Size(); }
+   static int Size(IIntArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
+   static int Size(IFloatArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
+   static int Size(ILineArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
+   static int Size(IBoxArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
 
-   static int Shift(IIntArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Shift(); }
+   static int Shift(IIntArray* array) { if (array == NULL) { return INT_MIN; } return array.Shift(); }
    static double Shift(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Shift(); }
    static Line* Shift(ILineArray* array) { if (array == NULL) { return NULL; } return array.Shift(); }
    static Box* Shift(IBoxArray* array) { if (array == NULL) { return NULL; } return array.Shift(); }
@@ -37,12 +37,12 @@ public:
    static void Push(ILineArray* array, Line* value) { if (array == NULL) { return; } array.Push(value); }
    static void Push(IBoxArray* array, Box* value) { if (array == NULL) { return; } array.Push(value); }
 
-   static int Pop(IIntArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Pop(); }
+   static int Pop(IIntArray* array) { if (array == NULL) { return INT_MIN; } return array.Pop(); }
    static double Pop(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Pop(); }
    static Line* Pop(ILineArray* array) { if (array == NULL) { return NULL; } return array.Pop(); }
    static Box* Pop(IBoxArray* array) { if (array == NULL) { return NULL; } return array.Pop(); }
 
-   static int Get(IIntArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Get(index); }
+   static int Get(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Get(index); }
    static double Get(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Get(index); }
    static Line* Get(ILineArray* array, int index) { if (array == NULL) { return NULL; } return array.Get(index); }
    static Box* Get(IBoxArray* array, int index) { if (array == NULL) { return NULL; } return array.Get(index); }
@@ -52,25 +52,25 @@ public:
    static void Set(ILineArray* array, int index, Line* value) { if (array == NULL) { return; } array.Set(index, value); }
    static void Set(IBoxArray* array, int index, Box* value) { if (array == NULL) { return; } array.Set(index, value); }
 
-   static int Remove(IIntArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Remove(index); }
+   static int Remove(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Remove(index); }
    static double Remove(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Remove(index); }
    static Line* Remove(ILineArray* array, int index) { if (array == NULL) { return NULL; } return array.Remove(index); }
    static Box* Remove(IBoxArray* array, int index) { if (array == NULL) { return NULL; } return array.Remove(index); }
 
-   static int PercentRank(IIntArray* array, int index)
+   static double PercentRank(IIntArray* array, int index)
    {
       int arraySize = array.Size();
-      if (array == NULL || arraySize == 0 || arraySize <= index) { return EMPTY_VALUE; }
+      if (array == NULL || arraySize == 0 || arraySize <= index) { return INT_MIN; }
       int target = array.Get(index);
-      if (target == EMPTY_VALUE)
+      if (target == INT_MIN)
       {
-         return EMPTY_VALUE;
+         return INT_MIN;
       }
       int count = 0;
       for (int i = 0; i < arraySize; ++i)
       {
          int current = array.Get(i);
-         if (current != EMPTY_VALUE && target >= current)
+         if (current != INT_MIN && target >= current)
          {
             count++;
          }
@@ -100,12 +100,12 @@ public:
 
    static int Max(IIntArray* array)
    {
-      if (array == NULL || array.Size() == 0) { return EMPTY_VALUE; }
+      if (array == NULL || array.Size() == 0) { return INT_MIN; }
       int max = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
          int current = array.Get(i);
-         if (max == EMPTY_VALUE || (current != EMPTY_VALUE && max < current))
+         if (max == INT_MIN || (current != INT_MIN && max < current))
          {
             max = current;
          }
@@ -128,12 +128,12 @@ public:
    }
    static int Min(IIntArray* array)
    {
-      if (array == NULL || array.Size() == 0) { return EMPTY_VALUE; }
+      if (array == NULL || array.Size() == 0) { return INT_MIN; }
       int min = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
          int current = array.Get(i);
-         if (min == EMPTY_VALUE || (current != EMPTY_VALUE && min > current))
+         if (min == INT_MIN || (current != INT_MIN && min > current))
          {
             min = current;
          }
