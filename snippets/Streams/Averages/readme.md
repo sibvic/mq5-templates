@@ -57,3 +57,7 @@ SWMA average.
 ## MfiOnStream
 
 Money flow index on stream
+
+## VwapOnStream
+
+VWAP average on stream
