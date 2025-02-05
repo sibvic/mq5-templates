@@ -1,4 +1,4 @@
-// VolumeStream v1.2
+// VolumeStream v1.3
 #include <Streams/Abstract/AIntStream.mqh>
 
 #ifndef VolumeStream_IMPL
@@ -17,7 +17,11 @@ public:
    
    virtual bool GetSeriesValues(const int period, const int count, int &val[])
    {
-      return GetValues(Size() - 1 - period, count, val);
+      for (int i = 0; i < count; ++i)
+      {
+         val[i] = iVolume(_symbol, _timeframe, period + i);
+      }
+      return true;
    }
    
    virtual int Size()
@@ -27,11 +31,7 @@ public:
 
    virtual bool GetValues(const int period, const int count, int &val[])
    {
-      for (int i = 0; i < count; ++i)
-      {
-         val[i] = iVolume(_symbol, _timeframe, period + i);
-      }
-      return true;
+      return GetValues(Size() - 1 - period, count, val);
    }
 };
 

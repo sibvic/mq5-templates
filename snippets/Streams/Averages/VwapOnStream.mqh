@@ -1,4 +1,4 @@
-// Vwap on stream v1.0
+// Vwap on stream v1.1
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/interfaces/IIntStream.mqh>
@@ -103,7 +103,7 @@ public:
       for (int i = period; i < Size(); ++i)
       {
          int current[1];
-         if (!anchor.GetValues(i, 1, current))
+         if (!anchor.GetSeriesValues(i, 1, current))
          {
             val = EMPTY_VALUE;
             return false;
@@ -113,13 +113,13 @@ public:
             break;
          }
          double value[1];
-         if (!_source.GetValues(i, 1, value))
+         if (!_source.GetSeriesValues(i, 1, value))
          {
             val = EMPTY_VALUE;
             return false;
          }
          int volumeValue[1];
-         if (!volume.GetValues(i, 1, volumeValue))
+         if (!volume.GetSeriesValues(i, 1, volumeValue))
          {
             val = EMPTY_VALUE;
             return false;
@@ -161,7 +161,7 @@ public:
       double sum1 = 0;
       double sum2 = 0;
       datetime startDate[1];
-      if (!_dates.GetValues(period, 1, startDate))
+      if (!_dates.GetSeriesValues(period, 1, startDate))
       {
          val = EMPTY_VALUE;
          return false;
@@ -170,7 +170,7 @@ public:
       for (int i = period; i < Size(); ++i)
       {
          datetime current[1];
-         if (!_dates.GetValues(i, 1, current))
+         if (!_dates.GetSeriesValues(i, 1, current))
          {
             val = EMPTY_VALUE;
             return false;
@@ -181,13 +181,13 @@ public:
             break;
          }
          double value[1];
-         if (!_source.GetValues(i, 1, value))
+         if (!_source.GetSeriesValues(i, 1, value))
          {
             val = EMPTY_VALUE;
             return false;
          }
          int volume[1];
-         if (!_volume.GetValues(i, 1, volume))
+         if (!_volume.GetSeriesValues(i, 1, volume))
          {
             val = EMPTY_VALUE;
             return false;
