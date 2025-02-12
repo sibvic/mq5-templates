@@ -1,28 +1,7 @@
-//+------------------------------------------------------------------------------------------------+
-//|                                                            Copyright © 2021, Gehtsoft USA LLC  |
-//|                                                                         http://fxcodebase.com  |
-//+------------------------------------------------------------------------------------------------+
-//|                                                              Support our efforts by donating   |
-//|                                                                 Paypal: https://goo.gl/9Rj74e  |
-//+------------------------------------------------------------------------------------------------+
-//|                                                                   Developed by : Mario Jemic   |
-//|                                                                       mario.jemic@gmail.com    |
-//|                                                        https://AppliedMachineLearning.systems  |
-//|                                                             Patreon :  https://goo.gl/GdXWeN   |
-//+------------------------------------------------------------------------------------------------+
-
-//+------------------------------------------------------------------------------------------------+
-//|BitCoin Address            : 15VCJTLaz12Amr7adHSBtL9v8XomURo9RF                                 |
-//|Ethereum Address           : 0x8C110cD61538fb6d7A2B47858F0c0AaBd663068D                         |
-//|Cardano/ADA                : addr1v868jza77crzdc87khzpppecmhmrg224qyumud6utqf6f4s99fvqv         |
-//|Dogecoin Address           : DNDTFfmVa2Gjts5YvSKEYaiih6cums2L6C                                 |
-//|Binance(ERC20 & BSC only)  : 0xe84751063de8ade7c5fbff5e73f6502f02af4e2c                         |
-//+------------------------------------------------------------------------------------------------+
-
 #property version   "1.0"
 #property indicator_separate_window
 #property strict
-#define rows 3
+#define rows 9
 #define plots (rows * 3)
 #property indicator_plots plots
 #property indicator_buffers plots
@@ -42,7 +21,6 @@ input color ne_color = Gray; // Neutral color
 input int bars_limit = 1000; // Bars limit
 
 #include <HeatMapValueCalculator.mqh>
-#include <streams/HABarStream.mqh> 
 
 IHeatMapValueCalculator* conditions[];
 
@@ -77,57 +55,41 @@ string GenerateIndicatorPrefix(const string target)
 
 class LongCondition : public ACondition
 {
-   HABarStream* _ha;
 public:
-   LongCondition(const string symbol, ENUM_TIMEFRAMES timeframe, HABarStream* stream)
+   LongCondition(const string symbol, ENUM_TIMEFRAMES timeframe)
       :ACondition(symbol, timeframe)
    {
-      _ha = stream;
-      _ha.AddRef();
    }
 
    ~LongCondition()
    {
-      _ha.Release();
    }
 
    bool IsPass(const int period, const datetime date)
    {
       int index = period == 0 ? 0 : iBarShift(_symbol, _timeframe, date);
-      double open, high, low, close;
-      if (!_ha.GetValues(period, open, high, low, close))
-      {
-         return false;
-      }
-      return open < close;
+      //TODO: implement
+      return false;
    }
 };
 
 class ShortCondition : public ACondition
 {
-   HABarStream* _ha;
 public:
-   ShortCondition(const string symbol, ENUM_TIMEFRAMES timeframe, HABarStream* stream)
+   ShortCondition(const string symbol, ENUM_TIMEFRAMES timeframe)
       :ACondition(symbol, timeframe)
    {
-      _ha = stream;
-      _ha.AddRef();
    }
 
    ~ShortCondition()
    {
-      _ha.Release();
    }
 
    bool IsPass(const int period, const datetime date)
    {
       int index = period == 0 ? 0 : iBarShift(_symbol, _timeframe, date);
-      double open, high, low, close;
-      if (!_ha.GetValues(period, open, high, low, close))
-      {
-         return false;
-      }
-      return open > close;
+      //TODO: implement
+      return false;
    }
 };
 
@@ -140,23 +102,10 @@ int CreateHeatmap(int id, int index, string name, ICondition* longCondition, ICo
    return calc.RegisterStreams(id, up_color, dn_color, ne_color, name);
 }
 
-HABarStream* ha[];
-
-int Create(int id, ENUM_TIMEFRAMES tf, int index, string name)
-{
-   int size = ArraySize(ha);
-   ArrayResize(ha, size + 1);
-   ha[size] = new HABarStream(_Symbol, tf);
-   id = CreateHeatmap(id, index, name, 
-      new LongCondition(_Symbol, tf, ha[size]), 
-      new ShortCondition(_Symbol, tf, ha[size]));
-   return id;
-}
-
 void OnInit()
 {
-   IndicatorObjPrefix = GenerateIndicatorPrefix("HABTF");
-   IndicatorSetString(INDICATOR_SHORTNAME, "HABTF");
+   IndicatorObjPrefix = GenerateIndicatorPrefix("...");
+   IndicatorSetString(INDICATOR_SHORTNAME, "...");
    IndicatorSetInteger(INDICATOR_DIGITS, Digits());
 
    int size = ArraySize(conditions);
@@ -166,39 +115,57 @@ void OnInit()
    int index = rows - 1;
    if (Include_M1)
    {
-      id = Create(id, PERIOD_M1, index--, "M1");
+      id = CreateHeatmap(id, index--, "M1", 
+         new LongCondition(_Symbol, PERIOD_M1), 
+         new ShortCondition(_Symbol, PERIOD_M1));
    }
    if (Include_M5)
    {
-      id = Create(id, PERIOD_M5, index--, "M5");
+      id = CreateHeatmap(id, index--, "M5", 
+         new LongCondition(_Symbol, PERIOD_M5), 
+         new ShortCondition(_Symbol, PERIOD_M5));
    }
    if (Include_M15)
    {
-      id = Create(id, PERIOD_M15, index--, "M15");
+      id = CreateHeatmap(id, index--, "M15", 
+         new LongCondition(_Symbol, PERIOD_M15), 
+         new ShortCondition(_Symbol, PERIOD_M15));
    }
    if (Include_M30)
    {
-      id = Create(id, PERIOD_M30, index--, "M30");
+      id = CreateHeatmap(id, index--, "M30", 
+         new LongCondition(_Symbol, PERIOD_M30), 
+         new ShortCondition(_Symbol, PERIOD_M30));
    }
    if (Include_H1)
    {
-      id = Create(id, PERIOD_H1, index--, "H1");
+      id = CreateHeatmap(id, index--, "H1", 
+         new LongCondition(_Symbol, PERIOD_H1), 
+         new ShortCondition(_Symbol, PERIOD_H1));
    }
    if (Include_H4)
    {
-      id = Create(id, PERIOD_H4, index--, "H4");
+      id = CreateHeatmap(id, index--, "H4", 
+         new LongCondition(_Symbol, PERIOD_H4), 
+         new ShortCondition(_Symbol, PERIOD_H4));
    }
    if (Include_D1)
    {
-      id = Create(id, PERIOD_D1, index--, "D1");
+      id = CreateHeatmap(id, index--, "D1", 
+         new LongCondition(_Symbol, PERIOD_D1), 
+         new ShortCondition(_Symbol, PERIOD_D1));
    }
    if (Include_W1)
    {
-      id = Create(id, PERIOD_W1, index--, "W1");
+      id = CreateHeatmap(id, index--, "W1", 
+         new LongCondition(_Symbol, PERIOD_W1), 
+         new ShortCondition(_Symbol, PERIOD_W1));
    }
    if (Include_MN1)
    {
-      id = Create(id, PERIOD_MN1, index--, "MN1");
+      id = CreateHeatmap(id, index--, "MN1", 
+         new LongCondition(_Symbol, PERIOD_MN1), 
+         new ShortCondition(_Symbol, PERIOD_MN1));
    }
 }
 
@@ -226,17 +193,16 @@ int OnCalculate(const int rates_total,
    {
       //ArrayInitialize(out, EMPTY_VALUE);
    }
-   for (int i = 0; i < ArraySize(ha); ++i)
-   {
-      ha[i].Refresh();
-   }
    int first = 0;
    for (int pos = MathMax(rates_total - 1 - bars_limit, MathMax(first, prev_calculated - 1)); pos < rates_total; ++pos)
    {
       int oldPos = rates_total - pos - 1;
       for (int conditionIndex = 0; conditionIndex < ArraySize(conditions); ++conditionIndex)
       {
-         conditions[conditionIndex].UpdateValue(oldPos);
+         if (conditions[conditionIndex] != NULL)
+         {
+            conditions[conditionIndex].UpdateValue(oldPos);
+         }
       }
    }
    return rates_total;
