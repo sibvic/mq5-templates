@@ -1,4 +1,6 @@
-#property copyright "Copyright © 2021, ProfitRobots"
+// Do implement EntryLongCondition and EntryShortCondition
+
+#property copyright "Copyright © 2025, ProfitRobots"
 #property link      "https://github.com/sibvic/mq5-templates"
 #property description "ProfitRobots templates"
 #property version   "1.0"
@@ -292,7 +294,7 @@ ICondition* CreateLongCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryS
    #endif
 }
 
-ICondition* CreateLongFilterCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+ICondition* CreateLongFilterCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryStreamData* data)
 {
    if (trading_side == ShortSideOnly)
    {
@@ -321,7 +323,7 @@ ICondition* CreateShortCondition(string symbol, ENUM_TIMEFRAMES timeframe, Entry
    #endif
 }
 
-ICondition* CreateShortFilterCondition(string symbol, ENUM_TIMEFRAMES timeframe)
+ICondition* CreateShortFilterCondition(string symbol, ENUM_TIMEFRAMES timeframe, EntryStreamData* data)
 {
    if (trading_side == LongSideOnly)
    {
@@ -508,9 +510,9 @@ TradingController* CreateController(const string symbol, ENUM_TIMEFRAMES timefra
    #endif
 
    AndCondition* longFilterCondition = new AndCondition();
-   longFilterCondition.Add(CreateLongFilterCondition(symbol, timeframe), false);
+   longFilterCondition.Add(CreateLongFilterCondition(symbol, timeframe, data), false);
    AndCondition* shortFilterCondition = new AndCondition();
-   shortFilterCondition.Add(CreateShortFilterCondition(symbol, timeframe), false);
+   shortFilterCondition.Add(CreateShortFilterCondition(symbol, timeframe, data), false);
 
    #ifdef WITH_EXIT_LOGIC
       controller.SetExitLogic(exit_logic);
