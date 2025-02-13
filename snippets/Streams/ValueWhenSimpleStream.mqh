@@ -1,7 +1,7 @@
 // Value when stream (condition as a parameter) v1.0
 
 #include <Streams/AStream.mqh>
-#include <conditions/ICondition.mqh>
+#include <Conditions/ICondition.mqh>
 
 class ValueWhenSimpleStream : public AStream
 {

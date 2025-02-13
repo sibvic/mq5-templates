@@ -1,4 +1,4 @@
-#include <conditions/ICondition.mqh>
+#include <Conditions/ICondition.mqh>
 #include <actions/IAction.mqh>
 
 // Action on condition v3.0

@@ -1,4 +1,4 @@
-#include <conditions/ICondition.mqh>
+#include <Conditions/ICondition.mqh>
 #include <enums/OrderSide.mqh>
 #include <Signaler.mqh>
 

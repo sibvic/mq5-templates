@@ -1,6 +1,6 @@
 // Heatmap value calculator v1.0
 
-#include <conditions/ICondition.mqh>
+#include <Conditions/ICondition.mqh>
 
 #ifndef IHeatMapValueCalculator_IMP
 #define IHeatMapValueCalculator_IMP

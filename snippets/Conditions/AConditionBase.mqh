@@ -1,4 +1,4 @@
-#include <conditions/ICondition.mqh>
+#include <Conditions/ICondition.mqh>
 
 // Condition base v2.1
 
