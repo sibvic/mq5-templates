@@ -1,9 +1,9 @@
 // Vwap on stream v1.1
 
 #include <Streams/AOnStream.mqh>
-#include <Streams/interfaces/IIntStream.mqh>
-#include <Streams/interfaces/IBoolStream.mqh>
-#include <Streams/interfaces/IDateTimeStream.mqh>
+#include <Streams/Interfaces/IIntStream.mqh>
+#include <Streams/Interfaces/IBoolStream.mqh>
+#include <Streams/Interfaces/IDateTimeStream.mqh>
 #include <Streams/VolumeStream.mqh>
 #include <Streams/DateTimeStream.mqh>
 #include <PineScript/Array/Array.mqh>
