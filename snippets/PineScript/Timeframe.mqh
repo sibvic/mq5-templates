@@ -42,6 +42,33 @@ public:
       }
       return false;
    }
+
+   static int Interval()
+   {
+      switch (_Period)
+      {
+         case PERIOD_M1:
+         case PERIOD_H1:
+         case PERIOD_D1:
+         case PERIOD_W1:
+         case PERIOD_MN1:
+            return 1;
+         case PERIOD_M5:
+            return 5;
+         case PERIOD_M15:
+            return 15;
+         case PERIOD_M30:
+            return 30;
+         case PERIOD_H4:
+            return 4;
+      }
+      return INT_MIN;
+   }
+
+   static bool IsIntraday()
+   {
+      return ~IsDWM();
+   }
    
    static ENUM_TIMEFRAMES GetTimeframe(string resolution)
    {
