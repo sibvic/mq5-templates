@@ -21,3 +21,7 @@ Converts bool stream to float stream. true = 1, false = 0
 ## ColorStream
 
 Stream of colors
+
+## TStream
+
+Templated stream

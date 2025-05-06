@@ -23,3 +23,7 @@ Abstract implementation of a IColorStream
 ## AStringStream
 
 Abstract implementation of a IStringStream
+
+## TAStream
+
+Abstract implementation of a TIStream

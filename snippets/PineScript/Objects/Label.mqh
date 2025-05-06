@@ -241,7 +241,7 @@ public:
       if (ObjectFind(0, _labelId) == -1 
          && ObjectCreate(0, _labelId, OBJ_TEXT, _window, x, y))
       {
-         ObjectSetString(0, _labelId, OBJPROP_FONT, "Arial");
+         ObjectSetString(0, _labelId, OBJPROP_FONT, _font);
          ObjectSetInteger(0, _labelId, OBJPROP_FONTSIZE, getFontSize());
          ObjectSetInteger(0, _labelId, OBJPROP_COLOR, _textColor);
          ObjectSetInteger(0, _labelId, OBJPROP_ANCHOR, GetAnchor());

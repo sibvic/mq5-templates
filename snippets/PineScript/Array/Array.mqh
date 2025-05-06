@@ -5,10 +5,19 @@
 #include <PineScript/Array/FloatArray.mqh>
 #include <PineScript/Array/BoxArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
+#include <PineScript/Array/CustomTypeArray.mqh>
 
 class Array
 {
 public:
+   template <typename ARRAY_TYPE>
+   static void Clear(ARRAY_TYPE array) { if (array == NULL) { return; } array.Clear(); }
+   
+   template <typename VALUE_TYPE, typename ARRAY_TYPE>
+   static VALUE_TYPE First(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.First(); }
+   template <typename VALUE_TYPE, typename ARRAY_TYPE>
+   static VALUE_TYPE Last(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Last(); }
+   
    static IIntArray* Slice(IIntArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    static IFloatArray* Slice(IFloatArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    static ILineArray* Slice(ILineArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
@@ -17,15 +26,11 @@ public:
    static void Sort(IIntArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
    static void Sort(IFloatArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
    
-   static void Unshift(IIntArray* array, int value) { if (array == NULL) { return; } array.Unshift(value); }
-   static void Unshift(IFloatArray* array, double value) { if (array == NULL) { return; } array.Unshift(value); }
-   static void Unshift(ILineArray* array, Line* value) { if (array == NULL) { return; } array.Unshift(value); }
-   static void Unshift(IBoxArray* array, Box* value) { if (array == NULL) { return; } array.Unshift(value); }
+   template <typename ARRAY_TYPE, typename VALUE_TYPE>
+   static void Unshift(ARRAY_TYPE array, VALUE_TYPE value) { if (array == NULL) { return; } array.Unshift(value); }
    
-   static int Size(IIntArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
-   static int Size(IFloatArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
-   static int Size(ILineArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
-   static int Size(IBoxArray* array) { if (array == NULL) { return INT_MIN;} return array.Size(); }
+   template <typename DUMMY_TYPE, typename ARRAY_TYPE>
+   static int Size(ARRAY_TYPE array, int defaultValue) { if (array == NULL) { return INT_MIN;} return array.Size(); }
 
    static int Shift(IIntArray* array) { if (array == NULL) { return INT_MIN; } return array.Shift(); }
    static double Shift(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Shift(); }
@@ -37,10 +42,8 @@ public:
    static void Push(ILineArray* array, Line* value) { if (array == NULL) { return; } array.Push(value); }
    static void Push(IBoxArray* array, Box* value) { if (array == NULL) { return; } array.Push(value); }
 
-   static int Pop(IIntArray* array) { if (array == NULL) { return INT_MIN; } return array.Pop(); }
-   static double Pop(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Pop(); }
-   static Line* Pop(ILineArray* array) { if (array == NULL) { return NULL; } return array.Pop(); }
-   static Box* Pop(IBoxArray* array) { if (array == NULL) { return NULL; } return array.Pop(); }
+   template <typename VALUE_TYPE, typename ARRAY_TYPE>
+   static VALUE_TYPE Pop(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Pop(); }
 
    static int Get(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Get(index); }
    static double Get(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Get(index); }

@@ -17,3 +17,7 @@ Interface for color stream. Similar to IStream located in the directory above, b
 ## IStringStream
 
 Interface for string stream. Similar to IStream located in the directory above, but returns datetime
+
+## TIStream
+
+Interface for templated stream. Similar to IStream located in the directory above, but returns templated item
