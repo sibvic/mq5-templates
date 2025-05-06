@@ -3,7 +3,7 @@
 #ifndef LabelsCollection_IMPL
 #define LabelsCollection_IMPL
 
-#include <Objects/Label.mqh>
+#include <PineScript/Objects/Label.mqh>
 
 class LabelsCollection
 {
