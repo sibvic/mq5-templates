@@ -18,7 +18,13 @@ public:
       {
          return DoubleToString(value, 2) + "%";
       }
-      return DoubleToString(value);
+      string valueStr = value == EMPTY_VALUE ? "" : DoubleToString(value);
+      if (format != "")
+      {
+         StringReplace(format, "#.#", valueStr);
+         return format;
+      }
+      return valueStr;
    }
    static string ToString(double value)
    {
