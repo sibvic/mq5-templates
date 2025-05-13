@@ -7,10 +7,11 @@ class Line
    double _y1;
    int _x2;
    double _y2;
-   color _clr;
+   uint _clr;
    int _width;
    ENUM_TIMEFRAMES _timeframe;
    string _style;
+   string _extend;
    int _refs;
    string _collectionId;
    int _window;
@@ -124,6 +125,13 @@ public:
       _width = width;
       return &this;
    }
+   
+   static Line* SetExtend(Line* line, string extend) { if (line == NULL) { return NULL; } return line.SetExtend(extend); }
+   Line* SetExtend(string extend)
+   {
+      _extend = extend;
+      return &this;
+   }
 
    void Redraw()
    {
@@ -133,7 +141,7 @@ public:
       if (ObjectFind(0, _id) == -1 && ObjectCreate(0, _id, OBJ_TREND, 0, x1, _y1, x2, _y2))
       {
          ObjectSetInteger(0, _id, OBJPROP_COLOR, _clr);
-         ObjectSetInteger(0, _id, OBJPROP_STYLE, STYLE_SOLID);
+         ObjectSetInteger(0, _id, OBJPROP_STYLE, GetStyleMQL());
          ObjectSetInteger(0, _id, OBJPROP_WIDTH, _width);
          ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, false);
       }
@@ -143,6 +151,18 @@ public:
       ObjectSetInteger(0, _id, OBJPROP_TIME, 1, x2);
    }
 private:
+   int GetStyleMQL()
+   {
+      if (_style == "dashed")
+      {
+         return STYLE_DASH;
+      }
+      if (_style == "solid")
+      {
+         return STYLE_SOLID;
+      }
+      return STYLE_SOLID;
+   }
    datetime GetTime(int x, int totalBars)
    {
       int pos = totalBars - x - 1;

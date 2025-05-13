@@ -3,7 +3,7 @@
 #ifndef LinesCollection_IMPL
 #define LinesCollection_IMPL
 
-#include <Objects/Line.mqh>
+#include <PineScript/Objects/Line.mqh>
 
 class LinesCollection
 {
@@ -12,6 +12,7 @@ class LinesCollection
    static LinesCollection* _collections[];
    static LinesCollection* _all;
    static int _max;
+   static uint _nextId;
 public:
    static Line* Get(Line* line, int index)
    {
@@ -77,13 +78,9 @@ public:
       dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - x1 - 1);
       MqlDateTime date;
       TimeToStruct(dateId, date);
-      string lineId = id + "_" 
-         + IntegerToString(date.day) + "_"
-         + IntegerToString(date.mon) + "_"
-         + IntegerToString(date.year) + "_"
-         + IntegerToString(date.hour) + "_"
-         + IntegerToString(date.min) + "_"
-         + IntegerToString(date.sec);
+      uint currentId = _nextId;
+      _nextId += 1;
+      string lineId = id + "_" + IntegerToString(currentId);
       
       Line* line = new Line(x1, y1, x2, y2, lineId, id, ChartWindowOnDropped());
       LinesCollection* collection = FindCollection(id);
@@ -246,4 +243,5 @@ private:
 LinesCollection* LinesCollection::_collections[];
 LinesCollection* LinesCollection::_all;
 int LinesCollection::_max = 50;
+uint LinesCollection::_nextId = 0;
 #endif
