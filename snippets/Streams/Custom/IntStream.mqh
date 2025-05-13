@@ -18,7 +18,7 @@ public:
 
    void Init()
    {
-      ArrayInitialize(_stream, EMPTY_VALUE);
+      ArrayInitialize(_stream, INT_MIN);
    }
 
    virtual int Size()
@@ -49,7 +49,7 @@ public:
       for (int i = 0; i < count; ++i)
       {
          val[i] = _stream[period - i];
-         if (val[i] == EMPTY_VALUE)
+         if (val[i] == INT_MIN)
          {
             return false;
          }
@@ -70,7 +70,7 @@ private:
          ArrayResize(_stream, size);
          for (int i = currentSize; i < size; ++i)
          {
-            _stream[i] = EMPTY_VALUE;
+            _stream[i] = INT_MIN;
          }
       }
    }
