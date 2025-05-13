@@ -240,7 +240,7 @@ public:
          {
             usedText = "\218";
          }
-         else if (_style == "diamond")
+         else  if (_style == "diamond")
          {
             usedText = "\116";
          }
