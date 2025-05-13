@@ -8,6 +8,10 @@ Stream of strings
 
 Stream of labels
 
+## LineStream
+
+Stream of lines
+
 ## LabelArrayStream
 
 Stream of array of labels
