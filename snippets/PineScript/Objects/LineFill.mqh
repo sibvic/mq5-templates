@@ -1,5 +1,6 @@
 // Linefill object v1.6
 #include <PineScript/Objects/Line.mqh>
+#include <PineScriptUtils.mqh>
 #ifndef Linefill_IMPL
 #define Linefill_IMPL
 
@@ -28,7 +29,7 @@ public:
          _line2.AddRef();
       }
       _id = id;
-      _clr = Blue;
+      _clr = clr;
       _timeframe = (ENUM_TIMEFRAMES)_Period;
       _window = window;
       _collectionId = collectionId;
@@ -73,7 +74,8 @@ public:
 
    void Redraw()
    {
-      if (_line1 == NULL || _line2 == NULL)
+      int transp = GetTranparency(_clr);
+      if (_line1 == NULL || _line2 == NULL || transp == 100)
       {
          return;
       }
@@ -94,16 +96,17 @@ public:
       }
       if (ObjectFind(0, id1) == -1)
       {
+         color usedColor = GetColorOnly(_clr);
          if (ObjectCreate(0, id1, OBJ_TRIANGLE, 0, x1, y1, x2, y2, x3, y3))
          {
-            ObjectSetInteger(0, id1, OBJPROP_COLOR, _clr);
+            ObjectSetInteger(0, id1, OBJPROP_COLOR, usedColor);
             ObjectSetInteger(0, id1, OBJPROP_FILL, true);
             ObjectSetInteger(0, id1, OBJPROP_STYLE, STYLE_SOLID);
             ObjectSetInteger(0, id1, OBJPROP_RAY_RIGHT, false);
          }
          if (ObjectCreate(0, id2, OBJ_TRIANGLE, 0, x4, y4, x2, y2, x3, y3))
          {
-            ObjectSetInteger(0, id2, OBJPROP_COLOR, _clr);
+            ObjectSetInteger(0, id2, OBJPROP_COLOR, usedColor);
             ObjectSetInteger(0, id2, OBJPROP_FILL, true);
             ObjectSetInteger(0, id2, OBJPROP_STYLE, STYLE_SOLID);
             ObjectSetInteger(0, id2, OBJPROP_RAY_RIGHT, false);
