@@ -48,6 +48,22 @@ public:
       return refs;
    }
    
+   void CopyTo(Label* label)
+   {
+      label._color = _color;
+      label._textColor = _textColor;
+      label._text = _text;
+      label._textAlign = _textAlign;
+      label._x = _x;
+      label._y = _y;
+      label._font = _font;
+      label._style = _style;
+      label._size = _size;
+      label._yloc = _yloc;
+      label._timeframe = _timeframe;
+      label._window = _window;
+   }
+   
    string GetId()
    {
       return _labelId;
