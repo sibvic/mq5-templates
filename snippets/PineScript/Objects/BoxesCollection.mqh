@@ -3,7 +3,7 @@
 #ifndef BoxesCollection_IMPL
 #define BoxesCollection_IMPL
 
-#include <Objects/Box.mqh>
+#include <PineScript/Objects/Box.mqh>
 
 class BoxesCollection
 {

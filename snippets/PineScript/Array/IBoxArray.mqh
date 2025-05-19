@@ -1,5 +1,5 @@
 // Box array interface v1.1
-#include <Objects/Box.mqh>
+#include <PineScript/Objects/Box.mqh>
 
 class IBoxArray
 {
