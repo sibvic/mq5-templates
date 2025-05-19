@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 
-// EMA on stream v1.1
+// EMA on stream v2.0
 
 class EMAOnStream : public AOnStream
 {
@@ -8,7 +8,7 @@ class EMAOnStream : public AOnStream
    double _k;
    double _buffer[];
 public:
-   EMAOnStream(IStream *source, const int length)
+   EMAOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _length = length;
