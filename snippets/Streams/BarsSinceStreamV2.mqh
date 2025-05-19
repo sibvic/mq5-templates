@@ -2,17 +2,17 @@
 #define BarsSinceStreamV2_IMPL
 
 #include <Streams/Abstract/AIntStream.mqh>
-#include <Streams/Interfaces/IBoolStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 
 // Counts number of bars since last condition.
-// v1.0
+// v2.0
 
 class BarsSinceStreamV2 : public AIntStream
 {
-   IBoolStream* _condition;
+   TIStream<int>* _condition;
    int _bars[];
 public:
-   BarsSinceStreamV2(IBoolStream* condition)
+   BarsSinceStreamV2(TIStream<int>* condition)
    {
       _condition = condition;
       _condition.AddRef();

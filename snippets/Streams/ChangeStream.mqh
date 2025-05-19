@@ -3,7 +3,6 @@
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/Interfaces/TIStream.mqh>
-#include <Streams/Interfaces/IBoolStream.mqh>
 #include <Streams/Custom/BoolToFloatStream.mqh>
 
 //ChangeStream v2.0
@@ -42,7 +41,7 @@ public:
       return new ChangeStream(stream, period);
    }
    
-   static TIStream<double>* Create(IBoolStream* stream, int period = 1)
+   static TIStream<double>* Create(TIStream<int>* stream, int period = 1)
    {
       BoolToFloatStream* wrapper = new BoolToFloatStream(stream);
       ChangeStream* change = new ChangeStream(wrapper, period);

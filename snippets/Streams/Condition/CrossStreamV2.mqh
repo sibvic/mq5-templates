@@ -11,7 +11,7 @@
 class CrossStreamFactory
 {
 public:
-   static IBoolStream* CreateCross(TIStream<double> *left, TIStream<double>* right)
+   static TIStream<int>* CreateCross(TIStream<double> *left, TIStream<double>* right)
    {
       OrCondition* or = new OrCondition();
       or.Add(new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossOverSecond, left, right, "", ""), false);
@@ -21,41 +21,41 @@ public:
       return result;
    }
 
-   static IBoolStream* CreateCrossunder(TIStream<double> *left, TIStream<double>* right)
+   static TIStream<int>* CreateCrossunder(TIStream<double> *left, TIStream<double>* right)
    {
       StreamStreamCondition* condition = new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossUnderSecond, left, right, "", "");
       ConditionStreamV2* result = new ConditionStreamV2(condition);
       condition.Release();
       return result;
    }
-   static IBoolStream* CreateCrossunder(TIStream<double> *left, IIntStream* right)
+   static TIStream<int>* CreateCrossunder(TIStream<double> *left, IIntStream* right)
    {
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
-      IBoolStream* condition = CreateCrossunder(left, rightWrapper);
+      TIStream<int>* condition = CreateCrossunder(left, rightWrapper);
       rightWrapper.Release();
       return condition;
    }
 
-   static IBoolStream* CreateCrossover(TIStream<double> *left, TIStream<double>* right)
+   static TIStream<int>* CreateCrossover(TIStream<double> *left, TIStream<double>* right)
    {
       StreamStreamCondition* condition = new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossOverSecond, left, right, "", "");
       ConditionStreamV2* result = new ConditionStreamV2(condition);
       condition.Release();
       return result;
    }
-   static IBoolStream* CreateCrossover(IIntStream *left, IIntStream* right)
+   static TIStream<int>* CreateCrossover(IIntStream *left, IIntStream* right)
    {
       IntToFloatStreamWrapper* leftWrapper = new IntToFloatStreamWrapper(left);
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
-      IBoolStream* condition = CreateCrossover(leftWrapper, rightWrapper);
+      TIStream<int>* condition = CreateCrossover(leftWrapper, rightWrapper);
       leftWrapper.Release();
       rightWrapper.Release();
       return condition;
    }
-   static IBoolStream* CreateCrossover(TIStream<double> *left, IIntStream* right)
+   static TIStream<int>* CreateCrossover(TIStream<double> *left, IIntStream* right)
    {
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
-      IBoolStream* condition = CreateCrossover(left, rightWrapper);
+      TIStream<int>* condition = CreateCrossover(left, rightWrapper);
       rightWrapper.Release();
       return condition;
    }

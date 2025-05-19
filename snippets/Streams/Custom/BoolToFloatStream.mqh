@@ -2,14 +2,14 @@
 #define BoolToFloatStream_IMPL
 
 #include <Streams/Abstract/AFloatStream.mqh>
-#include <Streams/Interfaces/IBoolStream.mqh>
-// Bool to float stream v1.0
+#include <Streams/Interfaces/TIStream.mqh>
+// Bool to float stream v2.0
 
 class BoolToFloatStream : public AFloatStream
 {
-   IBoolStream* stream;
+   TIStream<int>* stream;
 public:
-   BoolToFloatStream(IBoolStream* stream)
+   BoolToFloatStream(TIStream<int>* stream)
    {
       this.stream = stream;
       stream.AddRef();

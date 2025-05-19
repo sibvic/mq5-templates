@@ -2,7 +2,7 @@
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/Interfaces/IIntStream.mqh>
-#include <Streams/Interfaces/IBoolStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 #include <Streams/Interfaces/IDateTimeStream.mqh>
 #include <Streams/VolumeStream.mqh>
 #include <Streams/DateTimeStream.mqh>
@@ -16,10 +16,10 @@
 class VwapStdev : public AOnStream
 {
    IIntStream* volume;
-   IBoolStream* anchor;
+   TIStream<int>* anchor;
    double stdev;
 public:
-   VwapStdev(TIStream<double> *source, IIntStream* volume, IBoolStream* anchor, double stdev)
+   VwapStdev(TIStream<double> *source, IIntStream* volume, TIStream<int>* anchor, double stdev)
       :AOnStream(source)
    {
       this.volume = volume;
@@ -218,7 +218,7 @@ public:
       return new VwapOnStream(source, volume, dates);
    }
    
-   static VwapStdev* Create(const string symbol, ENUM_TIMEFRAMES timeframe, TIStream<double> *source, IBoolStream* anchor, double stdev)
+   static VwapStdev* Create(const string symbol, ENUM_TIMEFRAMES timeframe, TIStream<double> *source, TIStream<int>* anchor, double stdev)
    {
       VolumeStream* volume = new VolumeStream(symbol, timeframe);
       VwapStdev* stream = new VwapStdev(source, volume, anchor, stdev);
