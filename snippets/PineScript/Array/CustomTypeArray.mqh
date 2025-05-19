@@ -7,6 +7,114 @@ interface ICustomTypeArray : public ITArray<CLASS_TYPE>
 public:
    virtual ICustomTypeArray<CLASS_TYPE>* Clear() = 0;
 };
+
+template <typename CLASS_TYPE>
+class CustomTypeArraySlice : public ICustomTypeArray<CLASS_TYPE>
+{
+   ITArray<CLASS_TYPE>* array;
+   int from;
+   int to;
+   int _refs;
+public:
+   CustomTypeArraySlice(ITArray<CLASS_TYPE>* array, int from, int to)
+   {
+      _refs = 1;
+      this.array = array;
+      this.from = from;
+      this.to = to;
+   }
+   
+   void AddRef() { _refs++; }
+   int Release() { int refs = --_refs; if (refs == 0) { delete &this; } return refs; }
+   
+   int GetFrom() { return from; }
+   int GetTo() { return to; }
+   virtual void Unshift(CLASS_TYPE value)
+   {
+      //do nothing
+   }
+   virtual int Size()
+   {
+      return to - from + 1;
+   }
+   virtual void Push(CLASS_TYPE value)
+   {
+      //do nothing
+   }
+   virtual CLASS_TYPE Pop()
+   {
+      return NULL;
+   }
+   virtual CLASS_TYPE Get(int index)
+   {
+      return array.Get(index + from);
+   }
+   virtual void Set(int index, CLASS_TYPE value)
+   {
+      //do nothing
+   }
+   virtual ITArray<CLASS_TYPE>* Slice(int from, int to)
+   {
+      return NULL;
+   }
+   virtual ICustomTypeArray<CLASS_TYPE>* Clear()
+   {
+      return NULL;
+   }
+   virtual CLASS_TYPE Shift()
+   {
+      return NULL;
+   }
+   virtual CLASS_TYPE Remove(int index)
+   {
+      return NULL;
+   }
+   virtual void Sort(bool ascending)
+   {
+      //do nothing
+   }
+   int Includes(CLASS_TYPE value)
+   {
+      int size = Size();
+      for (int i = 0; i < size; ++i)
+      {
+         if (Get(i) == value)
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+   
+   CLASS_TYPE First()
+   {
+      if (Size() == 0)
+      {
+         return NULL;
+      }
+      CLASS_TYPE value = Get(0);
+      if (value != NULL)
+      {
+         value.AddRef();
+      }
+      return value;
+   }
+   CLASS_TYPE Last()
+   {
+      int size = Size();
+      if (size == 0)
+      {
+         return NULL;
+      }
+      CLASS_TYPE value = Get(size - 1);
+      if (value != NULL)
+      {
+         value.AddRef();
+      }
+      return value;
+   }
+};
+
 template <typename CLASS_TYPE>
 class CustomTypeArray : public ICustomTypeArray<CLASS_TYPE>
 {
@@ -18,6 +126,11 @@ public:
    CustomTypeArray(int size, CLASS_TYPE defaultValue)
    {
       _refs = 1;
+      _defaultValue = defaultValue;
+      if (_defaultValue != NULL)
+      {
+         _defaultValue.AddRef();
+      }
       _defaultSize = size;
       Clear();
    }
@@ -25,6 +138,10 @@ public:
    ~CustomTypeArray()
    {
       Clear();
+      if (_defaultValue != NULL)
+      {
+         _defaultValue.Release();
+      }
    }
    
    void AddRef() { _refs++; }
@@ -32,7 +149,7 @@ public:
    
    ICustomTypeArray<CLASS_TYPE>* Clear()
    {
-      int size = ArraySize(_array);
+     int size = ArraySize(_array);
       int i;
       for (i = 0; i < size; i++)
       {
@@ -45,7 +162,7 @@ public:
       ArrayResize(_array, _defaultSize);
       for (i = 0; i < _defaultSize; ++i)
       {
-         _array[i] = _defaultValue;
+         _array[i] = Clone(_defaultValue, i);
       }
       return &this;
    }
@@ -123,6 +240,11 @@ public:
          value.AddRef();
       }
    }
+      
+   ICustomTypeArray<CLASS_TYPE>* Slice(int from, int to)
+   {
+      return new CustomTypeArraySlice<CLASS_TYPE>(&this, from, to);
+   }
    
    CLASS_TYPE Remove(int index)
    {
@@ -181,6 +303,10 @@ public:
       return value;
    }
 protected:
+   virtual CLASS_TYPE Clone(CLASS_TYPE item, int index)
+   {
+      return NULL;
+   }
    virtual void DeleteItem(CLASS_TYPE item)
    {
    }

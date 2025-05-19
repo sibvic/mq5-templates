@@ -49,6 +49,20 @@ public:
       }
       return refs;
    }
+   
+   void CopyTo(Line* line)
+   {
+      line._x1 = _x1;
+      line._y1 = _y1;
+      line._x2 = _x2;
+      line._y2 = _y2;
+      line._clr = _clr;
+      line._width = _width;
+      line._timeframe = _timeframe;
+      line._style = _style;
+      line._window = _window;
+      line._extend = _extend;
+   }
 
    string GetId()
    {
@@ -135,6 +149,10 @@ public:
 
    void Redraw()
    {
+      if (_y1 == EMPTY_VALUE || _y2 == EMPTY_VALUE)
+      {
+         return;
+      }
       int totalBars = iBars(_Symbol, _timeframe);
       datetime x1 = GetTime(_x1, totalBars);
       datetime x2 = GetTime(_x2, totalBars);

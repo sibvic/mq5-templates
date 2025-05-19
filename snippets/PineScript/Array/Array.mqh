@@ -20,7 +20,6 @@ public:
    
    static IIntArray* Slice(IIntArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    static IFloatArray* Slice(IFloatArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
-   static ILineArray* Slice(ILineArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    static IBoxArray* Slice(IBoxArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    
    static void Sort(IIntArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
@@ -34,12 +33,10 @@ public:
 
    static int Shift(IIntArray* array) { if (array == NULL) { return INT_MIN; } return array.Shift(); }
    static double Shift(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Shift(); }
-   static Line* Shift(ILineArray* array) { if (array == NULL) { return NULL; } return array.Shift(); }
    static Box* Shift(IBoxArray* array) { if (array == NULL) { return NULL; } return array.Shift(); }
 
    static void Push(IIntArray* array, int value) { if (array == NULL) { return; } array.Push(value); }
    static void Push(IFloatArray* array, double value) { if (array == NULL) { return; } array.Push(value); }
-   static void Push(ILineArray* array, Line* value) { if (array == NULL) { return; } array.Push(value); }
    static void Push(IBoxArray* array, Box* value) { if (array == NULL) { return; } array.Push(value); }
 
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
@@ -47,17 +44,14 @@ public:
 
    static int Get(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Get(index); }
    static double Get(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Get(index); }
-   static Line* Get(ILineArray* array, int index) { if (array == NULL) { return NULL; } return array.Get(index); }
    static Box* Get(IBoxArray* array, int index) { if (array == NULL) { return NULL; } return array.Get(index); }
    
    static void Set(IIntArray* array, int index, int value) { if (array == NULL) { return; } array.Set(index, value); }
    static void Set(IFloatArray* array, int index, double value) { if (array == NULL) { return; } array.Set(index, value); }
-   static void Set(ILineArray* array, int index, Line* value) { if (array == NULL) { return; } array.Set(index, value); }
    static void Set(IBoxArray* array, int index, Box* value) { if (array == NULL) { return; } array.Set(index, value); }
 
    static int Remove(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Remove(index); }
    static double Remove(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Remove(index); }
-   static Line* Remove(ILineArray* array, int index) { if (array == NULL) { return NULL; } return array.Remove(index); }
    static Box* Remove(IBoxArray* array, int index) { if (array == NULL) { return NULL; } return array.Remove(index); }
 
    static double PercentRank(IIntArray* array, int index)
