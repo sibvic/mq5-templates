@@ -20,4 +20,4 @@ Interface for string stream. Similar to IStream located in the directory above, 
 
 ## TIStream
 
-Interface for templated stream. Similar to IStream located in the directory above, but returns templated item
+Interface for templated stream.

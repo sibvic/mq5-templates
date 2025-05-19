@@ -2,7 +2,7 @@
 #include <Streams/HighestHighStream.mqh>
 #include <Streams/LowestLowStream.mqh>
 
-// Williams %R stream v1.0
+// Williams %R stream v2.0
 
 #ifndef WilliamsRStream_IMP
 #define WilliamsRStream_IMP
@@ -10,10 +10,10 @@
 class WilliamsRStream : public AOnStream
 {
    int _period;
-   IStream* high;
-   IStream* low;
+   TIStream<double>* high;
+   TIStream<double>* low;
 public:
-   WilliamsRStream(IStream* source, IStream* high, IStream* low, int period)
+   WilliamsRStream(TIStream<double>* source, TIStream<double>* high, TIStream<double>* low, int period)
       :AOnStream(source)
    {
       this.high = new HighestHighStream(high, period);

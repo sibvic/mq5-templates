@@ -1,6 +1,6 @@
-// Colored fill v1.2
+// Colored fill v2.0
 #include <PineScriptUtils.mqh>
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 
 #ifndef ColoredFill_IMP
 #define ColoredFill_IMP
@@ -12,8 +12,8 @@ class ColoredFill
    color upColor;
    color dnColor;
    int streamIndex;
-   IStream* top;
-   IStream* bottom;
+   TIStream<double>* top;
+   TIStream<double>* bottom;
 public:
    ColoredFill(int streamIndex)
    {
@@ -39,7 +39,7 @@ public:
       ArrayInitialize(p2, 0);
    }
    
-   void SetTopBottom(IStream* top, IStream* bottom)
+   void SetTopBottom(TIStream<double>* top, TIStream<double>* bottom)
    {
       this.top = top;
       top.AddRef();

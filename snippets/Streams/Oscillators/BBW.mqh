@@ -1,4 +1,4 @@
-// Boilinger Band Width v1.0
+// Boilinger Band Width v2.0
 
 #ifndef BBW_IMP
 #define BBW_IMP
@@ -10,7 +10,7 @@ class BBW : public AStreamBase
    StDevStream *stdev;
    double mult;
 public:
-   BBW(IStream* stream, int length, double mult)
+   BBW(TIStream<double>* stream, int length, double mult)
    {
       stdev = new StDevStream(stream, length);
       this.mult = mult;

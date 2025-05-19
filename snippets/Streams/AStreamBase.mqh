@@ -1,7 +1,7 @@
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 
-//AOnStream v2.0
-class AStreamBase : public IStream
+//AOnStream v3.0
+class AStreamBase : public TIStream<double>
 {
    int _references;
 public:

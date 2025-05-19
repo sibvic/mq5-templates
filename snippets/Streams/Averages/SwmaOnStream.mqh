@@ -3,12 +3,12 @@
 #ifndef SwmaOnStream_IMPL
 #define SwmaOnStream_IMPL
 
-// EMA on stream v1.0
+// EMA on stream v2.0
 
 class SwmaOnStream : public AOnStream
 {
 public:
-   SwmaOnStream(IStream *source)
+   SwmaOnStream(TIStream<double> *source)
       :AOnStream(source)
    {
    }

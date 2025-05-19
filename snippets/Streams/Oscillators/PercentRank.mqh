@@ -1,4 +1,4 @@
-// Percent rank v1.0
+// Percent rank v2.0
 
 #ifndef PercentRank_IMP
 #define PercentRank_IMP
@@ -9,7 +9,7 @@ class PercentRank : public AOnStream
 {
    int length;
 public:
-   PercentRank(IStream* stream, int length)
+   PercentRank(TIStream<double>* stream, int length)
       :AOnStream(stream)
    {
       this.length = length;

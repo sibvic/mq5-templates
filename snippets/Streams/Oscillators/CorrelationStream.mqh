@@ -1,6 +1,6 @@
 #ifndef CorrelationStream_IMP
 #define CorrelationStream_IMP
-// Correlation stream v1.0
+// Correlation stream v2.0
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/Averages/SMAOnStream.mqh>
@@ -9,10 +9,10 @@ class CorrelationStream : public AOnStream
 {
    SmaOnStream *xx_ma;
    SmaOnStream *yy_ma;
-   IStream *_source2;
+   TIStream<double> *_source2;
    int _length;
 public:
-   CorrelationStream(IStream *source1, IStream *source2, int length)
+   CorrelationStream(TIStream<double> *source1, TIStream<double> *source2, int length)
       :AOnStream(source1)
    {
       xx_ma = new SmaOnStream(source1, length);

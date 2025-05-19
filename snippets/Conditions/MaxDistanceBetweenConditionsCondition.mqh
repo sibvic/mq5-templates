@@ -2,7 +2,7 @@
 #include <Conditions/AndCondition.mqh>
 #include <Conditions/OrCondition.mqh>
 #include <Conditions/StreamLevelCondition.mqh>
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 #include <Streams/BarsSinceStream.mqh>
 
 class MaxDistanceBetweenConditionsCondition : public ACondition
@@ -32,7 +32,7 @@ private:
       OrCondition* or = new OrCondition();
       or.Add(exactCondition, true);
 
-      IStream* barsSince = new BarsSinceStream(_symbol, _timeframe, distanceCondition);
+      TIStream<double>* barsSince = new BarsSinceStream(_symbol, _timeframe, distanceCondition);
       ICondition* maxDistCondition = new StreamLevelCondition(_symbol, _timeframe, FirstBelowSecond, barsSince, maxDistance + 1, "Bars since " + name + " <= " + IntegerToString(maxDistance));
       barsSince.Release();
       or.Add(maxDistCondition, true);

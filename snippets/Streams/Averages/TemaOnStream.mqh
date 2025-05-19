@@ -1,5 +1,5 @@
 #include <Streams/AOnStream.mqh>
-// TemaOnStream v2.0
+// TemaOnStream v3.0
 
 class TemaOnStream : public AOnStream
 {
@@ -8,7 +8,7 @@ class TemaOnStream : public AOnStream
    double _buffer2[];
    double _buffer3[];
 public:
-   TemaOnStream(IStream *source, const int length)
+   TemaOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _alpha = 2.0 / (1.0 + length);

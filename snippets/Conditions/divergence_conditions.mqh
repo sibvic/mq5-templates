@@ -1,4 +1,4 @@
-// Divergence conditions v1.0
+// Divergence conditions v2.0
 
 #ifndef DIVERGENCE_IMP
 #define DIVERGENCE_IMP
@@ -13,12 +13,12 @@ enum DivergenceType
 
 class DivergencePattern : public ICondition
 {
-   IStream* _divergenceStream;
-   IStream* _mainHighStream;
-   IStream* _mainLowStream;
+   TIStream<double>* _divergenceStream;
+   TIStream<double>* _mainHighStream;
+   TIStream<double>* _mainLowStream;
    DivergenceType _divergenceType;
 public:
-   DivergencePattern(IStream* divergenceStream, IStream* mainHighStream, IStream* mainLowStream, DivergenceType divergenceType)
+   DivergencePattern(TIStream<double>* divergenceStream, TIStream<double>* mainHighStream, TIStream<double>* mainLowStream, DivergenceType divergenceType)
    {
       _divergenceStream = divergenceStream;
       _divergenceStream.AddRef();

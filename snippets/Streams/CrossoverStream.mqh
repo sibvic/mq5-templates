@@ -2,12 +2,12 @@
 #include <Conditions/StreamStreamCondition.mqh>
 #include <enums/TwoStreamsConditionType.mqh>
 
-//AOnStream v1.0
+//AOnStream v2.0
 
 class CrossoverStream : public ConditionStream//Obsolete
 {
 public:
-   CrossoverStream(IStream *left, IStream* right)
+   CrossoverStream(TIStream<double> *left, TIStream<double>* right)
       :ConditionStream(new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossOverSecond, left, right, "", ""))
    {
       _condition.Release();

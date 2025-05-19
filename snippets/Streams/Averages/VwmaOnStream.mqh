@@ -1,13 +1,13 @@
 #include <Streams/AOnStream.mqh>
 #include <Streams/SimplePriceStream.mqh>
 #include <Enums/PriceType.mqh>
-// VwmaOnStream v2.1
+// VwmaOnStream v3.0
 class VwmaOnStream : public AOnStream
 {
-   IStream *_volumeSource;
+   TIStream<double> *_volumeSource;
    int _length;
 public:
-   VwmaOnStream(IStream *source, IStream *volumeSource, const int length)
+   VwmaOnStream(TIStream<double> *source, TIStream<double> *volumeSource, const int length)
       :AOnStream(source)
    {
       _volumeSource = volumeSource;
@@ -15,7 +15,7 @@ public:
       _length = length;
    }
 
-   VwmaOnStream(string symbol, ENUM_TIMEFRAMES timeframe, IStream *source, const int length)
+   VwmaOnStream(string symbol, ENUM_TIMEFRAMES timeframe, TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _volumeSource = new SimplePriceStream(symbol, timeframe, PriceVolume);

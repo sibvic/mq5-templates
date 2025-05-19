@@ -1,5 +1,5 @@
 // v1.0
-// Wraps IIntStream and provides IStream
+// Wraps IIntStream and provides TIStream<double>
 
 #ifndef IntToFloatStreamWrapper_IMPL
 #define IntToFloatStreamWrapper_IMPL

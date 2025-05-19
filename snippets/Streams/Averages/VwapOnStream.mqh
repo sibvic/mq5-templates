@@ -1,4 +1,4 @@
-// Vwap on stream v1.1
+// Vwap on stream v2.0
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/Interfaces/IIntStream.mqh>
@@ -19,7 +19,7 @@ class VwapStdev : public AOnStream
    IBoolStream* anchor;
    double stdev;
 public:
-   VwapStdev(IStream *source, IIntStream* volume, IBoolStream* anchor, double stdev)
+   VwapStdev(TIStream<double> *source, IIntStream* volume, IBoolStream* anchor, double stdev)
       :AOnStream(source)
    {
       this.volume = volume;
@@ -137,7 +137,7 @@ class VwapOnStream : public AOnStream
    IIntStream* _volume;
    IDateTimeStream* _dates;
 public:
-   VwapOnStream(IStream *source, IIntStream* volume, IDateTimeStream* dates)
+   VwapOnStream(TIStream<double> *source, IIntStream* volume, IDateTimeStream* dates)
       :AOnStream(source)
    {
       _volume = volume;
@@ -203,7 +203,7 @@ public:
 class VwapOnStreamFactory
 {
 public:
-   static IStream* Create(const string symbol, ENUM_TIMEFRAMES timeframe, IStream *source)
+   static TIStream<double>* Create(const string symbol, ENUM_TIMEFRAMES timeframe, TIStream<double> *source)
    {
       VolumeStream* volume = new VolumeStream(symbol, timeframe);
       DateTimeStream* dates = new DateTimeStream(symbol, timeframe);
@@ -213,12 +213,12 @@ public:
       return stream;
    }
    
-   static IStream* Create(IStream *source, IIntStream* volume, IDateTimeStream* dates)
+   static TIStream<double>* Create(TIStream<double> *source, IIntStream* volume, IDateTimeStream* dates)
    {
       return new VwapOnStream(source, volume, dates);
    }
    
-   static VwapStdev* Create(const string symbol, ENUM_TIMEFRAMES timeframe, IStream *source, IBoolStream* anchor, double stdev)
+   static VwapStdev* Create(const string symbol, ENUM_TIMEFRAMES timeframe, TIStream<double> *source, IBoolStream* anchor, double stdev)
    {
       VolumeStream* volume = new VolumeStream(symbol, timeframe);
       VwapStdev* stream = new VwapStdev(source, volume, anchor, stdev);

@@ -1,12 +1,12 @@
 #include <Streams/AStreamBase.mqh>
 
-//AOnStream v2.0
+//AOnStream v3.0
 class AOnStream : public AStreamBase
 {
 protected:
-   IStream *_source;
+   TIStream<double> *_source;
 public:
-   AOnStream(IStream *source)
+   AOnStream(TIStream<double> *source)
       :AStreamBase()
    {
       _source = source;

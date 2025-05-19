@@ -5,14 +5,14 @@
 #define AlertSignal_IMP
 
 #include <Conditions/ICondition.mqh>
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 #include <Signaler.mqh>
 
 class AlertSignal
 {
    double _signals[];
    ICondition* _condition;
-   IStream* _price;
+   TIStream<double>* _price;
    Signaler* _signaler;
    string _message;
    datetime _lastSignal;
@@ -37,7 +37,7 @@ public:
       ArrayInitialize(_signals, EMPTY_VALUE);
    }
 
-   int RegisterStreams(int id, int shift, string name, int code, color clr, IStream* price)
+   int RegisterStreams(int id, int shift, string name, int code, color clr, TIStream<double>* price)
    {
       _message = name;
       _price = price;

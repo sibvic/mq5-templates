@@ -1,7 +1,7 @@
-#include <../AOnStream.mqh>
-#include <../ChangeStream.mqh>
+#include <Streams/AOnStream.mqh>
+#include <Streams/ChangeStream.mqh>
 
-//RSIOnStream v1.0
+//RSIOnStream v2.0
 class RSIOnStream : public AOnStream
 {
    double _length;
@@ -9,7 +9,7 @@ class RSIOnStream : public AOnStream
    double pos[];
    double neg[];
 public:
-   RSIOnStream(IStream *source, const int length)
+   RSIOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _length = length;

@@ -184,7 +184,7 @@ void AdvancedAlertCustom(string key, string text, string instrument, string time
 #ifdef ACT_ON_SWITCH_CONDITION
 #include <Conditions/ActOnSwitchCondition.mqh>
 #endif
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 #include <MarketEntryStrategy.mqh>
 #include <InstrumentInfo.mqh>
 #include <TradesIterator.mqh>
@@ -406,7 +406,7 @@ AOrderAction* CreateTrailing(const string symbol, const ENUM_TIMEFRAMES timefram
                {
                   return new CreateTrailingAction(trailing_start, false, trailing_step, actions);
                }
-               // IStream* stream = CreateTrailingStream(symbol, timeframe);
+               // TIStream<double>* stream = CreateTrailingStream(symbol, timeframe);
                // AOrderAction* action = new CreateTrailingStreamAction(trailing_start, false, stream, actions);
                // stream.Release();
                // return action;
@@ -419,7 +419,7 @@ AOrderAction* CreateTrailing(const string symbol, const ENUM_TIMEFRAMES timefram
          //       {
          //          return new CreateTrailingAction(trailing_start, true, trailing_step, actions);
          //       }
-         //       IStream* stream = CreateTrailingStream(symbol, timeframe);
+         //       TIStream<double>* stream = CreateTrailingStream(symbol, timeframe);
          //       AOrderAction* action = new CreateTrailingStreamAction(trailing_start, true, stream, actions);
          //       stream.Release();
          //       return action;

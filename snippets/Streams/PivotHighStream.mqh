@@ -1,4 +1,4 @@
-// Pivot high stream v1.0
+// Pivot high stream v2.0
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/SimplePriceStream.mqh>
@@ -9,7 +9,7 @@ class PivotHighStream : public AOnStream
    int _leftBars;
    int _rightBars;
 public:
-   PivotHighStream(IStream *source, int leftBars, int rightBars)
+   PivotHighStream(TIStream<double> *source, int leftBars, int rightBars)
       :AOnStream(source)
    {
       _leftBars = leftBars;
@@ -33,7 +33,7 @@ public:
       return result;
    }
    
-   static bool GetValues(const int period, const int count, double &val[], IStream* source, int leftBars, int rightBars)
+   static bool GetValues(const int period, const int count, double &val[], TIStream<double>* source, int leftBars, int rightBars)
    {
       for (int i = 0; i < count; ++i)
       {
@@ -47,7 +47,7 @@ public:
       return true;
    }
 
-   static bool GetValue(const int period, double &val, IStream* source, int leftBars, int rightBars)
+   static bool GetValue(const int period, double &val, TIStream<double>* source, int leftBars, int rightBars)
    {
       double center[1];
       if (!source.GetValues(period - rightBars, 1, center))

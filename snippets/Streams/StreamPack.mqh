@@ -1,11 +1,11 @@
-// Stream pack v1.0
+// Stream pack v2.0
 
-class StreamPack : public IStream
+class StreamPack : public TIStream<double>
 {
-   IStream *_main;
-   IStream *_secondary[];
+   TIStream<double> *_main;
+   TIStream<double> *_secondary[];
 public:
-   StreamPack(IStream *main)
+   StreamPack(TIStream<double> *main)
    {
       _main = main;
    }
@@ -20,7 +20,7 @@ public:
       }
    }
 
-   void Add(IStream *stream)
+   void Add(TIStream<double> *stream)
    {
       int count = ArrayRange(_secondary, 0);
       ArrayResize(_secondary, count + 1);

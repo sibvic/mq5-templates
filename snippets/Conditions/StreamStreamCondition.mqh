@@ -1,17 +1,17 @@
 #include <Conditions/ACondition.mqh>
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 #include <Streams/IBarStream.mqh>
 #include <enums/TwoStreamsConditionType.mqh>
 
-// Stream-stream condition v2.0
+// Stream-stream condition v3.0
 
 #ifndef StreamStreamCondition_IMP
 #define StreamStreamCondition_IMP
 
 class StreamStreamCondition : public ACondition
 {
-   IStream* _stream1;
-   IStream* _stream2;
+   TIStream<double>* _stream1;
+   TIStream<double>* _stream2;
    int _periodShift1;
    int _periodShift2;
    string _name1;
@@ -21,8 +21,8 @@ public:
    StreamStreamCondition(const string symbol, 
       ENUM_TIMEFRAMES timeframe, 
       TwoStreamsConditionType condition,
-      IStream* stream1,
-      IStream* stream2,
+      TIStream<double>* stream1,
+      TIStream<double>* stream2,
       string name1,
       string name2,
       int streamPeriodShift1 = 0,

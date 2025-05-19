@@ -8,12 +8,12 @@
 #include <Streams/averages/EMAOnStream.mqh>
 #include <enums/MATypes.mqh>
 
-// AveragesStreamFactory v1.2
+// AveragesStreamFactory v2.0
 
 class AveragesStreamFactory
 {
 public:
-   static IStream* Create(MATypes method, IStream* source, IStream* volumeSource, int period)
+   static TIStream<double>* Create(MATypes method, TIStream<double>* source, TIStream<double>* volumeSource, int period)
    {
       switch (method)
       {

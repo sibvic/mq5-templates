@@ -1,11 +1,11 @@
-// IBarStream v1.0
+// IBarStream v2.0
 
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 
 #ifndef IBarStream_IMP
 #define IBarStream_IMP
 
-interface IBarStream : public IStream
+interface IBarStream : public TIStream<double>
 {
 public:
    virtual bool GetValues(const int period, double &open, double &high, double &low, double &close) = 0;

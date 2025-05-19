@@ -1,7 +1,7 @@
 #include <streams/AOnStream.mqh>
 #include <Streams/CustomStream.mqh>
 
-// OBV on stream v1.0
+// OBV on stream v2.0
 
 #ifndef OBVStream_IMP
 #define OBVStream_IMP
@@ -9,9 +9,9 @@
 class OBVStream : public AOnStream
 {
    StreamBuffer* _buffer;
-   IStream *_volumeSource;
+   TIStream<double> *_volumeSource;
 public:
-   OBVStream(IStream *source, IStream *volumeSource)
+   OBVStream(TIStream<double> *source, TIStream<double> *volumeSource)
       :AOnStream(source)
    {
       _volumeSource = volumeSource;

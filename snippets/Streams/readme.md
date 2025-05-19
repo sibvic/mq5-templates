@@ -1,9 +1,5 @@
 # Streams
 
-## IStream
-
-Stream interface.
-
 ## ABaseStream
 
 Base stream implementation.

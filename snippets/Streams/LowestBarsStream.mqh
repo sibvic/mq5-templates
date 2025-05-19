@@ -2,13 +2,13 @@
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Lowest bars stream v2.0
+// Lowest bars stream v3.0
 
 class LowestBarsStream : public AIntStream
 {
    int _loopback;
    double _values[];
-   IStream *_source;
+   TIStream<double> *_source;
 public:
    LowestBarsStream(string symbol, ENUM_TIMEFRAMES timeframe, int loopback)
    {
@@ -16,7 +16,7 @@ public:
       _loopback = loopback;
       ArrayResize(_values, loopback);
    }
-   LowestBarsStream(IStream* source, int loopback)
+   LowestBarsStream(TIStream<double>* source, int loopback)
    {
       _source = NULL;
       _loopback = loopback;

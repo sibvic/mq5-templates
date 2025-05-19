@@ -1,13 +1,13 @@
 #include <Streams/AOnStream.mqh>
 
-// Sum on stream v1.1
+// Sum on stream v2.0
 
 class SumOnStream : public AOnStream
 {
    double _buffer[];
    int _length;
 public:
-   SumOnStream(IStream *source, int length)
+   SumOnStream(TIStream<double> *source, int length)
       :AOnStream(source)
    {
       _length = length;

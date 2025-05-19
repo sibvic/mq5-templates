@@ -1,4 +1,4 @@
-// MFI on stream v1.0
+// MFI on stream v2.0
 
 #ifndef MfiOnStream_IMP
 #define MfiOnStream_IMP
@@ -8,7 +8,7 @@ class MfiOnStream : public AOnStream
 {
    int _length;
 public:
-   MfiOnStream(IStream *source, const int length)
+   MfiOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _length = length;

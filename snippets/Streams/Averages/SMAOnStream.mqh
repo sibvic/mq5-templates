@@ -1,11 +1,11 @@
 #include <Streams/AOnStream.mqh>
-//SMAOnStream v4.0
+//SMAOnStream v5.0
 
 class SmaOnStream : public AOnStream
 {
    double _length;
 public:
-   SmaOnStream(IStream *source, const int length)
+   SmaOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _length = length;

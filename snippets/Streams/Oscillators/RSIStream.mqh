@@ -2,7 +2,7 @@
 #include <Streams/ChangeStream.mqh>
 #include <Streams/AStreamBase.mqh>
 
-// RSI stream v1.2
+// RSI stream v2.0
 
 #ifndef RSIStream_IMP
 #define RSIStream_IMP
@@ -13,7 +13,7 @@ class RSISimpleStream : public AOnStream
    double _pos[];
    double _neg[];
 public:
-   RSISimpleStream(IStream* stream, int period)
+   RSISimpleStream(TIStream<double>* stream, int period)
       :AOnStream(new ChangeStream(stream))
    {
       _source.Release();
@@ -106,10 +106,10 @@ public:
 
 class PineScriptRSIUpDownStream : public AStreamBase
 {
-   IStream* _up;
-   IStream* _down;
+   TIStream<double>* _up;
+   TIStream<double>* _down;
 public:
-   PineScriptRSIUpDownStream(IStream* up, IStream* down)
+   PineScriptRSIUpDownStream(TIStream<double>* up, TIStream<double>* down)
    {
       _up = up;
       _up.AddRef();
@@ -167,14 +167,14 @@ public:
 
 class RSIStream : public AStreamBase
 {
-   IStream* _impl;
+   TIStream<double>* _impl;
 public:
-   RSIStream(IStream* stream, int period)
+   RSIStream(TIStream<double>* stream, int period)
    {
       _impl = new RSISimpleStream(stream, period);
    }
 
-   RSIStream(IStream* up, IStream* down)
+   RSIStream(TIStream<double>* up, TIStream<double>* down)
    {
       _impl = new PineScriptRSIUpDownStream(up, down);
    }

@@ -1,6 +1,6 @@
 #include <streams/AOnStream.mqh>
 
-// ALMA on stream v1.0
+// ALMA on stream v2.0
 
 #ifndef AlmaOnStream_IMP
 #define AlmaOnStream_IMP
@@ -11,7 +11,7 @@ class ALMAOnStream : public AOnStream
    double _m;
    double _s;
 public:
-   ALMAOnStream(IStream *source, const int length, double offset, double sigma)
+   ALMAOnStream(TIStream<double> *source, const int length, double offset, double sigma)
       :AOnStream(source)
    {
       _length = length;

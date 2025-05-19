@@ -2,14 +2,14 @@
 #include <Streams/CustomStream.mqh>
 #include <Streams/averages/RmaOnStream.mqh>
 
-// DEMAOnStream v1.0
+// DEMAOnStream v2.0
 class DEMAOnStream : public AOnStream
 {
    double _alpha;
    CustomStream* _buffer;
    CustomStream* _buffer2;
 public:
-   DEMAOnStream(IStream* source, const int length)
+   DEMAOnStream(TIStream<double>* source, const int length)
       :AOnStream(source)
    {
       _alpha = 2.0 / (1.0 + length);

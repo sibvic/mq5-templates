@@ -1,4 +1,4 @@
-// Pending entry strategy v1.0
+// Pending entry strategy v2.0
 
 #ifndef PendingEntryStrategy_IMP
 #define PendingEntryStrategy_IMP
@@ -7,15 +7,15 @@ class PendingEntryStrategy : public IEntryStrategy
    string _symbol;
    int _magicNumber;
    int _slippagePoints;
-   IStream* _longEntryPrice;
-   IStream* _shortEntryPrice;
+   TIStream<double>* _longEntryPrice;
+   TIStream<double>* _shortEntryPrice;
    ActionOnConditionLogic* _actions;
 public:
    PendingEntryStrategy(const string symbol, 
       const int magicMumber, 
       const int slippagePoints, 
-      IStream* longEntryPrice, 
-      IStream* shortEntryPrice,
+      TIStream<double>* longEntryPrice, 
+      TIStream<double>* shortEntryPrice,
       ActionOnConditionLogic* actions)
    {
       _actions = actions;

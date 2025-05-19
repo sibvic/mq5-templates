@@ -6,12 +6,12 @@
 #include <enums/TwoStreamsConditionType.mqh>
 #include <Streams/Custom/IntToFloatStreamWrapper.mqh>
 
-//CrossStreamV2 v1.0
+//CrossStreamV2 v2.0
 
 class CrossStreamFactory
 {
 public:
-   static IBoolStream* CreateCross(IStream *left, IStream* right)
+   static IBoolStream* CreateCross(TIStream<double> *left, TIStream<double>* right)
    {
       OrCondition* or = new OrCondition();
       or.Add(new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossOverSecond, left, right, "", ""), false);
@@ -21,14 +21,14 @@ public:
       return result;
    }
 
-   static IBoolStream* CreateCrossunder(IStream *left, IStream* right)
+   static IBoolStream* CreateCrossunder(TIStream<double> *left, TIStream<double>* right)
    {
       StreamStreamCondition* condition = new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossUnderSecond, left, right, "", "");
       ConditionStreamV2* result = new ConditionStreamV2(condition);
       condition.Release();
       return result;
    }
-   static IBoolStream* CreateCrossunder(IStream *left, IIntStream* right)
+   static IBoolStream* CreateCrossunder(TIStream<double> *left, IIntStream* right)
    {
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
       IBoolStream* condition = CreateCrossunder(left, rightWrapper);
@@ -36,7 +36,7 @@ public:
       return condition;
    }
 
-   static IBoolStream* CreateCrossover(IStream *left, IStream* right)
+   static IBoolStream* CreateCrossover(TIStream<double> *left, TIStream<double>* right)
    {
       StreamStreamCondition* condition = new StreamStreamCondition(_Symbol, (ENUM_TIMEFRAMES)_Period, FirstCrossOverSecond, left, right, "", "");
       ConditionStreamV2* result = new ConditionStreamV2(condition);
@@ -52,7 +52,7 @@ public:
       rightWrapper.Release();
       return condition;
    }
-   static IBoolStream* CreateCrossover(IStream *left, IIntStream* right)
+   static IBoolStream* CreateCrossover(TIStream<double> *left, IIntStream* right)
    {
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
       IBoolStream* condition = CreateCrossover(left, rightWrapper);

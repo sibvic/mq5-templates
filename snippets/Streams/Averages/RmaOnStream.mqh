@@ -1,12 +1,12 @@
 #include <Streams/AOnStream.mqh>
 
-//RmaOnStream v2.4
+//RmaOnStream v3.0
 class RmaOnStream : public AOnStream
 {
    double _length;
    double _buffer[];
 public:
-   RmaOnStream(IStream *source, const int length)
+   RmaOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _length = length;

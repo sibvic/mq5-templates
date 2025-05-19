@@ -1,7 +1,7 @@
-#include <../AOnStream.mqh>
+#include <Streams/AOnStream.mqh>
 #include <RmaOnStream.mqh>
-#include <../ChangeStream.mqh>
-#include <../AbsStream.mqh>
+#include <Streams/ChangeStream.mqh>
+#include <Streams/AbsStream.mqh>
 
 //TSIOnStream v1.0
 class TSIOnStream : public AOnStream
@@ -14,7 +14,7 @@ class TSIOnStream : public AOnStream
    RmaOnStream* ema_s1;
    RmaOnStream* ema_s2;
 public:
-   TSIOnStream(IStream *source, const int length)
+   TSIOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _length = length;

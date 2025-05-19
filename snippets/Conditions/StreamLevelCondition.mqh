@@ -1,16 +1,16 @@
 #include <enums/TwoStreamsConditionType.mqh>
 #include <Conditions/ACondition.mqh>
-#include <Streams/IStream.mqh>
-// Stream level condition v1.0
+#include <Streams/Interfaces/TIStream.mqh>
+// Stream level condition v2.0
 
 class StreamLevelCondition : public ACondition
 {
    TwoStreamsConditionType _condition;
-   IStream* _stream;
+   TIStream<double>* _stream;
    string _name;
    double _level;
 public:
-   StreamLevelCondition(const string symbol, ENUM_TIMEFRAMES timeframe, TwoStreamsConditionType condition, IStream* stream, double level, string name)
+   StreamLevelCondition(const string symbol, ENUM_TIMEFRAMES timeframe, TwoStreamsConditionType condition, TIStream<double>* stream, double level, string name)
       :ACondition(symbol, timeframe)
    {
       _level = level;

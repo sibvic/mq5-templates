@@ -1,4 +1,4 @@
-// Slope stream v1.0
+// Slope stream v2.0
 
 #ifndef SlopeStream_IMP
 #define SlopeStream_IMP
@@ -6,7 +6,7 @@
 class SlopeStream : public AOnStream
 {
 public:
-   SlopeStream(IStream* stream)
+   SlopeStream(TIStream<double>* stream)
       :AOnStream(stream)
    {
 

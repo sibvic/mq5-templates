@@ -2,13 +2,13 @@
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Highest bars stream v2.0
+// Highest bars stream v3.0
 
 class HighestBarsStream : public AIntStream
 {
    int _loopback;
    double _values[];
-   IStream *_source;
+   TIStream<double> *_source;
 public:
    HighestBarsStream(string symbol, ENUM_TIMEFRAMES timeframe, int loopback)
    {
@@ -16,7 +16,7 @@ public:
       _loopback = loopback;
       ArrayResize(_values, loopback);
    }
-   HighestBarsStream(IStream* source, int loopback)
+   HighestBarsStream(TIStream<double>* source, int loopback)
    {
       _source = NULL;
       _loopback = loopback;

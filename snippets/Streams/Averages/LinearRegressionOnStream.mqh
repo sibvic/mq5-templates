@@ -1,5 +1,5 @@
 #include <Streams/AOnStream.mqh>
-//LinearRegressionOnStream v1.4
+//LinearRegressionOnStream v2.0
 
 class LinearRegressionOnStream : public AOnStream
 {
@@ -7,7 +7,7 @@ class LinearRegressionOnStream : public AOnStream
    double _buffer[];
    int _offset;
 public:
-   LinearRegressionOnStream(IStream *source, const int length, int offset = 0)
+   LinearRegressionOnStream(TIStream<double> *source, const int length, int offset = 0)
       :AOnStream(source)
    {
       _offset = offset;

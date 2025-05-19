@@ -1,10 +1,10 @@
-// Abstract float stream v1.0
+// Abstract float stream v2.0
 
 #ifndef AFloatStream_IMPL
 #define AFloatStream_IMPL
-#include <Streams/IStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 
-class AFloatStream : public IStream
+class AFloatStream : public TIStream<double>
 {
    int _refs;   
 public:

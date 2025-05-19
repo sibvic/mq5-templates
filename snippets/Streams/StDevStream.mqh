@@ -1,12 +1,12 @@
 #include <Streams/AOnStream.mqh>
 
-// StDev stream v1.2
+// StDev stream v2.0
 
 class StDevStream : public AOnStream
 {
    int _period;
 public:
-   StDevStream(IStream* __source, int period)
+   StDevStream(TIStream<double>* __source, int period)
       :AOnStream(__source)
    {
       _period = period;

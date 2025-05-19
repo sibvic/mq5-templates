@@ -2,16 +2,16 @@
 #include <Streams/CustomStream.mqh>
 #include <Streams/averages/RmaOnStream.mqh>
 
-// HullOnStream v2.0
+// HullOnStream v3.0
 class HullOnStream : public AOnStream
 {
    int _length;
    CustomStream* _buffer;
-   IStream* _half;
-   IStream* _full;
-   IStream* _hull;
+   TIStream<double>* _half;
+   TIStream<double>* _full;
+   TIStream<double>* _hull;
 public:
-   HullOnStream(IStream *source, const int length)
+   HullOnStream(TIStream<double> *source, const int length)
       :AOnStream(source)
    {
       _source = source;

@@ -3,12 +3,12 @@
 #include <Conditions/OrCondition.mqh>
 #include <enums/TwoStreamsConditionType.mqh>
 
-//CrossStream v1.0
+//CrossStream v2.0
 
 class CrossStream : public ConditionStream
 {
 public:
-   CrossStream(IStream *left, IStream* right)
+   CrossStream(TIStream<double> *left, TIStream<double>* right)
       :ConditionStream(new OrCondition())
    {
       OrCondition* or = (OrCondition*)(_condition);

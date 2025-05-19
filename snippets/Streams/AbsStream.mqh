@@ -1,10 +1,10 @@
 #include <AOnStream.mqh>
 
-//AbsStream v1.0
+//AbsStream v2.0
 class AbsStream : public AOnStream
 {
 public:
-   AbsStream(IStream *source)
+   AbsStream(TIStream<double> *source)
       :AOnStream(source)
    {
    }

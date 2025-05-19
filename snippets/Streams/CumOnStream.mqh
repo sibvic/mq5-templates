@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 
-// Cumulative on stream v1.2
+// Cumulative on stream v2.0
 
 #ifndef CumOnStream_IMP
 #define CumOnStream_IMP
@@ -9,7 +9,7 @@ class CumOnStream : public AOnStream
 {
    double _buffer[];
 public:
-   CumOnStream(IStream *source)
+   CumOnStream(TIStream<double> *source)
       :AOnStream(source)
    {
    }

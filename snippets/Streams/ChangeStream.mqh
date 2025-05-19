@@ -2,15 +2,16 @@
 #define ChangeStream_IMPL
 
 #include <Streams/AOnStream.mqh>
+#include <Streams/Interfaces/TIStream.mqh>
 #include <Streams/Interfaces/IBoolStream.mqh>
 #include <Streams/Custom/BoolToFloatStream.mqh>
 
-//ChangeStream v1.2
+//ChangeStream v2.0
 class ChangeStream : public AOnStream
 {
    int _period;
 public:
-   ChangeStream(IStream* stream, int period = 1)
+   ChangeStream(TIStream<double>* stream, int period = 1)
       :AOnStream(stream)
    {
       _period = period;
@@ -36,12 +37,12 @@ public:
 class ChangeStreamFactory
 {
 public:
-   static IStream* Create(IStream* stream, int period = 1)
+   static TIStream<double>* Create(TIStream<double>* stream, int period = 1)
    {
       return new ChangeStream(stream, period);
    }
    
-   static IStream* Create(IBoolStream* stream, int period = 1)
+   static TIStream<double>* Create(IBoolStream* stream, int period = 1)
    {
       BoolToFloatStream* wrapper = new BoolToFloatStream(stream);
       ChangeStream* change = new ChangeStream(wrapper, period);
