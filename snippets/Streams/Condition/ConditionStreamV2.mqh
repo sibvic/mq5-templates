@@ -1,11 +1,10 @@
 #ifndef ConditionStreamV2_IMPL
 #define ConditionStreamV2_IMPL
-#include <Streams/Abstract/ABoolStream.mqh>
 #include <Conditions/ICondition.mqh>
 
-//ConditionStreamV2 v1.1
+//ConditionStreamV2 v2.0
 
-class ConditionStreamV2 : public ABoolStream
+class ConditionStreamV2 : public TIStream<int>
 {
 protected:
    ICondition* _condition;
@@ -26,12 +25,12 @@ public:
       return iBars(_Symbol, (ENUM_TIMEFRAMES)_Period);
    }
 
-   bool GetValue(const int period, bool &val)
+   bool GetValue(const int period, int &val)
    {
       val = _condition.IsPass(period, 0);
       return true;
    }
-   virtual bool GetValues(const int period, const int count, bool &val[])
+   virtual bool GetValues(const int period, const int count, int &val[])
    {
       if (Size() <= period || period - count + 1 < 0)
       {
@@ -39,26 +38,7 @@ public:
       }
       for (int i = 0; i < count; ++i)
       {
-         val[i] = _condition.IsPass(period - i, 0);
-      }
-      return true;
-   }
-   virtual bool GetSeriesValues(const int period, const int count, bool &val[])
-   {
-      int pos = Size() - period - 1;
-      return GetValues(pos, count, val);
-   }
-   virtual bool GetValues(const int period, const int count, int &val[])
-   {
-      bool values[];
-      ArrayResize(values, count);
-      if (!GetValues(period, count, values))
-      {
-         return false;
-      }
-      for (int i = 0; i < count; ++i)
-      {
-         val[i] = values[i];
+         val[i] = _condition.IsPass(period - i, 0) ? 1 : 0;
       }
       return true;
    }

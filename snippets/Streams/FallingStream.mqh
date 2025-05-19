@@ -1,8 +1,7 @@
-// Stream returns falling flag. Similar to ta.rising in PineScript v2.0
-#include <Streams/Abstract/ABoolStream.mqh>
+// Stream returns falling flag. Similar to ta.rising in PineScript v3.0
 #include <Streams/Interfaces/TIStream.mqh>
 
-class FallingStream : public ABoolStream
+class FallingStream : public TIStream<int>
 {
    TIStream<double>* _source;
    int _length;
@@ -27,10 +26,6 @@ public:
    {
       return GetValues(Size() - period - 1, count, val);
    }
-   bool GetSeriesValues(const int period, int count, bool &val[])
-   {
-      return GetValues(Size() - period - 1, count, val);
-   }
    bool GetValues(const int period, int count, int &val[])
    {
       bool boolVals[];
@@ -44,10 +39,6 @@ public:
          val[i] = boolVals[i] ? 1 : 0;
       }
       return true;
-   }
-   bool GetValues(const int period, int count, bool &val[])
-   {
-      return Get(period, count, val);
    }
 private:
    bool Get(const int period, int count, bool &val[])
