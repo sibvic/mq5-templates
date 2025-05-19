@@ -15,3 +15,7 @@ syminfo.* functions
 ## Timeframe
 
 timeframe.* functions
+
+## PlotShpae
+
+PS-like plotshape()
