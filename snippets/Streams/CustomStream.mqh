@@ -1,19 +1,25 @@
 // CustomStream v2.0
-#include <Streams/AStream.mqh>
+#include <Streams/AOnStream.mqh>
 #include <Streams/StreamBuffer.mqh>
 
-class CustomStream : public AStream
+class CustomStream : public AStreamBase
 {
    StreamBuffer _data;
+   TIStream<double> *_source;
 public:
-   CustomStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
-      :AStream(symbol, timeframe)
+   CustomStream(TIStream<double>* base)
    {
+      _source = base;
+      _source.AddRef();
+   }
+   ~CustomStream()
+   {
+      _source.Release();
    }
 
    virtual int Size()
    {
-      return iBars(_symbol, _timeframe);
+      return _source.Size();
    }
 
    virtual void SetValue(int period, double value)

@@ -30,7 +30,7 @@ public:
    
    virtual bool GetValues(const int period, const int count, double &val[])
    {
-      bool values[];
+      int values[];
       ArrayResize(values, count);
       if (!stream.GetValues(period, count, values))
       {

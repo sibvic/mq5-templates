@@ -1,10 +1,11 @@
 #ifndef ConditionStreamV2_IMPL
 #define ConditionStreamV2_IMPL
 #include <Conditions/ICondition.mqh>
+#include <Streams/Abstract/TAStream.mqh>
 
 //ConditionStreamV2 v2.0
 
-class ConditionStreamV2 : public TIStream<int>
+class ConditionStreamV2 : public TAStream<int>
 {
 protected:
    ICondition* _condition;
