@@ -5,7 +5,7 @@
 #include <Streams/Interfaces/TIStream.mqh>
 
 // Counts number of bars since last condition.
-// v2.0
+// v2.1
 
 class BarsSinceStreamV2 : public AIntStream
 {
@@ -74,7 +74,7 @@ private:
       int size = Size();
       for (int periodIndex = period; periodIndex > 0; --periodIndex)
       {
-         bool val[1];
+         int val[1];
          if (_condition.GetValues(periodIndex, 1, val) && val[0] == true)
          {
             _bars[periodIndex] = 0;
