@@ -2,23 +2,25 @@
 #define FloatStream_IMPL
 
 #include <Streams/Abstract/AFloatStream.mqh>
-// Float stream v2.0
+// Float stream v2.1
 
 class FloatStream : public AFloatStream
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
    double _stream[];
+   double _emptyValue;
 public:
-   FloatStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
+   FloatStream(const string symbol, const ENUM_TIMEFRAMES timeframe, double emptyValue = EMPTY_VALUE)
    {
       _symbol = symbol;
       _timeframe = timeframe;
+      _emptyValue = emptyValue;
    }
 
    void Init()
    {
-      ArrayInitialize(_stream, EMPTY_VALUE);
+      ArrayInitialize(_stream, _emptyValue);
    }
 
    virtual int Size()
@@ -49,7 +51,7 @@ public:
       for (int i = 0; i < count; ++i)
       {
          val[i] = _stream[period - i];
-         if (val[i] == EMPTY_VALUE)
+         if (val[i] == _emptyValue)
          {
             return false;
          }
@@ -70,7 +72,7 @@ private:
          ArrayResize(_stream, size);
          for (int i = currentSize; i < size; ++i)
          {
-            _stream[i] = EMPTY_VALUE;
+            _stream[i] = _emptyValue;
          }
       }
    }
