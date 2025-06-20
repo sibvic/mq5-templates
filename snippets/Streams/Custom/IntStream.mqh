@@ -2,23 +2,25 @@
 #define IntStream_IMPL
 
 #include <Streams/Abstract/AIntStream.mqh>
-// Int stream v1.0
+// Int stream v1.1
 
 class IntStream : public AIntStream
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
    int _stream[];
+   int _emptyValue;
 public:
-   IntStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
+   IntStream(const string symbol, const ENUM_TIMEFRAMES timeframe, int emptyValue = INT_MIN)
    {
+      _emptyValue = emptyValue;
       _symbol = symbol;
       _timeframe = timeframe;
    }
 
    void Init()
    {
-      ArrayInitialize(_stream, INT_MIN);
+      ArrayInitialize(_stream, _emptyValue);
    }
 
    virtual int Size()
@@ -49,7 +51,7 @@ public:
       for (int i = 0; i < count; ++i)
       {
          val[i] = _stream[period - i];
-         if (val[i] == INT_MIN)
+         if (val[i] == _emptyValue)
          {
             return false;
          }
@@ -70,7 +72,7 @@ private:
          ArrayResize(_stream, size);
          for (int i = currentSize; i < size; ++i)
          {
-            _stream[i] = INT_MIN;
+            _stream[i] = _emptyValue;
          }
       }
    }
