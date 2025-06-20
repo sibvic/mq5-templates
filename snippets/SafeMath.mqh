@@ -284,3 +284,11 @@ double InvertSign(double value)
    }
    return -value;
 }
+int SafeMathCeil(double value)
+{
+   if (value == EMPTY_VALUE)
+   {
+      return INT_MIN;
+   }
+   return MathCeil(value);
+}
