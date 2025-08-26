@@ -61,3 +61,7 @@ Money flow index on stream
 ## VwapOnStream
 
 VWAP average on stream
+
+## TrueRangeOnStream
+
+True Range indicator on stream. Calculates the greatest of three ranges: current high-low, current high-previous close, or current low-previous close.
