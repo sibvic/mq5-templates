@@ -1,4 +1,4 @@
-// Bar stream v2.0
+// Bar stream v2.1
 
 #include <Streams/IBarStream.mqh>
 
@@ -38,7 +38,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -51,7 +51,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -64,7 +64,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -77,7 +77,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -90,7 +90,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -103,7 +103,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -119,7 +119,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -133,7 +133,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos)
+      if (size <= oldPos || oldPos < 0)
       {
          return false;
       }
@@ -152,7 +152,7 @@ public:
    {
       int size = Size();
       int oldPos = size - period - 1;
-      if (size <= oldPos + count - 1)
+      if (size <= oldPos + count - 1 || oldPos < 0)
       {
          return false;
       }
@@ -166,7 +166,7 @@ public:
    virtual bool GetSeriesValues(const int oldPos, const int count, double &val[])
    {
       int size = Size();
-      if (size <= oldPos + count - 1)
+      if (size <= oldPos + count - 1 || oldPos < 0)
       {
          return false;
       }
