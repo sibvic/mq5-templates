@@ -91,7 +91,7 @@ public:
       _prefix = prefix;
    }
 
-   void Alert(string message, int position, datetime time)
+   void ShowAlert(string message, int position, datetime time)
    {
       if (position != 0)
       {
