@@ -1,5 +1,5 @@
 // PineScript timeframe.* functions
-// v1.0
+// v1.1
 
 class Timeframe
 {
@@ -70,13 +70,40 @@ public:
       return ~IsDWM();
    }
    
+   static string ToString(ENUM_TIMEFRAMES resolution)
+   {
+      switch (resolution)
+      {
+         case PERIOD_M1:
+            return "1";
+         case PERIOD_M5:
+            return "5";
+         case PERIOD_M15:
+            return "15";
+         case PERIOD_M30:
+            return "30";
+         case PERIOD_H1:
+            return "60";
+         case PERIOD_H4:
+            return "240";
+         case PERIOD_D1:
+            return "D";
+         case PERIOD_W1:
+            return "W";
+         case PERIOD_MN1:
+            return "M";
+         
+      }
+      return "";
+   }
+   
    static ENUM_TIMEFRAMES GetTimeframe(string resolution)
    {
       if (resolution == "1") { return PERIOD_M1; }
       if (resolution == "5") { return PERIOD_M5; }
       if (resolution == "15") { return PERIOD_M15; }
       if (resolution == "30") { return PERIOD_M30; }
-      if (resolution == "60") { return PERIOD_H1; }
+      if (resolution == "60" || resolution == "1H") { return PERIOD_H1; }
       if (resolution == "240") { return PERIOD_H4; }
       if (resolution == "D") { return PERIOD_D1; }
       if (resolution == "W") { return PERIOD_W1; }
