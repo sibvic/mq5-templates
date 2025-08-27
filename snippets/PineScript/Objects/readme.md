@@ -33,3 +33,7 @@ Default implementation of a linefill.
 ## Table
 
 PineScript-like table
+
+## ChartPoint
+
+Base chart point object with reference counting support. Provides basic functionality for chart point management.
