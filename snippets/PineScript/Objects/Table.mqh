@@ -1,4 +1,4 @@
-// Table v1.2
+// Table v1.3
 #include <Grid/Grid.mqh>
 #include <Grid/LabelCell.mqh>
 
@@ -330,6 +330,11 @@ public:
             break;
       }
       _grid.Draw(x, y);
+   }
+   
+   static void MergeCells(Table* table, int startColumn, int startRow, int endColumn, int endRow)
+   {
+      //TODO: implement
    }
 private:
    int GetFontSize(string size)
