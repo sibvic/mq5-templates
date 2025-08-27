@@ -1,15 +1,19 @@
 #ifndef ChartPoint_IMPL
 #define ChartPoint_IMPL
 
-// Chart point object v1.0
+// Chart point object v1.1
 
 class ChartPoint
 {
    int _refs;
+   int _index;
+   double _price;
 public:
-   ChartPoint()
+   ChartPoint(int index, double price)
    {
       _refs = 1;
+      _index = index;
+      _price = price;
    }
    ~ChartPoint()
    {
@@ -31,7 +35,12 @@ public:
    
    static ChartPoint* Create()
    {
-      return new ChartPoint();
+      return new ChartPoint(0, 0);
+   }
+   
+   static ChartPoint* FromIndex(int index, double price)
+   {
+      return new ChartPoint(index, price);
    }
 
    void CopyTo(ChartPoint* other)
