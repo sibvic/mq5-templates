@@ -1,7 +1,7 @@
 #include <Grid/ACell.mqh>
 #include <PineScriptUtils.mqh>
 
-// Label cell v4.1
+// Label cell v5.0
 
 #ifndef LabelCell_IMP
 #define LabelCell_IMP
@@ -34,7 +34,7 @@ public:
       _windowNumber = windowNumber;
    }
 
-   virtual void Measure(int& width, int& height)
+   virtual void Measure(uint& width, uint& height)
    {
       _width = 0;
       _height = 0;
@@ -44,8 +44,8 @@ public:
       ArrayResize(_linesWidths, linesCount);
       for (int i = 0; i < linesCount; ++i)
       {
-         int w, h;
-         Measure(lines[i], "Arial", _fontSize, w, h);
+         uint w, h;
+         ACell::Measure(lines[i], "Arial", _fontSize, w, h);
          _height += h;
          _width = MathMax(_width, w);
          _linesHeights[i] = h;

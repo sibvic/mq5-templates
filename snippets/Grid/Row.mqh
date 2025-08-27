@@ -1,7 +1,7 @@
 #include <Grid/ICell.mqh>
 #include <Grid/RowSize.mqh>
 
-// Row v2.1
+// Row v2.2
 
 #ifndef Row_IMP
 #define Row_IMP
@@ -24,7 +24,7 @@ public:
       int count = ArraySize(_cells); 
       for (int i = 0; i < count; ++i) 
       { 
-         int w, h;
+         uint w, h;
          _cells[i].Measure(w, h);
          rowSizes.Add(i, w + 5, h + 5);
       } 
