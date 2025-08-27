@@ -1,4 +1,4 @@
-// String stream v1.0
+// String stream v1.1
 
 #ifndef StringStream_IMPL
 #define StringStream_IMPL
@@ -10,11 +10,13 @@ class StringStream : public AStringStream
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
    string _stream[];
+   string _emptyValue;
 public:
-   StringStream(const string symbol, const ENUM_TIMEFRAMES timeframe)
+   StringStream(const string symbol, const ENUM_TIMEFRAMES timeframe, string emptyValue = NULL)
    {
       _symbol = symbol;
       _timeframe = timeframe;
+      _emptyValue = emptyValue;
    }
    void Init()
    {
@@ -52,7 +54,7 @@ public:
       EnsureStreamHasProperSize(size);
       for (int i = 0; i < count; ++i)
       {
-         if (_stream[period + i] == NULL)
+         if (_stream[period + i] == _emptyValue)
          {
             return false;
          }
