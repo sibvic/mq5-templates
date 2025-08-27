@@ -1,11 +1,11 @@
 #include <Grid/ICell.mqh>
 
-// ACell v1.0
+// ACell v1.1
 
 class ACell : public ICell
 {
 protected:
-   void Measure(string text, string font, int fontSize, int& width, int& height)
+   void Measure(string text, string font, int fontSize, uint& width, uint& height)
    {
       TextSetFont(font, -fontSize * 10);
       TextGetSize(text, width, height);
