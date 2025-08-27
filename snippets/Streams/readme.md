@@ -195,3 +195,7 @@ Returns true when value > than previous (length). Similar to ta.rising from Pine
 ## FallingStream
 
 Returns true when value < than previous (length). Similar to ta.falling from Pine Script
+
+## FixnanStream
+
+Fixes NaN (Not a Number) values in a stream by looking back to find the next valid value. Useful for handling missing or invalid data points.
