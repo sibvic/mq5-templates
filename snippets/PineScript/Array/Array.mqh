@@ -1,4 +1,4 @@
-// Array v1.4
+// Array v1.5
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
@@ -42,9 +42,8 @@ public:
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
    static VALUE_TYPE Pop(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Pop(); }
 
-   static int Get(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Get(index); }
-   static double Get(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Get(index); }
-   static Box* Get(IBoxArray* array, int index) { if (array == NULL) { return NULL; } return array.Get(index); }
+   template <typename VALUE_TYPE, typename ARRAY_TYPE, typename dummy>
+   static VALUE_TYPE Get(ARRAY_TYPE array, int index, ARRAY_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Get(index); }
    
    static void Set(IIntArray* array, int index, int value) { if (array == NULL) { return; } array.Set(index, value); }
    static void Set(IFloatArray* array, int index, double value) { if (array == NULL) { return; } array.Set(index, value); }
