@@ -1,5 +1,5 @@
 // PineScript timeframe.* functions
-// v1.1
+// v1.2
 
 class Timeframe
 {
@@ -16,6 +16,40 @@ public:
       if (_Period == PERIOD_W1) { return "W"; }
       if (_Period == PERIOD_MN1) { return "M"; }
       return "1";
+   }
+   
+   static bool IsDaily()
+   {
+      return _Period == PERIOD_D1;
+   }
+   
+   static bool IsWeekly()
+   {
+      return _Period == PERIOD_W1;
+   }
+   
+   static bool IsMonthly()
+   {
+      return _Period == PERIOD_MN1;
+   }
+   
+   static int InSeconds(string resolution)
+   {
+      return (int)GetTimeframe(resolution);
+   }
+   
+   static int Multiplier()
+   {
+      if (_Period == PERIOD_M1) { return 1; }
+      if (_Period == PERIOD_M5) { return 5; }
+      if (_Period == PERIOD_M15) { return 15; }
+      if (_Period == PERIOD_M30) { return 30; }
+      if (_Period == PERIOD_H1) { return 1; }
+      if (_Period == PERIOD_H4) { return 4; }
+      if (_Period == PERIOD_D1) { return 1; }
+      if (_Period == PERIOD_W1) { return 1; }
+      if (_Period == PERIOD_MN1) { return 1; }
+      return 1;
    }
    
    static bool Change(string timeframe, int pos)
