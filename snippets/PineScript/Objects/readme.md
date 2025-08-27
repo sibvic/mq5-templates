@@ -37,3 +37,11 @@ PineScript-like table
 ## ChartPoint
 
 Base chart point object with reference counting support. Provides basic functionality for chart point management.
+
+## Polyline
+
+Polyline object for drawing trend lines on charts. Manages polyline creation, deletion, and redrawing with reference counting support.
+
+## PolyLinesCollection
+
+Collection manager for polylines with automatic cleanup and memory management. Handles creation, deletion, and organization of polyline objects across multiple collections.
