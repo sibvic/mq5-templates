@@ -45,7 +45,12 @@ public:
 
    void CopyTo(ChartPoint* other)
    {
+      other._index = _index;
+      other._price = _price;
    }
+   
+   int GetIndex() { return _index; }
+   double GetPrice() { return _price; }
 private:
 };
 

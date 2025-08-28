@@ -64,7 +64,11 @@ public:
       line._curved = _curved;
       line._closed = _closed;
       line._forceOverlay = _forceOverlay;
-      line._points.AddRef();
+      line._points = _points;
+      if (line._points != NULL)
+      {
+         line._points.AddRef();
+      }
    }
 
    string GetId()
@@ -78,8 +82,35 @@ public:
 
    void Redraw()
    {
+      if (_points == NULL)
+      {
+         return;
+      }
+      int size = _points.Size();
+      if (size == 0)
+      {
+         return;
+      }
       int totalBars = iBars(_Symbol, _Period);
-      //TODO: Implement
+      
+      ChartPoint* prev = _points.Get(0);
+      for (int i = 1; i < size; ++i)
+      {
+         ChartPoint* point = _points.Get(i);
+         datetime x1 = GetTime(prev.GetIndex(), totalBars);
+         datetime x2 = GetTime(point.GetIndex(), totalBars);
+         string lineId = _id + i;
+         if (ObjectFind(0, lineId) == -1 && ObjectCreate(0, lineId, OBJ_TREND, 0, x1, prev.GetPrice(), x2, point.GetPrice()))
+         {
+            ObjectSetInteger(0, lineId, OBJPROP_COLOR, _lineColor);
+            ObjectSetInteger(0, lineId, OBJPROP_WIDTH, _lineWidth);
+         }
+         ObjectSetDouble(0, lineId, OBJPROP_PRICE, 0, prev.GetPrice());
+         ObjectSetDouble(0, lineId, OBJPROP_PRICE, 1, point.GetPrice());
+         ObjectSetInteger(0, lineId, OBJPROP_TIME, 0, x1);
+         ObjectSetInteger(0, lineId, OBJPROP_TIME, 1, x2);
+         prev = point;
+      }
       
    }
    datetime GetTime(int x, int totalBars)
