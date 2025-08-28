@@ -290,5 +290,5 @@ int SafeMathCeil(double value)
    {
       return INT_MIN;
    }
-   return MathCeil(value);
+   return (int)MathCeil(value);
 }
