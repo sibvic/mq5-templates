@@ -1,7 +1,9 @@
 #ifndef Box_IMPL
 #define Box_IMPL
 
-// Box object v1.2
+#include <PineScriptUtils.mqh>
+
+// Box object v1.3
 
 class Box
 {
@@ -12,8 +14,8 @@ class Box
    int _right;
    double _bottom;
    int _window;
-   color _bgcolor;
-   color _borderColor;
+   uint _bgcolor;
+   uint _borderColor;
    ENUM_TIMEFRAMES _timeframe;
    string _extend;
 
@@ -102,10 +104,10 @@ public:
    static void SetRight(Box* box, int value) { if (box == NULL) { return; } box.SetRight(value); }
    void SetRight(int value) { _right = value; }
 
-   static void SetBgColor(Box* box, color clr) { if (box == NULL) { return; } box.SetBgColor(clr); }
-   Box* SetBgColor(color clr) { _bgcolor = clr; return &this; }
-   static void SetBorderColor(Box* box, color clr) { if (box == NULL) { return; } box.SetBorderColor(clr); }
-   Box* SetBorderColor(color clr) { _borderColor = clr; return &this; }
+   static void SetBgColor(Box* box, uint clr) { if (box == NULL) { return; } box.SetBgColor(clr); }
+   Box* SetBgColor(uint clr) { _bgcolor = clr; return &this; }
+   static void SetBorderColor(Box* box, uint clr) { if (box == NULL) { return; } box.SetBorderColor(clr); }
+   Box* SetBorderColor(uint clr) { _borderColor = clr; return &this; }
    static void SetExtend(Box* box, string extend) { if (box == NULL) { return; } box.SetExtend(extend); }
    Box* SetExtend(string extend) { _extend = extend; return &this; }
 
@@ -117,8 +119,8 @@ public:
    Box* SetTextVAlign(string valign) { _textVAlign = valign; return &this; }
    static void SetTextSize(Box* box, string size) { if (box == NULL) { return; } box.SetTextSize(size); }
    Box* SetTextSize(string size) { _textSize = size; return &this; }
-   static void SetTextColor(Box* box, color clr) { if (box == NULL) { return; } box.SetTextColor(clr); }
-   Box* SetTextColor(color clr) { _textColor = clr; return &this; }
+   static void SetTextColor(Box* box, uint clr) { if (box == NULL) { return; } box.SetTextColor(clr); }
+   Box* SetTextColor(uint clr) { _textColor = clr; return &this; }
 
    void Redraw()
    {
@@ -143,8 +145,8 @@ public:
       }
       if (ObjectFind(0, _id) == -1 && ObjectCreate(0, _id, OBJ_RECTANGLE, _window, left, _top, right, _bottom))
       {
-         ObjectSetInteger(0, _id, OBJPROP_COLOR, _bgcolor);
-         ObjectSetInteger(0, _id, OBJPROP_BGCOLOR, _bgcolor);
+         ObjectSetInteger(0, _id, OBJPROP_COLOR, GetColorOnly(_bgcolor));
+         ObjectSetInteger(0, _id, OBJPROP_BGCOLOR, GetColorOnly(_bgcolor));
          ObjectSetInteger(0, _id, OBJPROP_STYLE, STYLE_SOLID);
          ObjectSetInteger(0, _id, OBJPROP_WIDTH, 1);
       }
