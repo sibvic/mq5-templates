@@ -43,7 +43,7 @@ public:
    static VALUE_TYPE Pop(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Pop(); }
 
    template <typename VALUE_TYPE, typename ARRAY_TYPE, typename dummy>
-   static VALUE_TYPE Get(ARRAY_TYPE array, int index, ARRAY_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Get(index); }
+   static VALUE_TYPE Get(ARRAY_TYPE array, int index, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Get(index); }
    
    static void Set(IIntArray* array, int index, int value) { if (array == NULL) { return; } array.Set(index, value); }
    static void Set(IFloatArray* array, int index, double value) { if (array == NULL) { return; } array.Set(index, value); }
