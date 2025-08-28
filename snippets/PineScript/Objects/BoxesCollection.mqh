@@ -120,7 +120,7 @@ public:
       collection.DeleteItem(box);
    }
 
-   static Box* Create(string id, int left, double top, int right, double bottom, datetime dateId)
+   static Box* Create(string id, int left, double top, int right, double bottom, datetime dateId, bool global = false)
    {
       ResetLastError();
       dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - left - 1);
@@ -133,7 +133,8 @@ public:
          + IntegerToString(date.hour) + "_"
          + IntegerToString(date.min) + "_"
          + IntegerToString(date.sec);
-      Box* box = new Box(left, top, right, bottom, boxId, id, ChartWindowOnDropped());
+      
+      Box* box = new Box(left, top, right, bottom, boxId, id, ChartWindowOnDropped(), global);
       BoxesCollection* collection = FindCollection(id);
       if (collection == NULL)
       {
@@ -143,9 +144,18 @@ public:
       collection.Add(box);
       _all.Add(box);
       box.Release();
-      if (_all.Count() > _max)
+      int allCount = _all.Count();
+      if (allCount > _max)
       {
-         Delete(_all.GetFirst());
+         for (int i = 0; i < allCount; ++i)
+         {
+            Box* toDelete = _all.Get(i);
+            if (!toDelete.IsGlobal() && toDelete != box)
+            {
+               Delete(toDelete);
+               break;
+            }
+         }
       }
       return box;
    }
@@ -176,12 +186,12 @@ private:
       return -1;
    }
 
-   bool RemoveItem(Box* box)
+   void DeleteItem(Box* box)
    {
       int index = FindIndex(box);
       if (index == -1)
       {
-         return false;
+         return;
       }
       int size = ArraySize(_array);
       for (int i = index + 1; i < size; ++i)
@@ -189,14 +199,7 @@ private:
          _array[i - 1] = _array[i];
       }
       ArrayResize(_array, size - 1);
-      return true;
-   }
-   void DeleteItem(Box* box)
-   {
-      if (RemoveItem(box))
-      {
-         box.Release();
-      }
+      box.Release();
    }
    
    void Add(Box* box)

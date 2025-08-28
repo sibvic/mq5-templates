@@ -24,10 +24,11 @@ class Box
    string _textVAlign;
    string _textSize;
    color _textColor;
+   bool global;
 
    int _refs;
 public:
-   Box(int left, double top, int right, double bottom, string id, string collectionId, int window)
+   Box(int left, double top, int right, double bottom, string id, string collectionId, int window, bool global = false)
    {
       _refs = 1;
       _textColor = White;
@@ -40,6 +41,7 @@ public:
       _window = window;
       _extend = "none";
       _timeframe = (ENUM_TIMEFRAMES)_Period;
+      this.global = global;
    }
    ~Box()
    {
@@ -60,6 +62,10 @@ public:
          delete &this;
       }
       return refs;
+   }
+   bool IsGlobal()
+   {
+      return global;
    }
 
    string GetId()
@@ -103,6 +109,8 @@ public:
    void SetLeft(int value) { _left = value; }
    static void SetRight(Box* box, int value) { if (box == NULL) { return; } box.SetRight(value); }
    void SetRight(int value) { _right = value; }
+   static void SetLeftTop(Box* box, double top, int left) { if (box == NULL) { return; } box.SetTop(top); box.SetLeft(left); }
+   static void SetRightBottom(Box* box, double bottom, int right) { if (box == NULL) { return; } box.SetRight(right); box.SetBottom(bottom); }
 
    static void SetBgColor(Box* box, uint clr) { if (box == NULL) { return; } box.SetBgColor(clr); }
    Box* SetBgColor(uint clr) { _bgcolor = clr; return &this; }

@@ -39,7 +39,6 @@ public:
       }
       else
       {
-      
          _all.ClearItems();
          if (full)
          {
@@ -72,8 +71,12 @@ public:
       collection.DeleteItem(line);
    }
 
-   static Line* Create(string id, int x1, double y1, int x2, double y2, datetime dateId)
+   static Line* Create(string id, int x1, double y1, int x2, double y2, datetime dateId, bool global = false)
    {
+      if (_all == NULL)
+      {
+         Clear();
+      }
       ResetLastError();
       dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - x1 - 1);
       MqlDateTime date;
@@ -82,7 +85,7 @@ public:
       _nextId += 1;
       string lineId = id + "_" + IntegerToString(currentId);
       
-      Line* line = new Line(x1, y1, x2, y2, lineId, id, ChartWindowOnDropped());
+      Line* line = new Line(x1, y1, x2, y2, lineId, id, ChartWindowOnDropped(), global);
       LinesCollection* collection = FindCollection(id);
       if (collection == NULL)
       {
@@ -91,9 +94,18 @@ public:
       }
       collection.Add(line);
       _all.Add(line);
-      if (_all.Count() > _max)
+      int allLinesCount = _all.Count();
+      if (allLinesCount > _max)
       {
-         Delete(_all.GetFirst());
+         for (int i = 0; i < allLinesCount; ++i)
+         {
+            Line* lineToDelete = _all.Get(i);
+            if (!lineToDelete.IsGlobal() && lineToDelete != line)
+            {
+               Delete(lineToDelete);
+               break;
+            }
+         }
       }
       line.Release();
       return line;

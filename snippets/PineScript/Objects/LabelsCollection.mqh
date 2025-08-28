@@ -27,7 +27,10 @@ public:
    {
       for (int i = 0; i < ArraySize(_labels); ++i)
       {
-         delete _labels[i];
+         if (_labels[i] != NULL)
+         {
+            _labels[i].Release();
+         }
       }
       ArrayResize(_labels, 0);
    }
@@ -117,8 +120,12 @@ public:
       collection.DeleteLabel(label);
    }
 
-   static Label* Create(string id, int x, double y, datetime dateId)
+   static Label* Create(string id, int x, double y, datetime dateId, bool globalLabel = false)
    {
+      if (_all == NULL)
+      {
+         Clear();
+      }
       ResetLastError();
       dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - x - 1);
       MqlDateTime date;
@@ -130,7 +137,7 @@ public:
          + IntegerToString(date.hour) + "_"
          + IntegerToString(date.min) + "_"
          + IntegerToString(date.sec);
-      Label* label = new Label(x, y, labelId, id, ChartWindowOnDropped());
+      Label* label = new Label(x, y, labelId, id, ChartWindowOnDropped(), globalLabel);
       LabelsCollection* collection = FindCollection(id);
       if (collection == NULL)
       {
@@ -139,9 +146,18 @@ public:
       }
       collection.Add(label);
       _all.Add(label);
-      if (_all.Count() > _maxLabels)
+      int allLabelsCount = _all.Count();
+      if (allLabelsCount > _maxLabels)
       {
-         Delete(_all.GetFirst());
+         for (int i = 0; i < allLabelsCount; ++i)
+         {
+            Label* labelToDelete = _all.Get(i);
+            if (!labelToDelete.IsGlobal() && labelToDelete != label)
+            {
+               Delete(labelToDelete);
+               break;
+            }
+         }
       }
       return label;
    }
@@ -184,11 +200,12 @@ private:
          _labels[i - 1] = _labels[i];
       }
       ArrayResize(_labels, size - 1);
+      label.Release();
    }
    void DeleteLabel(Label* label)
    {
       RemoveLabel(label);
-      delete label;
+      label.Release();
    }
    void Add(Label* label)
    {
@@ -197,6 +214,10 @@ private:
       int size = ArraySize(_labels);
       ArrayResize(_labels, size + 1);
       _labels[size] = label;
+      if (label != NULL)
+      {
+         label.AddRef();
+      }
    }
 
    void RedrawLabels()

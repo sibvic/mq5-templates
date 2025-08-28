@@ -15,9 +15,11 @@ class Line
    int _refs;
    string _collectionId;
    int _window;
+   bool global;
 public:
-   Line(int x1, double y1, int x2, double y2, string id, string collectionId, int window)
+   Line(int x1, double y1, int x2, double y2, string id, string collectionId, int window, bool global)
    {
+      _extend = "none";
       _refs = 1;
       _x1 = x1;
       _x2 = x2;
@@ -28,6 +30,7 @@ public:
       _timeframe = (ENUM_TIMEFRAMES)_Period;
       _window = window;
       _collectionId = collectionId;
+      this.global = global;
    }
    ~Line()
    {
@@ -63,6 +66,11 @@ public:
       line._window = _window;
       line._extend = _extend;
    }
+   
+   bool IsGlobal()
+   {
+      return global;
+   }
 
    string GetId()
    {
@@ -71,6 +79,36 @@ public:
    string GetCollectionId()
    {
       return _collectionId;
+   }
+
+   static void SetStyle(Line* line, string style)
+   {
+      if (line == NULL)
+      {
+         return;
+      }
+      line.SetStyle(style);
+   }
+   
+   Line* SetStyle(string style)
+   {
+      _style = style;
+      return &this;
+   }
+   
+   static void SetExtend(Line* line, string extend)
+   {
+      if (line == NULL)
+      {
+         return;
+      }
+      line.SetExtend(extend);
+   }
+   
+   Line* SetExtend(string extend)
+   {
+      _extend = extend;
+      return &this;
    }
 
    void SetXY1(int x, double y)
@@ -119,31 +157,32 @@ public:
    double GetY2() { return _y2; }
    static double GetY2(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetY2(); }
 
-   static Line* SetColor(Line* line, color clr) { if (line == NULL) { return NULL; } return line.SetColor(clr); }
-   Line* SetColor(color clr)
+   Line* SetColor(uint clr)
    {
       _clr = clr;
       return &this;
    }
-
-   static Line* SetStyle(Line* line, string style) { if (line == NULL) { return NULL; } return line.SetStyle(style); }
-   Line* SetStyle(string style)
+   static void SetColor(Line* line, uint clr)
    {
-      _style = style;
-      return &this;
+      if (line == NULL)
+      {
+         return;
+      }
+      line.SetColor(clr);
    }
 
-   static Line* SetWidth(Line* line, int width) { if (line == NULL) { return NULL; } return line.SetWidth(width); }
+   static void SetWidth(Line* line, int width)
+   {
+      if (line == NULL)
+      {
+         return;
+      }
+      line.SetWidth(width);
+   }
+
    Line* SetWidth(int width)
    {
       _width = width;
-      return &this;
-   }
-   
-   static Line* SetExtend(Line* line, string extend) { if (line == NULL) { return NULL; } return line.SetExtend(extend); }
-   Line* SetExtend(string extend)
-   {
-      _extend = extend;
       return &this;
    }
 
@@ -176,6 +215,12 @@ public:
             ObjectSetInteger(0, _id, OBJPROP_RAY, true);
             ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, true);
             ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, true);
+         }
+         else if (_extend == "none")
+         {
+            ObjectSetInteger(0, _id, OBJPROP_RAY, false);
+            ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, false);
+            ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, false);
          }
       }
       ObjectSetDouble(0, _id, OBJPROP_PRICE, 0, _y1);

@@ -20,8 +20,9 @@ class Label
    ENUM_TIMEFRAMES _timeframe;
    int _refs;
    int _window;
+   bool globalLabel;
 public:
-   Label(int x, double y, string labelId, string collectionId, int window)
+   Label(int x, double y, string labelId, string collectionId, int window, bool globalLabel)
    {
       _refs = 1;
       _window = window;
@@ -33,6 +34,7 @@ public:
       _font = "Arial";
       _textAlign = "";
       _timeframe = (ENUM_TIMEFRAMES)_Period;
+      this.globalLabel = globalLabel;
    }
    void AddRef()
    {
@@ -62,6 +64,11 @@ public:
       label._yloc = _yloc;
       label._timeframe = _timeframe;
       label._window = _window;
+   }
+   
+   bool IsGlobal()
+   {
+      return globalLabel;
    }
    
    string GetId()
@@ -121,7 +128,7 @@ public:
          return;
       }
       label.SetY(y);
-   }
+  }
    void SetXY(int x, double y)
    {
       SetX(x);
@@ -256,7 +263,7 @@ public:
          {
             usedText = "\218";
          }
-         else  if (_style == "diamond")
+         else if (_style == "diamond")
          {
             usedText = "\116";
          }
