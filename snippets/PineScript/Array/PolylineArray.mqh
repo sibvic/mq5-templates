@@ -18,7 +18,7 @@ protected:
       {
          return NULL;
       }
-      Polyline* clone = PolyLinesCollection::Create(item.GetId(), 0);
+      Polyline* clone = PolyLinesCollection::Create(item.GetId(), NULL, 0);
       item.CopyTo(clone);
       return clone;
    }

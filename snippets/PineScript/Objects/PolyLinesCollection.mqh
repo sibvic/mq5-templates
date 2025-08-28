@@ -5,6 +5,7 @@
 
 #include <PineScript/Objects/PolyLine.mqh>
 #include <PineScript/Array/CustomTypeArray.mqh>
+#include <PineScript/Objects/ChartPoint.mqh>
 
 class PolyLinesCollection
 {
@@ -72,32 +73,31 @@ public:
       collection.DeleteItem(PolyLine);
    }
 
-   static Polyline* Create(string id, datetime dateId)
+   static Polyline* Create(string id, ICustomTypeArray<ChartPoint*>* points, datetime dateId)
    {
       ResetLastError();
-      int x1 = 0;
-      dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - x1 - 1);
+      dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - 1);
       MqlDateTime date;
       TimeToStruct(dateId, date);
       uint currentId = _nextId;
       _nextId += 1;
-      string PolyLineId = id + "_" + IntegerToString(currentId);
+      string polyLineId = id + "_" + IntegerToString(currentId);
       
-      Polyline* PolyLine = new Polyline(PolyLineId, id, ChartWindowOnDropped());
+      Polyline* polyLine = new Polyline(points, polyLineId, id, ChartWindowOnDropped());
       PolyLinesCollection* collection = FindCollection(id);
       if (collection == NULL)
       {
          collection = new PolyLinesCollection(id);
          AddCollection(collection);
       }
-      collection.Add(PolyLine);
-      _all.Add(PolyLine);
+      collection.Add(polyLine);
+      _all.Add(polyLine);
       if (_all.Count() > _max)
       {
          Delete(_all.GetFirst());
       }
-      PolyLine.Release();
-      return PolyLine;
+      polyLine.Release();
+      return polyLine;
    }
 
    static void SetMaxLines(int max)
