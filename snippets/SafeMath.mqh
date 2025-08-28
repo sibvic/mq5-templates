@@ -292,3 +292,11 @@ int SafeMathCeil(double value)
    }
    return (int)MathCeil(value);
 }
+double SafeMod(int val1, int val2)
+{
+   if (val1 == INT_MIN || val2 == INT_MIN)
+   {
+      return EMPTY_VALUE;
+   }
+   return val1 % val2;
+}
