@@ -43,6 +43,10 @@ public:
    {
       return StringFind(str1, str2) != -1;
    }
+   static double ToNumber(string str)
+   {
+      return StringToDouble(str);
+   }
 };
 
 enum StrFormatValueType
