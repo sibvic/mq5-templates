@@ -1,5 +1,9 @@
 # MQL5/MT5/MetaTrader 5 templates
 
+## Goal of the project
+
+It's designed to make development of typical indicators and EA faster. And since PineScript is very popular right now there are a lot of functions to make convertion from PineScript easier. Mainly developed to support of [Trade Script Convertor](https://convertor.profitrobots.com)
+
 There are two ways to compile the template:
 
 - My injecting all code into the template using [MQ4Inject](https://github.com/sibvic/MQ4Inject)
@@ -12,8 +16,6 @@ For the advanced notification (like Telegram) you will need [this dll](https://g
 [Lint utility for indicators/strategies](https://github.com/sibvic/fxlint)
 
 [Injection of includes into MQL4/5](https://github.com/sibvic/MQ4Inject)
-
-[Automatic Trade Script Converter App](https://www.microsoft.com/en-us/p/pinescript-converter/9mwmkf7bmqgn?activetab=pivot:overviewtab) and [WebApp](https://convert.profitrobots.com)
 
 [Trade Copier Source](https://github.com/sibvic/trade_copier)
 
