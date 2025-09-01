@@ -1,5 +1,5 @@
 #include <Actions/AOrderAction.mqh>
-// Order handlers v1.1
+// Order handlers v2.0
 
 #ifndef OrderHandlers_IMP
 #define OrderHandlers_IMP
@@ -52,7 +52,7 @@ public:
    {
       for (int orderHandlerIndex = 0; orderHandlerIndex < ArraySize(_orderHandlers); ++orderHandlerIndex)
       {
-         _orderHandlers[orderHandlerIndex].DoAction(order);
+         _orderHandlers[orderHandlerIndex].DoOrderAction(order);
       }
    }
 };
