@@ -1,10 +1,10 @@
-#include <Streams/Abstract/AIntStream.mqh>
+#include <Streams/Abstract/TAStream.mqh>
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Lowest bars stream v3.0
+// Lowest bars stream v4.0
 
-class LowestBarsStream : public AIntStream
+class LowestBarsStream : public TAStream<int>
 {
    int _loopback;
    double _values[];

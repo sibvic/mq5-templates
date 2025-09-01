@@ -1,13 +1,13 @@
 #ifndef BarsSinceStreamV2_IMPL
 #define BarsSinceStreamV2_IMPL
 
-#include <Streams/Abstract/AIntStream.mqh>
+#include <Streams/Abstract/TAStream.mqh>
 #include <Streams/Interfaces/TIStream.mqh>
 
 // Counts number of bars since last condition.
-// v2.1
+// v3.0
 
-class BarsSinceStreamV2 : public AIntStream
+class BarsSinceStreamV2 : public TAStream<int>
 {
    TIStream<int>* _condition;
    int _bars[];

@@ -199,3 +199,7 @@ Returns true when value < than previous (length). Similar to ta.falling from Pin
 ## FixnanStream
 
 Fixes NaN (Not a Number) values in a stream by looking back to find the next valid value. Useful for handling missing or invalid data points.
+
+## VarianceOnStream
+
+Variance on stream

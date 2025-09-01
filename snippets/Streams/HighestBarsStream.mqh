@@ -1,10 +1,10 @@
-#include <Streams/Abstract/AIntStream.mqh>
+#include <Streams/Abstract/TAStream.mqh>
 #include <Streams/SimplePriceStream.mqh>
 #include <enums/PriceType.mqh>
 
-// Highest bars stream v3.0
+// Highest bars stream v4.0
 
-class HighestBarsStream : public AIntStream
+class HighestBarsStream : public TAStream<int>
 {
    int _loopback;
    double _values[];

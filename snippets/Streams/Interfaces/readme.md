@@ -1,7 +1,3 @@
-## IIntStream
-
-Interface for integer stream. Similar to IStream located in the directory above, but returns int
-
 ## IDateTimeStream
 
 Interface for datetime stream. Similar to IStream located in the directory above, but returns datetime

@@ -1,10 +1,10 @@
-// VolumeStream v1.3
-#include <Streams/Abstract/AIntStream.mqh>
+// VolumeStream v2.0
+#include <Streams/Abstract/TAStream.mqh>
 
 #ifndef VolumeStream_IMPL
 #define VolumeStream_IMPL
 
-class VolumeStream : public AIntStream
+class VolumeStream : public TAStream<int>
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;

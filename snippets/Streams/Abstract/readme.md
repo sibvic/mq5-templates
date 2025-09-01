@@ -4,10 +4,6 @@
 
 Abstract implementation of a IFloatStream
 
-## AIntStream
-
-Abstract implementation of a IIntStream
-
 ## ADateTimeStream
 
 Abstract implementation of a IDateTimeStream
