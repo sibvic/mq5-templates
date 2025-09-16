@@ -14,9 +14,17 @@ public:
    static void Clear(ARRAY_TYPE array) { if (array == NULL) { return; } array.Clear(); }
    
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
-   static VALUE_TYPE First(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.First(); }
+   static VALUE_TYPE First(ARRAY_TYPE array, VALUE_TYPE defaultValue)
+   {
+      if (array == NULL || array.Size() == 0) { return defaultValue; } 
+      return array.Get(0);
+   }
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
-   static VALUE_TYPE Last(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Last(); }
+   static VALUE_TYPE Last(ARRAY_TYPE array, VALUE_TYPE defaultValue)
+   {
+      if (array == NULL || array.Size() == 0) { return defaultValue; } 
+      return array.Get(array.Size() - 1);
+   }
    
    static IIntArray* Slice(IIntArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    static IFloatArray* Slice(IFloatArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
