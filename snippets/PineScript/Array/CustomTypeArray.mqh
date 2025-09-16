@@ -37,9 +37,10 @@ public:
    {
       return to - from + 1;
    }
-   virtual void Push(CLASS_TYPE value)
+   virtual ITArray<CLASS_TYPE>* Push(CLASS_TYPE value)
    {
       //do nothing
+      return &this;
    }
    virtual CLASS_TYPE Pop()
    {
@@ -144,6 +145,11 @@ public:
       }
    }
    
+   void Sort(bool ascending)
+   {
+      //do nothing
+   }
+   
    void AddRef() { _refs++; }
    int Release() { int refs = --_refs; if (refs == 0) { delete &this; } return refs; }
    
@@ -187,7 +193,7 @@ public:
       return ArraySize(_array);
    }
 
-   void Push(CLASS_TYPE value)
+   ITArray<CLASS_TYPE>* Push(CLASS_TYPE value)
    {
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);
@@ -196,6 +202,7 @@ public:
       {
          value.AddRef();
       }
+      return &this;
    }
 
    CLASS_TYPE Pop()

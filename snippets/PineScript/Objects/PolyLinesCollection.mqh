@@ -5,6 +5,7 @@
 
 #include <PineScript/Objects/PolyLine.mqh>
 #include <PineScript/Array/CustomTypeArray.mqh>
+#include <PineScript/Array/Array.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>
 
 class PolyLinesCollection
@@ -147,7 +148,7 @@ private:
 
    Polyline* GetFirst()
    {
-      return _array.First();
+      return Array::First<Polyline*, ITArray<Polyline*>*>(_array, NULL);
    }
 
    Polyline* Get(int index)
