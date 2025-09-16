@@ -51,9 +51,8 @@ public:
    template <typename VALUE_TYPE, typename ARRAY_TYPE, typename dummy>
    static VALUE_TYPE Get(ARRAY_TYPE array, int index, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Get(index); }
    
-   static void Set(IIntArray* array, int index, int value) { if (array == NULL) { return; } array.Set(index, value); }
-   static void Set(IFloatArray* array, int index, double value) { if (array == NULL) { return; } array.Set(index, value); }
-   static void Set(IBoxArray* array, int index, Box* value) { if (array == NULL) { return; } array.Set(index, value); }
+   template <typename ARRAY_TYPE, typename DUMMY_TYPE, typename VALUE_TYPE>
+   static void Set(ARRAY_TYPE array, int index, VALUE_TYPE value) { if (array == NULL) { return; } array.Set(index, value); }
 
    static int Remove(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Remove(index); }
    static double Remove(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Remove(index); }
