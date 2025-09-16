@@ -42,9 +42,8 @@ public:
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
    static VALUE_TYPE Shift(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Shift(); }
 
-   static void Push(IIntArray* array, int value) { if (array == NULL) { return; } array.Push(value); }
-   static void Push(IFloatArray* array, double value) { if (array == NULL) { return; } array.Push(value); }
-   static void Push(IBoxArray* array, Box* value) { if (array == NULL) { return; } array.Push(value); }
+   template <typename ARRAY_TYPE, typename VALUE_TYPE>
+   static void Push(ARRAY_TYPE array, VALUE_TYPE value) { if (array == NULL) { return; } array.Push(value); }
 
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
    static VALUE_TYPE Pop(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Pop(); }
