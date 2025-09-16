@@ -1,7 +1,7 @@
 #ifndef ChartPoint_IMPL
 #define ChartPoint_IMPL
 
-// Chart point object v1.1
+// Chart point object v2.0
 
 class ChartPoint
 {
@@ -33,9 +33,13 @@ public:
       return refs;
    }
    
-   static ChartPoint* Create()
+   static ChartPoint* Create(int time, int index, double price)
    {
-      return new ChartPoint(0, 0);
+      if (time != INT_MIN)
+      {
+         return NULL;//not supported yet
+      }
+      return new ChartPoint(index, price);
    }
    
    static ChartPoint* FromIndex(int index, double price)

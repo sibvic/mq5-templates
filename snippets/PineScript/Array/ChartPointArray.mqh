@@ -1,6 +1,6 @@
 #ifndef ChartPointArray_IMPL
 #define ChartPointArray_IMPL
-// ChartPoint array v1.0
+// ChartPoint array v1.1
 #include <PineScript/Array/CustomTypeArray.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>
 
@@ -18,7 +18,7 @@ protected:
       {
          return NULL;
       }
-      ChartPoint* clone = ChartPoint::Create();
+      ChartPoint* clone = ChartPoint::Create(INT_MIN, item.GetIndex(), item.GetPrice());
       item.CopyTo(clone);
       return clone;
    }
