@@ -1,4 +1,4 @@
-// Array v1.6
+// Array v1.7
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
@@ -73,6 +73,9 @@ public:
 
    template <typename RETURN_TYPE, typename ARRAY_TYPE, typename DUMMY_TYPE>
    static RETURN_TYPE Remove(ARRAY_TYPE array, int index, RETURN_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Remove(index); }
+
+   template <typename ARRAY_TYPE, typename DUMMY_TYPE>
+   static ARRAY_TYPE Copy(ARRAY_TYPE array, ARRAY_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Copy(); }
 
    static double PercentRank(IIntArray* array, int index)
    {
