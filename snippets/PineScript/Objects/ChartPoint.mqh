@@ -1,7 +1,7 @@
 #ifndef ChartPoint_IMPL
 #define ChartPoint_IMPL
 
-// Chart point object v2.0
+// Chart point object v2.1
 
 class ChartPoint
 {
@@ -31,6 +31,24 @@ public:
          delete &this;
       }
       return refs;
+   }
+   
+   static double Getprice(ChartPoint* chartPoint)
+   {
+      if (chartPoint == NULL)
+      {
+         return EMPTY_VALUE;
+      }
+      return chartPoint.GetPrice();
+   }
+   
+   static int Getindex(ChartPoint* chartPoint)
+   {
+      if (chartPoint == NULL)
+      {
+         return INT_MIN;
+      }
+      return chartPoint.GetIndex();
    }
    
    static ChartPoint* Create(int time, int index, double price)
