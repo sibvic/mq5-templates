@@ -39,9 +39,8 @@ public:
    template <typename DUMMY_TYPE, typename ARRAY_TYPE>
    static int Size(ARRAY_TYPE array, int defaultValue) { if (array == NULL) { return INT_MIN;} return array.Size(); }
 
-   static int Shift(IIntArray* array) { if (array == NULL) { return INT_MIN; } return array.Shift(); }
-   static double Shift(IFloatArray* array) { if (array == NULL) { return EMPTY_VALUE; } return array.Shift(); }
-   static Box* Shift(IBoxArray* array) { if (array == NULL) { return NULL; } return array.Shift(); }
+   template <typename VALUE_TYPE, typename ARRAY_TYPE>
+   static VALUE_TYPE Shift(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Shift(); }
 
    static void Push(IIntArray* array, int value) { if (array == NULL) { return; } array.Push(value); }
    static void Push(IFloatArray* array, double value) { if (array == NULL) { return; } array.Push(value); }
