@@ -54,9 +54,8 @@ public:
    template <typename ARRAY_TYPE, typename DUMMY_TYPE, typename VALUE_TYPE>
    static void Set(ARRAY_TYPE array, int index, VALUE_TYPE value) { if (array == NULL) { return; } array.Set(index, value); }
 
-   static int Remove(IIntArray* array, int index) { if (array == NULL) { return INT_MIN; } return array.Remove(index); }
-   static double Remove(IFloatArray* array, int index) { if (array == NULL) { return EMPTY_VALUE; } return array.Remove(index); }
-   static Box* Remove(IBoxArray* array, int index) { if (array == NULL) { return NULL; } return array.Remove(index); }
+   template <typename RETURN_TYPE, typename ARRAY_TYPE, typename DUMMY_TYPE>
+   static RETURN_TYPE Remove(ARRAY_TYPE array, int index, RETURN_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Remove(index); }
 
    static double PercentRank(IIntArray* array, int index)
    {
