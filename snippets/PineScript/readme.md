@@ -16,6 +16,10 @@ syminfo.* functions
 
 timeframe.* functions
 
+## MathEx
+
+Extended mathematical functions
+
 ## PlotShpae
 
 PS-like plotshape()
