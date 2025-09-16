@@ -98,61 +98,73 @@ public:
       return (count * 100.0) / arraySize;
    }
 
-   static int Max(IIntArray* array)
+   static double Max(ISimpleTypeArray<double>* array, int nth)
    {
-      if (array == NULL || array.Size() == 0) { return INT_MIN; }
-      int max = array.Get(0);
+      if (array == NULL || array.Size() == 0 || nth != 0)
+      {
+         return EMPTY_VALUE;
+      }
+      double maxVal = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
-         int current = array.Get(i);
-         if (max == INT_MIN || (current != INT_MIN && max < current))
+         double val = array.Get(i);
+         if (maxVal < val)
          {
-            max = current;
+            maxVal = val;
          }
       }
-      return max;
+      return maxVal;
    }
-   static double Max(IFloatArray* array)
+   static int Max(ISimpleTypeArray<int>* array, int nth)
    {
-      if (array == NULL || array.Size() == 0) { return EMPTY_VALUE; }
-      double max = array.Get(0);
+      if (array == NULL || array.Size() == 0 || nth != 0)
+      {
+         return INT_MIN;
+      }
+      int maxVal = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
-         double current = array.Get(i);
-         if (max == EMPTY_VALUE || (current != EMPTY_VALUE && max < current))
+         int val = array.Get(i);
+         if (maxVal < val)
          {
-            max = current;
+            maxVal = val;
          }
       }
-      return max;
+      return maxVal;
    }
-   static int Min(IIntArray* array)
+   static double Min(ISimpleTypeArray<double>* array, int nth)
    {
-      if (array == NULL || array.Size() == 0) { return INT_MIN; }
-      int min = array.Get(0);
+      if (array == NULL || array.Size() == 0 || nth != 0)
+      {
+         return EMPTY_VALUE;
+      }
+      double minVal = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
-         int current = array.Get(i);
-         if (min == INT_MIN || (current != INT_MIN && min > current))
+         double val = array.Get(i);
+         if (minVal > val)
          {
-            min = current;
+            minVal = val;
          }
       }
-      return min;
+      return minVal;
    }
-   static double Min(IFloatArray* array)
+   static int Min(ISimpleTypeArray<int>* array, int nth)
    {
-      if (array == NULL || array.Size() == 0) { return EMPTY_VALUE; }
-      double min = array.Get(0);
+      if (array == NULL || array.Size() == 0 || nth != 0)
+      {
+         return INT_MIN;
+      }
+      int minVal = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
-         double current = array.Get(i);
-         if (min == EMPTY_VALUE || (current != EMPTY_VALUE && min > current))
+         int val = array.Get(i);
+         if (minVal > val)
          {
-            min = current;
+            minVal = val;
          }
       }
-      return min;
+      return minVal;
    }
 
    static int Sum(IIntArray* array)
