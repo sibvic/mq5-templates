@@ -1,4 +1,4 @@
-// Market order builder v1.8
+// Market order builder v1.9
 #include <enums/OrderSide.mqh>
 #include <Logic/ActionOnConditionLogic.mqh>
 
@@ -89,11 +89,11 @@ public:
          
       if ((fillingMode & SYMBOL_FILLING_FOK) == SYMBOL_FILLING_FOK)
       {
-         request.type_filling = ORDER_FILLING_FOK;
+         request.type_filling = SYMBOL_FILLING_FOK;
       }
       else if ((fillingMode & SYMBOL_FILLING_IOC) == SYMBOL_FILLING_IOC)
       {
-         request.type_filling = ORDER_FILLING_IOC;
+         request.type_filling = SYMBOL_FILLING_IOC;
       }
       MqlTradeResult result;
       ZeroMemory(result);
