@@ -1,4 +1,4 @@
-// Array v1.5
+// Array v1.6
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
@@ -25,6 +25,23 @@ public:
       if (array == NULL || array.Size() == 0) { return defaultValue; } 
       return array.Get(array.Size() - 1);
    }
+
+   template <typename VALUE_TYPE, typename ARRAY_TYPE>
+   static int IndexOf(ARRAY_TYPE array, VALUE_TYPE value)
+   {
+      if (array == NULL)
+      {
+         return -1;
+      }
+      for (int i = 0; i < array.Size(); ++i)
+      {
+         if (value == array.Get(i))
+         {
+            return i;
+         }
+      }
+      return -1;
+   }
    
    static IIntArray* Slice(IIntArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
    static IFloatArray* Slice(IFloatArray* array, int from, int to) { if (array == NULL) { return NULL; } return array.Slice(from, to); }
@@ -44,7 +61,7 @@ public:
 
    template <typename ARRAY_TYPE, typename VALUE_TYPE>
    static void Push(ARRAY_TYPE array, VALUE_TYPE value) { if (array == NULL) { return; } array.Push(value); }
-
+  
    template <typename VALUE_TYPE, typename ARRAY_TYPE>
    static VALUE_TYPE Pop(ARRAY_TYPE array, VALUE_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Pop(); }
 
