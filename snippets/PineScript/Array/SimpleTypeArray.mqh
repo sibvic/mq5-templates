@@ -1,4 +1,4 @@
-// Simple type array v.1.0
+// Simple type array v1.1
 
 #ifndef SimpleTypeArray_IMPL
 #define SimpleTypeArray_IMPL
@@ -8,7 +8,109 @@ interface ISimpleTypeArray : public ITArray<CLASS_TYPE>
 {
 public:
    virtual ISimpleTypeArray<CLASS_TYPE>* Clear() = 0;
+   virtual ITArray<CLASS_TYPE>* Slice(int from, int to) = 0;
 };
+
+template <typename CLASS_TYPE>
+class SimpleTypeArraySlice : public ISimpleTypeArray<CLASS_TYPE>
+{
+   ITArray<CLASS_TYPE>* array;
+   int from;
+   int to;
+   int _refs;
+   CLASS_TYPE emptyValue;
+public:
+   SimpleTypeArraySlice(ITArray<CLASS_TYPE>* array, int from, int to, CLASS_TYPE emptyValue)
+   {
+      _refs = 1;
+      this.array = array;
+      this.from = from;
+      this.to = to;
+      this.emptyValue = emptyValue;
+   }
+   
+   void AddRef() { _refs++; }
+   int Release() { int refs = --_refs; if (refs == 0) { delete &this; } return refs; }
+   
+   int GetFrom() { return from; }
+   int GetTo() { return to; }
+   virtual void Unshift(CLASS_TYPE value)
+   {
+      //do nothing
+   }
+   virtual int Size()
+   {
+      return to - from + 1;
+   }
+   virtual ITArray<CLASS_TYPE>* Push(CLASS_TYPE value)
+   {
+      //do nothing
+      return &this;
+   }
+   virtual CLASS_TYPE Pop()
+   {
+      return emptyValue;
+   }
+   virtual CLASS_TYPE Get(int index)
+   {
+      return array.Get(index + from);
+   }
+   virtual void Set(int index, CLASS_TYPE value)
+   {
+      //do nothing
+   }
+   virtual ITArray<CLASS_TYPE>* Slice(int from, int to)
+   {
+      return NULL;
+   }
+   virtual ISimpleTypeArray<CLASS_TYPE>* Clear()
+   {
+      return NULL;
+   }
+   virtual CLASS_TYPE Shift()
+   {
+      return emptyValue;
+   }
+   virtual CLASS_TYPE Remove(int index)
+   {
+      return emptyValue;
+   }
+   virtual void Sort(bool ascending)
+   {
+      //do nothing
+   }
+   int Includes(CLASS_TYPE value)
+   {
+      int size = Size();
+      for (int i = 0; i < size; ++i)
+      {
+         if (Get(i) == value)
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+   
+   CLASS_TYPE First()
+   {
+      if (Size() == 0)
+      {
+         return emptyValue;
+      }
+      return Get(0);
+   }
+   CLASS_TYPE Last()
+   {
+      int size = Size();
+      if (size == 0)
+      {
+         return emptyValue;
+      }
+      return Get(size - 1);
+   }
+};
+
 template <typename CLASS_TYPE>
 class SimpleTypeArray : public ISimpleTypeArray<CLASS_TYPE>
 {
@@ -34,6 +136,11 @@ public:
 
    void AddRef() { _refs++; }
    int Release() { int refs = --_refs; if (refs == 0) { delete &this; } return refs; }
+   
+   ITArray<CLASS_TYPE>* Slice(int from, int to)
+   {
+      return new SimpleTypeArraySlice<CLASS_TYPE>(&this, from, to, _emptyValue);
+   }
    
    ISimpleTypeArray<CLASS_TYPE>* Clear()
    {
