@@ -1,4 +1,4 @@
-// Line object v1.6
+// Line object v1.7
 
 class Line
 {
@@ -7,6 +7,7 @@ class Line
    double _y1;
    int _x2;
    double _y2;
+   string _xLoc;
    uint _clr;
    int _width;
    ENUM_TIMEFRAMES _timeframe;
@@ -19,6 +20,7 @@ class Line
 public:
    Line(int x1, double y1, int x2, double y2, string id, string collectionId, int window, bool global)
    {
+      _xLoc = "bar_index";
       _extend = "none";
       _refs = 1;
       _x1 = x1;
@@ -89,7 +91,6 @@ public:
       }
       line.SetStyle(style);
    }
-   
    Line* SetStyle(string style)
    {
       _style = style;
@@ -104,7 +105,6 @@ public:
       }
       line.SetExtend(extend);
    }
-   
    Line* SetExtend(string extend)
    {
       _extend = extend;
@@ -156,6 +156,20 @@ public:
    static double GetY1(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetY1(); }
    double GetY2() { return _y2; }
    static double GetY2(Line* line) { if (line == NULL) { return EMPTY_VALUE; } return line.GetY2(); }
+   
+   static void SetXLoc(Line* line, string val)
+   {
+      if (line == NULL)
+      {
+         return;
+      }
+      line.SetXLoc(val);
+   }
+   Line* SetXLoc(string val)
+   {
+      _xLoc = val;
+      return &this;
+   }
 
    Line* SetColor(uint clr)
    {
@@ -179,7 +193,6 @@ public:
       }
       line.SetWidth(width);
    }
-
    Line* SetWidth(int width)
    {
       _width = width;
