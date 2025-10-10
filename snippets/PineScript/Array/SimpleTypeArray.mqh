@@ -1,4 +1,4 @@
-// Simple type array v1.1
+// Simple type array v1.2
 
 #ifndef SimpleTypeArray_IMPL
 #define SimpleTypeArray_IMPL
@@ -8,7 +8,8 @@ interface ISimpleTypeArray : public ITArray<CLASS_TYPE>
 {
 public:
    virtual ISimpleTypeArray<CLASS_TYPE>* Clear() = 0;
-   virtual ITArray<CLASS_TYPE>* Slice(int from, int to) = 0;
+   virtual ISimpleTypeArray<CLASS_TYPE>* Copy() = 0;
+   virtual ISimpleTypeArray<CLASS_TYPE>* Slice(int from, int to) = 0;
 };
 
 template <typename CLASS_TYPE>
@@ -59,11 +60,15 @@ public:
    {
       //do nothing
    }
-   virtual ITArray<CLASS_TYPE>* Slice(int from, int to)
+   virtual ISimpleTypeArray<CLASS_TYPE>* Slice(int from, int to)
    {
       return NULL;
    }
    virtual ISimpleTypeArray<CLASS_TYPE>* Clear()
+   {
+      return NULL;
+   }
+   virtual ISimpleTypeArray<CLASS_TYPE>* Copy()
    {
       return NULL;
    }
@@ -137,7 +142,7 @@ public:
    void AddRef() { _refs++; }
    int Release() { int refs = --_refs; if (refs == 0) { delete &this; } return refs; }
    
-   ITArray<CLASS_TYPE>* Slice(int from, int to)
+   ISimpleTypeArray<CLASS_TYPE>* Slice(int from, int to)
    {
       return new SimpleTypeArraySlice<CLASS_TYPE>(&this, from, to, _emptyValue);
    }
@@ -151,6 +156,15 @@ public:
          _array[i] = _defaultValue;
       }
       return &this;
+   }
+   ISimpleTypeArray<CLASS_TYPE>* Copy()
+   {
+      SimpleTypeArray* clone = new SimpleTypeArray(_defaultSize, _defaultValue, _emptyValue);
+      for (int i = 0; i < Size(); ++i)
+      {
+         clone.Push(Get(i));
+      }
+      return clone;
    }
    
    void Sort(bool ascending)
