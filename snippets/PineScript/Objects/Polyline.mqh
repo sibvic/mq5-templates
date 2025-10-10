@@ -1,4 +1,4 @@
-// PolyLine object v1.0
+// PolyLine object v1.1
 #include <PineScript/Array/CustomTypeArray.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>
 
@@ -14,10 +14,12 @@ class Polyline
    bool _curved;
    bool _closed;
    bool _forceOverlay;
+   string _xLoc;
    ICustomTypeArray<ChartPoint*>* _points;
 public:
    Polyline(ICustomTypeArray<ChartPoint*>* points, string id, string collectionId, int window)
    {
+      _xLoc = "bar_index";
       _refs = 1;
       _id = id;
       _window = window;
@@ -99,7 +101,7 @@ public:
          ChartPoint* point = _points.Get(i);
          datetime x1 = GetTime(prev.GetIndex(), totalBars);
          datetime x2 = GetTime(point.GetIndex(), totalBars);
-         string lineId = _id + i;
+         string lineId = _id + IntegerToString(i);
          if (ObjectFind(0, lineId) == -1 && ObjectCreate(0, lineId, OBJ_TREND, 0, x1, prev.GetPrice(), x2, point.GetPrice()))
          {
             ObjectSetInteger(0, lineId, OBJPROP_COLOR, _lineColor);
@@ -147,6 +149,11 @@ public:
    Polyline* SetForceOverlay(bool val)
    {
       _forceOverlay = val;
+      return &this;
+   }
+   Polyline* SetXLoc(string val)
+   {
+      _xLoc = val;
       return &this;
    }
 };
