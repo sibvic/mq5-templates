@@ -223,7 +223,7 @@ public:
    }
    Label* SetText(string text)
    {
-      _text = text;
+      _text = text == NULL ? " " : text;
       StringReplace(_text, "\n", " ");
       if (_text == "")
       {
