@@ -1,4 +1,6 @@
 // PolyLine object v1.2
+#ifndef POLYLINE_IMPL
+#define POLYLINE_IMPL
 #include <PineScript/Array/CustomTypeArray.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>
 
@@ -169,3 +171,4 @@ public:
       return &this;
    }
 };
+#endif
