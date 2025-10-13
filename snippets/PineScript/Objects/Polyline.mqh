@@ -1,4 +1,4 @@
-// PolyLine object v1.1
+// PolyLine object v1.2
 #include <PineScript/Array/CustomTypeArray.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>
 
@@ -99,8 +99,20 @@ public:
       for (int i = 1; i < size; ++i)
       {
          ChartPoint* point = _points.Get(i);
-         datetime x1 = GetTime(prev.GetIndex(), totalBars);
-         datetime x2 = GetTime(point.GetIndex(), totalBars);
+         int pointIndex = point.GetIndex();
+         if (pointIndex == INT_MIN)
+         {
+            continue;
+         }
+         int prevIndex = prev.GetIndex();
+         if (prevIndex == INT_MIN)
+         {
+            prev = point;
+            continue;
+         }
+         datetime x1 = GetTime(prevIndex, totalBars);
+         
+         datetime x2 = GetTime(pointIndex, totalBars);
          string lineId = _id + IntegerToString(i);
          if (ObjectFind(0, lineId) == -1 && ObjectCreate(0, lineId, OBJ_TREND, 0, x1, prev.GetPrice(), x2, point.GetPrice()))
          {
