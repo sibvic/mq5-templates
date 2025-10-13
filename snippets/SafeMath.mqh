@@ -1,210 +1,193 @@
 // Pine-script like safe operations
-// v1.2
+// v1.3
 
 double Nz(double val, double defaultValue = 0)
 {
    return val == EMPTY_VALUE ? defaultValue : val;
 }
-double SafePlus(int left, double right)
+bool ParameterDefined(double p) { return p != EMPTY_VALUE; }
+bool ParameterDefined(int p) { return p != INT_MIN; }
+bool ParameterDefined(string p) { return p != NULL; }
+template <typename T1, typename T2>
+bool BothParametersDefined(T1 left, T2 right) { return ParameterDefined(left) && ParameterDefined(right); }
+
+template <typename T1, typename T2>
+double SafePlus(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return left + right;
-}
-double SafePlus(double left, int right)
-{
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!BothParametersDefined(left, right)) { return EMPTY_VALUE; }
    return left + right;
 }
 int SafePlus(int left, int right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return INT_MIN;
-   }
-   return left + right;
-}
-double SafePlus(double left, double right)
-{
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return left + right;
-}
-string SafePlus(string left, string right)
-{
-   if (left == NULL || right == NULL)
-   {
-      return NULL;
-   }
+   if (!BothParametersDefined(left, right)) { return INT_MIN; }
    return left + right;
 }
 
-double SafeMinus(double left, double right)
+template <typename T1, typename T2>
+double SafeMinus(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!BothParametersDefined(left, right)) { return EMPTY_VALUE; }
+   return left - right;
+}
+int SafeMinus(int left, int right)
+{
+   if (!BothParametersDefined(left, right)) { return INT_MIN; }
    return left - right;
 }
 
-double SafeDivide(double left, double right)
+template <typename T1, typename T2>
+double SafeDivide(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE || right == 0)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!BothParametersDefined(left, right) || right == 0) { return EMPTY_VALUE; }
    return left / right;
 }
 
-double SafeMultiply(double left, double right)
+template <typename T1, typename T2>
+double SafeMultiply(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!BothParametersDefined(left, right)) { return EMPTY_VALUE; }
+   return left * right;
+}
+int SafeMultiply(int left, int right)
+{
+   if (!BothParametersDefined(left, right)) { return INT_MIN; }
    return left * right;
 }
 
-bool SafeGreater(double left, double right)
+template <typename T1, typename T2>
+bool SafeGreater(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return false;
-   }
+   if (!BothParametersDefined(left, right)) { return false; }
    return left > right;
 }
 
-bool SafeGE(double left, double right)
+template <typename T1, typename T2>
+bool SafeGE(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return false;
-   }
+   if (!BothParametersDefined(left, right)) { return false; }
    return left >= right;
 }
 
-bool SafeLess(double left, double right)
+template <typename T1, typename T2>
+bool SafeLess(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return false;
-   }
+   if (!BothParametersDefined(left, right)) { return false; }
    return left < right;
 }
 
-bool SafeLE(double left, double right)
+template <typename T1, typename T2>
+bool SafeLE(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return false;
-   }
+   if (!BothParametersDefined(left, right)) { return false; }
    return left <= right;
 }
 
-double SafeMathExp(double value)
+template <typename T>
+double SafeMathExp(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathExp(value);
 }
 
-double SafeMathMax(double left, double right)
+template <typename T1, typename T2>
+double SafeMathMax(T1 left, T2 right)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!BothParametersDefined(left, right)) { return EMPTY_VALUE; }
+   return MathMax(left, right);
+}
+int SafeMathMax(int left, int right)
+{
+   if (!BothParametersDefined(left, right)) { return INT_MIN; }
    return MathMax(left, right);
 }
 
-double SafeMathMax(double param1, double param2, double param3)
+template <typename T1, typename T2, typename T3>
+double SafeMathMax(T1 param1, T2 param2, T3 param3)
 {
-   if (param1 == EMPTY_VALUE || param2 == EMPTY_VALUE || param3 == EMPTY_VALUE)
+   if (!ParameterDefined(param1) || !ParameterDefined(param2) || !ParameterDefined(param3))
    {
       return EMPTY_VALUE;
    }
    return MathMax(MathMax(param1, param2), param3);
 }
-
-double SafeMathMin(double left, double right)
+int SafeMathMax(int param1, int param2, int param3)
 {
-   if (left == EMPTY_VALUE || right == EMPTY_VALUE)
+   if (!ParameterDefined(param1) || !ParameterDefined(param2) || !ParameterDefined(param3))
    {
-      return EMPTY_VALUE;
+      return INT_MIN;
    }
+   return MathMax(MathMax(param1, param2), param3);
+}
+
+template <typename T1, typename T2>
+double SafeMathMin(T1 left, T2 right)
+{
+   if (!BothParametersDefined(left, right)) { return EMPTY_VALUE; }
+   return MathMin(left, right);
+}
+int SafeMathMin(int left, int right)
+{
+   if (!BothParametersDefined(left, right)) { return INT_MIN; }
    return MathMin(left, right);
 }
 
-double SafeMathMin(double param1, double param2, double param3)
+template <typename T1, typename T2, typename T3>
+double SafeMathMin(T1 param1, T2 param2, T3 param3)
 {
-   if (param1 == EMPTY_VALUE || param2 == EMPTY_VALUE || param3 == EMPTY_VALUE)
+   if (!ParameterDefined(param1) || !ParameterDefined(param2) || !ParameterDefined(param3))
    {
       return EMPTY_VALUE;
    }
    return MathMin(MathMin(param1, param2), param3);
 }
-
-double SafeMathPow(double value, double power)
+int SafeMathMin(int param1, int param2, int param3)
 {
-   if (value == EMPTY_VALUE || power == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return MathPow(value, power);
-}
-
-double SafeMathAbs(double value)
-{
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return MathAbs(value);
-}
-
-double SafeMathRound(double value)
-{
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return MathRound(value);
-}
-
-double SafeMathRound(double value, int precision)
-{
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return NormalizeDouble(value, precision);
-}
-
-double SafeMathSqrt(double value)
-{
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
-   return MathSqrt(value);
-}
-
-int SafeSign(double value)
-{
-   if (value == EMPTY_VALUE)
+   if (!ParameterDefined(param1) || !ParameterDefined(param2) || !ParameterDefined(param3))
    {
       return INT_MIN;
    }
+   return MathMin(MathMin(param1, param2), param3);
+}
+
+template <typename T1, typename T2>
+double SafeMathPow(T1 value, T2 power)
+{
+   if (!BothParametersDefined(value, power)) { return EMPTY_VALUE; }
+   return MathPow(value, power);
+}
+
+template <typename T>
+double SafeMathAbs(T value)
+{
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
+   return MathAbs(value);
+}
+
+template <typename T>
+double SafeMathRound(T value)
+{
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
+   return MathRound(value);
+}
+
+template <typename T>
+double SafeMathRound(T value, int precision)
+{
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
+   return NormalizeDouble(value, precision);
+}
+
+template <typename T>
+double SafeMathSqrt(T value)
+{
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
+   return MathSqrt(value);
+}
+
+template <typename T>
+int SafeSign(T value)
+{
+   if (!ParameterDefined(value)) { return INT_MIN; }
    if (value == 0)
    {
       return 0;
@@ -212,84 +195,64 @@ int SafeSign(double value)
    return value > 0 ? 1 : -1;
 }
 
-double SafeLog(double value)
+template <typename T>
+double SafeLog(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathLog(value);
 }
-double SafeLog10(double value)
+template <typename T>
+double SafeLog10(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathLog10(value);
 }
-double SafeCos(double value) 
+template <typename T>
+double SafeCos(T value) 
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathCos(value);
 }
-double SafeArccos(double value)
+template <typename T>
+double SafeArccos(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathArccos(value);
 }
-double SafeSin(double value) 
+template <typename T>
+double SafeSin(T value) 
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathSin(value);
 }
-double SafeArcsin(double value)
+template <typename T>
+double SafeArcsin(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathArcsin(value);
 }
-double SafeTan(double value) 
+template <typename T>
+double SafeTan(T value) 
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathTan(value);
 }
-double SafeArctan(double value)
+template <typename T>
+double SafeArctan(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathArctan(value);
 }
-double InvertSign(double value)
+template <typename T>
+double InvertSign(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return EMPTY_VALUE;
-   }
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return -value;
 }
-int SafeMathCeil(double value)
+template <typename T>
+int SafeMathCeil(T value)
 {
-   if (value == EMPTY_VALUE)
-   {
-      return INT_MIN;
-   }
+   if (!ParameterDefined(value)) { return INT_MIN; }
    return (int)MathCeil(value);
 }
 double SafeMod(int val1, int val2)
