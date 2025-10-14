@@ -3,9 +3,9 @@
 
 #include <Streams/AOnStream.mqh>
 #include <Streams/Interfaces/TIStream.mqh>
-#include <Streams/Custom/BoolToFloatStream.mqh>
+#include <Streams/Custom/IntToFloatStreamWrapper.mqh>
 
-//ChangeStream v2.0
+//ChangeStream v2.1
 class ChangeStream : public AOnStream
 {
    int _period;
@@ -43,7 +43,7 @@ public:
    
    static TIStream<double>* Create(TIStream<int>* stream, int period = 1)
    {
-      BoolToFloatStream* wrapper = new BoolToFloatStream(stream);
+      IntToFloatStreamWrapper* wrapper = new IntToFloatStreamWrapper(stream);
       ChangeStream* change = new ChangeStream(wrapper, period);
       wrapper.Release();
       return change;
