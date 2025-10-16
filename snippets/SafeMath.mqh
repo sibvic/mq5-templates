@@ -1,5 +1,5 @@
 // Pine-script like safe operations
-// v1.3
+// v1.4
 
 double Nz(double val, double defaultValue = 0)
 {
@@ -262,4 +262,10 @@ double SafeMod(int val1, int val2)
       return EMPTY_VALUE;
    }
    return val1 % val2;
+}
+template <typename T>
+double SafeMathFloor(T value)
+{
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
+   return MathFloor(value);
 }
