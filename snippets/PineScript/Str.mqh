@@ -1,11 +1,15 @@
 // str.* functions from Pine Script
-// v1.0
+// v1.1
 
 class Str
 {
 public:
    static string ToString(int value, string format)
    {
+      if (value == INT_MIN)
+      {
+         return "NaN";
+      }
       if (format == "percent")
       {
          return IntegerToString(value, 2) + "%";
@@ -14,11 +18,15 @@ public:
    }
    static string ToString(double value, string format)
    {
+      if (value == EMPTY_VALUE)
+      {
+         return "NaN";
+      }
       if (format == "percent")
       {
          return DoubleToString(value, 2) + "%";
       }
-      string valueStr = value == EMPTY_VALUE ? "" : DoubleToString(value);
+      string valueStr = DoubleToString(value);
       if (format != "")
       {
          StringReplace(format, "#.#", valueStr);
@@ -28,24 +36,40 @@ public:
    }
    static string ToString(double value)
    {
+      if (value == EMPTY_VALUE)
+      {
+         return "NaN";
+      }
       return DoubleToString(value);
    }
    static string ToString(int value)
    {
+      if (value == INT_MIN)
+      {
+         return "NaN";
+      }
       return IntegerToString(value);
+   }
+   static string ToString(string value)
+   {
+      return value;
    }
    static string ReplaceAll(string source, string target, string replaceWith)
    {
       StringReplace(source, target, replaceWith);
       return source;
    }
-   static bool Contains(string str1, string str2)
+   static bool Contains(string source, string str)
    {
-      return StringFind(str1, str2) != -1;
+      return StringFind(source, str) != -1;
    }
    static double ToNumber(string str)
    {
       return StringToDouble(str);
+   }
+   static int Length(string str)
+   {
+      return StringLen(str);
    }
 };
 

@@ -1,9 +1,19 @@
-// Collection of boxes v1.1
+// Collection of boxes v1.2
 
 #ifndef BoxesCollection_IMPL
 #define BoxesCollection_IMPL
 
 #include <PineScript/Objects/Box.mqh>
+#include <PineScript/Objects/IObjectDestructor.mqh>
+
+class BoxObjectDestructor : public IObjectDestructor<Box*>
+{
+public:
+   virtual void Free(Box* obj)
+   {
+      BoxesCollection::Delete(obj);
+   }
+};
 
 class BoxesCollection
 {
@@ -12,6 +22,7 @@ class BoxesCollection
    static BoxesCollection* _collections[];
    static BoxesCollection* _all;
    static int _max;
+   static IObjectDestructor<Box*>* _destructor;
 public:
    BoxesCollection(string id)
    {
@@ -21,6 +32,11 @@ public:
    ~BoxesCollection()
    {
       ClearItems();
+   }
+   
+   static IObjectDestructor<Box*>* GetDestructor()
+   {
+      return _destructor;
    }
    
    void ClearItems()
@@ -242,5 +258,6 @@ private:
 };
 BoxesCollection* BoxesCollection::_collections[];
 BoxesCollection* BoxesCollection::_all;
+IObjectDestructor<Box*>* BoxesCollection::_destructor = new BoxObjectDestructor();
 int BoxesCollection::_max = 50;
 #endif

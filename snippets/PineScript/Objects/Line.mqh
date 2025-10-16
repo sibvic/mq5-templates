@@ -1,4 +1,4 @@
-// Line object v1.7
+// Line object v1.8
 
 class Line
 {
@@ -256,6 +256,10 @@ private:
    }
    datetime GetTime(int x, int totalBars)
    {
+      if (_xloc == "bar_time")
+      {
+         return x;
+      }
       int pos = totalBars - x - 1;
       return pos < 0 ? iTime(_Symbol, _timeframe, 0) + MathAbs(pos) * PeriodSeconds(_timeframe) : iTime(_Symbol, _timeframe, pos);
    }
