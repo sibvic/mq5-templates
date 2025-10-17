@@ -1,4 +1,4 @@
-// PolyLine object v1.2
+// PolyLine object v1.3
 #ifndef POLYLINE_IMPL
 #define POLYLINE_IMPL
 #include <PineScript/Array/CustomTypeArray.mqh>
@@ -16,12 +16,12 @@ class Polyline
    bool _curved;
    bool _closed;
    bool _forceOverlay;
-   string _xLoc;
+   string _xloc;
    ICustomTypeArray<ChartPoint*>* _points;
 public:
    Polyline(ICustomTypeArray<ChartPoint*>* points, string id, string collectionId, int window)
    {
-      _xLoc = "bar_index";
+      _xloc = "bar_index";
       _refs = 1;
       _id = id;
       _window = window;
@@ -131,6 +131,10 @@ public:
    }
    datetime GetTime(int x, int totalBars)
    {
+      if (_xloc == "bar_time")
+      {
+         return x;
+      }
       int pos = totalBars - x - 1;
       return pos < 0 ? iTime(_Symbol, _Period, 0) + MathAbs(pos) * PeriodSeconds(_Period) : iTime(_Symbol, _Period, pos);
    }
@@ -167,7 +171,7 @@ public:
    }
    Polyline* SetXLoc(string val)
    {
-      _xLoc = val;
+      _xloc = val;
       return &this;
    }
 };

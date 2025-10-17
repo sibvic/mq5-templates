@@ -1,4 +1,4 @@
-// Line object v1.8
+// Line object v1.9
 
 class Line
 {
@@ -7,7 +7,7 @@ class Line
    double _y1;
    int _x2;
    double _y2;
-   string _xLoc;
+   string _xloc;
    uint _clr;
    int _width;
    ENUM_TIMEFRAMES _timeframe;
@@ -20,7 +20,7 @@ class Line
 public:
    Line(int x1, double y1, int x2, double y2, string id, string collectionId, int window, bool global)
    {
-      _xLoc = "bar_index";
+      _xloc = "bar_index";
       _extend = "none";
       _refs = 1;
       _x1 = x1;
@@ -167,7 +167,7 @@ public:
    }
    Line* SetXLoc(string val)
    {
-      _xLoc = val;
+      _xloc = val;
       return &this;
    }
 
