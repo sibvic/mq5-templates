@@ -1,4 +1,4 @@
-// Array v1.8
+// Array v1.9
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
@@ -111,7 +111,7 @@ public:
       for (int i = 1; i < array.Size(); ++i)
       {
          TYPE val = array.Get(i);
-         if (maxVal < val)
+         if (maxVal < val && val != emptyValue)
          {
             maxVal = val;
          }
@@ -122,25 +122,25 @@ public:
    static int Max(ISimpleTypeArray<int>* array, int nth) { return Max<int>(array, nth, INT_MIN); }
    
    template<typename TYPE>
-   static TYPE Min(ISimpleTypeArray<TYPE>* array, int nth)
+   static TYPE Min(ISimpleTypeArray<TYPE>* array, int nth, TYPE emptyValue)
    {
       if (array == NULL || array.Size() == 0 || nth != 0)
       {
-         return EMPTY_VALUE;
+         return emptyValue;
       }
       TYPE minVal = array.Get(0);
       for (int i = 1; i < array.Size(); ++i)
       {
          TYPE val = array.Get(i);
-         if (minVal > val)
+         if (minVal > val && val != emptyValue)
          {
             minVal = val;
          }
       }
       return minVal;
    }
-   static double Min(ISimpleTypeArray<double>* array, int nth) { return Min<double>(array, nth); }
-   static int Min(ISimpleTypeArray<int>* array, int nth) { return Min<int>(array, nth); }
+   static double Min(ISimpleTypeArray<double>* array, int nth) { return Min<double>(array, nth, EMPTY_VALUE); }
+   static int Min(ISimpleTypeArray<int>* array, int nth) { return Min<int>(array, nth, INT_MIN); }
 
    template<typename TYPE>
    static TYPE Sum(ISimpleTypeArray<TYPE>* array, TYPE emptyValue)
