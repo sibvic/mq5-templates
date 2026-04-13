@@ -3,7 +3,7 @@
 
 #include <PineScriptUtils.mqh>
 
-// Box object v1.3
+// Box object v1.4
 
 class Box
 {
@@ -81,6 +81,12 @@ public:
    Box* Copy()
    {
       Box* copy = new Box(_left, _top, _right, _bottom, _id, _collectionId, _window);
+      CopyTo(copy);
+      return copy;
+   }
+   
+   void CopyTo(Box* copy)
+   {
       copy.SetBgColor(_bgcolor);
       copy.SetBorderColor(_borderColor);
       copy.SetExtend(_extend);
@@ -89,7 +95,6 @@ public:
       copy.SetTextVAlign(_textVAlign);
       copy.SetTextSize(_textSize);
       copy.SetTextColor(_textColor);
-      return copy;
    }
 
    static double GetTop(Box* box) { if (box == NULL) { return EMPTY_VALUE; } return box.GetTop(); }
