@@ -193,22 +193,44 @@ public:
    static double Covariance(ISimpleTypeArray<double>* array1, ISimpleTypeArray<int>* array2) { return Covariance<double, int>(array1, array2); }
    
    template<typename TYPE>
-   static double Stdev(ISimpleTypeArray<TYPE>* array, TYPE emptyValue)
+   static double Stdev(ISimpleTypeArray<TYPE>* array, bool biased, TYPE emptyValue)
    {
       if (array == NULL)
       {
          return emptyValue;
       }
+      int size = array.Size();
+      if (size == 0)
+      {
+         return emptyValue;
+      }
+      if (!biased && size < 2)
+      {
+         return emptyValue;
+      }
       double sum = 0;
       double ssum = 0;
-      int size = array.Size();
       for (int i = 0; i < size; i++)
       {
-         sum += array.Get(i);
-         ssum += MathPow(size, 2);
+         double v = (double)array.Get(i);
+         sum += v;
+         ssum += v * v;
       }
-      return MathSqrt((ssum * size - sum * sum) / (size * (size - 1)));
+      double num = size * ssum - sum * sum;
+      if (num < 0)
+      {
+         num = 0;
+      }
+      double denom = biased ? (double)size * (double)size : (double)size * (double)(size - 1);
+      return MathSqrt(num / denom);
    }
+   template<typename TYPE>
+   static double Stdev(ISimpleTypeArray<TYPE>* array, TYPE emptyValue)
+   {
+      return Stdev(array, false, emptyValue);
+   }
+   static double Stdev(ISimpleTypeArray<int>* array, bool biased) { return Stdev<int>(array, biased, INT_MIN); }
+   static double Stdev(ISimpleTypeArray<double>* array, bool biased) { return Stdev<double>(array, biased, EMPTY_VALUE); }
    static double Stdev(ISimpleTypeArray<int>* array) { return Stdev<int>(array, INT_MIN); }
    static double Stdev(ISimpleTypeArray<double>* array) { return Stdev<double>(array, EMPTY_VALUE); }
    
