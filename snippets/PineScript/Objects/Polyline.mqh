@@ -12,6 +12,7 @@ class Polyline
    int _window;
    uint _lineColor;
    uint _fillColor;
+   string _lineStyle;
    int _lineWidth;
    bool _curved;
    bool _closed;
@@ -26,6 +27,7 @@ public:
       _id = id;
       _window = window;
       _lineWidth = 1;
+      _lineStyle = "solid";
       _collectionId = collectionId;
       _points = points;
       if (_points != NULL)
@@ -64,6 +66,7 @@ public:
       line._points = _points;
       line._lineColor = _lineColor;
       line._fillColor = _fillColor;
+      line._lineStyle = _lineStyle;
       line._lineWidth = _lineWidth;
       line._curved = _curved;
       line._closed = _closed;
@@ -121,6 +124,7 @@ public:
             ObjectSetInteger(0, lineId, OBJPROP_COLOR, _lineColor);
             ObjectSetInteger(0, lineId, OBJPROP_WIDTH, _lineWidth);
          }
+         ObjectSetInteger(0, lineId, OBJPROP_STYLE, LineStyleMql());
          ObjectSetDouble(0, lineId, OBJPROP_PRICE, 0, prev.GetPrice());
          ObjectSetDouble(0, lineId, OBJPROP_PRICE, 1, point.GetPrice());
          ObjectSetInteger(0, lineId, OBJPROP_TIME, 0, x1);
@@ -142,6 +146,11 @@ public:
    Polyline* SetLineColor(uint clr)
    {
       _lineColor = clr;
+      return &this;
+   }
+   Polyline* SetLineStyle(string style)
+   {
+      _lineStyle = style;
       return &this;
    }
    Polyline* SetFillColor(uint clr)
@@ -173,6 +182,19 @@ public:
    {
       _xloc = val;
       return &this;
+   }
+private:
+   ENUM_LINE_STYLE LineStyleMql() const
+   {
+      if (_lineStyle == "dashed")
+      {
+         return STYLE_DASH;
+      }
+      if (_lineStyle == "dotted")
+      {
+         return STYLE_DOT;
+      }
+      return STYLE_SOLID;
    }
 };
 #endif
