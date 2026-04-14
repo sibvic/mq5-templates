@@ -156,15 +156,39 @@ public:
       return _prefix;
    }
 
+   static void SetBorderColor(Table* table, uint clr)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.SetBorderColor(clr);
+   }
    Table* SetBorderColor(uint clr)
    {
       _borderColor = clr;
       return &this;
    }
+   static void SetBorderWidth(Table* table, int borderWidth)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.SetBorderWidth(borderWidth);
+   }
    Table* SetBorderWidth(int borderWidth)
    {
       _borderWidth = borderWidth;
       return &this;
+   }
+   static void SetBGColor(Table* table, uint clr)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.SetBGColor(clr);
    }
    Table* SetBGColor(uint clr)
    {
@@ -180,10 +204,26 @@ public:
       return &this;
    }
    
+   static void SetFrameColor(Table* table, uint clr)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.SetFrameColor(clr);
+   }
    Table* SetFrameColor(uint clr)
    {
       _frameColor = clr;
       return &this;
+   }
+   static void SetFrameWidth(Table* table, int frameWidth)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.SetFrameWidth(frameWidth);
    }
    Table* SetFrameWidth(int frameWidth)
    {
