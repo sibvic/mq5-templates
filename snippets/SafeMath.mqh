@@ -269,3 +269,21 @@ double SafeMathFloor(T value)
    if (!ParameterDefined(value)) { return EMPTY_VALUE; }
    return MathFloor(value);
 }
+template <typename T>
+int SafeToint(T value)
+{
+   if (!ParameterDefined(value)) { return INT_MIN; }
+   return (int)value;
+}
+template <typename T>
+uint SafeTouint(T value)
+{
+   if (!ParameterDefined(value)) { return INT_MAX; }
+   return (uint)value;
+}
+template <typename T>
+double SafeTodouble(T value)
+{
+   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
+   return (double)value;
+}
