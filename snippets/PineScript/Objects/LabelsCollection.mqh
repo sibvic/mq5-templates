@@ -4,6 +4,16 @@
 #define LabelsCollection_IMPL
 
 #include <PineScript/Objects/Label.mqh>
+#include <PineScript/Objects/IObjectDestructor.mqh>
+
+class LabelObjectDestructor : public IObjectDestructor<Label*>
+{
+public:
+   virtual void Free(Label* obj)
+   {
+      LabelsCollection::Delete(obj);
+   }
+};
 
 class LabelsCollection
 {
@@ -12,6 +22,7 @@ class LabelsCollection
    static LabelsCollection* _collections[];
    static LabelsCollection* _all;
    static int _maxLabels;
+   static IObjectDestructor<Label*>* _destructor;
 public:
    LabelsCollection(string id)
    {
@@ -21,6 +32,11 @@ public:
    ~LabelsCollection()
    {
       ClearLabels();
+   }
+
+   static IObjectDestructor<Label*>* GetDestructor()
+   {
+      return _destructor;
    }
    
    void ClearLabels()
@@ -250,5 +266,6 @@ private:
 };
 LabelsCollection* LabelsCollection::_collections[];
 LabelsCollection* LabelsCollection::_all;
+IObjectDestructor<Label*>* LabelsCollection::_destructor = new LabelObjectDestructor();
 int LabelsCollection::_maxLabels = 50;
 #endif

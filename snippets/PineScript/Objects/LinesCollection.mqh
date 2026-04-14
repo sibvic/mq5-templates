@@ -4,6 +4,16 @@
 #define LinesCollection_IMPL
 
 #include <PineScript/Objects/Line.mqh>
+#include <PineScript/Objects/IObjectDestructor.mqh>
+
+class LineObjectDestructor : public IObjectDestructor<Line*>
+{
+public:
+   virtual void Free(Line* obj)
+   {
+      LinesCollection::Delete(obj);
+   }
+};
 
 class LinesCollection
 {
@@ -12,7 +22,13 @@ class LinesCollection
    static LinesCollection* _collections[];
    static LinesCollection* _all;
    static int _max;
+   static IObjectDestructor<Line*>* _destructor;
 public:
+   static IObjectDestructor<Line*>* GetDestructor()
+   {
+      return _destructor;
+   }
+
    static Line* Get(Line* line, int index)
    {
       if (line == NULL)
@@ -257,5 +273,6 @@ private:
 };
 LinesCollection* LinesCollection::_collections[];
 LinesCollection* LinesCollection::_all;
+IObjectDestructor<Line*>* LinesCollection::_destructor = new LineObjectDestructor();
 int LinesCollection::_max = 50;
 #endif

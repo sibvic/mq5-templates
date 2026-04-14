@@ -7,6 +7,16 @@
 #include <PineScript/Array/CustomTypeArray.mqh>
 #include <PineScript/Array/Array.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>
+#include <PineScript/Objects/IObjectDestructor.mqh>
+
+class PolylineObjectDestructor : public IObjectDestructor<Polyline*>
+{
+public:
+   virtual void Free(Polyline* obj)
+   {
+      PolyLinesCollection::Delete(obj);
+   }
+};
 
 class PolyLinesCollection
 {
@@ -16,7 +26,13 @@ class PolyLinesCollection
    static PolyLinesCollection* _all;
    static int _max;
    static uint _nextId;
+   static IObjectDestructor<Polyline*>* _destructor;
 public:
+   static IObjectDestructor<Polyline*>* GetDestructor()
+   {
+      return _destructor;
+   }
+   
    static Polyline* Get(Polyline* PolyLine, int index)
    {
       if (PolyLine == NULL)
@@ -227,6 +243,7 @@ private:
 };
 PolyLinesCollection* PolyLinesCollection::_collections[];
 PolyLinesCollection* PolyLinesCollection::_all;
+IObjectDestructor<Polyline*>* PolyLinesCollection::_destructor = new PolylineObjectDestructor();
 int PolyLinesCollection::_max = 50;
 uint PolyLinesCollection::_nextId = 0;
 #endif
