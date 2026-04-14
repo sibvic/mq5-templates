@@ -46,8 +46,8 @@ public:
    template <typename ARRAY_TYPE, typename DUMMY_TYPE1, typename DUMMY_TYPE2, typename DUMMY_TYPE3>
    static ARRAY_TYPE Slice(ARRAY_TYPE array, int from, int to, ARRAY_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Slice(from, to); }
    
-   static void Sort(IIntArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
-   static void Sort(IFloatArray* array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
+   template <typename ARRAY_TYPE, typename DUMMY_TYPE1>
+   static void Sort(ARRAY_TYPE array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
    
    template <typename ARRAY_TYPE, typename VALUE_TYPE>
    static void Unshift(ARRAY_TYPE array, VALUE_TYPE value) { if (array == NULL) { return; } array.Unshift(value); }
