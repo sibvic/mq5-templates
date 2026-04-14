@@ -14,6 +14,21 @@ public:
       {
          return IntegerToString(value, 2) + "%";
       }
+      if (format == "$")
+      {
+         return "$" + IntegerToString(value);
+      }
+      if (format == "mintick")
+      {
+         int dec = DigitsForMintick(MintickFromPoint());
+         return DoubleToString((double)value, dec);
+      }
+      if (format != "")
+      {
+         string hashFmt;
+         if (TryApplyHashDecimalFormat((double)value, format, hashFmt))
+            return hashFmt;
+      }
       return IntegerToString(value);
    }
    static string ToString(double value, string format)
@@ -26,9 +41,21 @@ public:
       {
          return DoubleToString(value, 2) + "%";
       }
+      if (format == "$")
+      {
+         return "$" + DoubleToString(value, 2);
+      }
+      if (format == "mintick")
+      {
+         int dec = DigitsForMintick(MintickFromPoint());
+         return DoubleToString(value, dec);
+      }
       string valueStr = DoubleToString(value);
       if (format != "")
       {
+         string hashFmt;
+         if (TryApplyHashDecimalFormat(value, format, hashFmt))
+            return hashFmt;
          StringReplace(format, "#.#", valueStr);
          return format;
       }
@@ -70,6 +97,63 @@ public:
    static int Length(string str)
    {
       return StringLen(str);
+   }
+
+private:
+   // MQL5: SymbolInfoDouble(Symbol(), SYMBOL_POINT) replaces MQL4 MarketInfo(Symbol(), MODE_POINT)
+   static double MintickFromPoint()
+   {
+      double point = SymbolInfoDouble(Symbol(), SYMBOL_POINT);
+      int digits = (int)SymbolInfoInteger(Symbol(), SYMBOL_DIGITS);
+      int mult = digits == 3 || digits == 5 ? 10 : 1;
+      return point * mult;
+   }
+   static int DigitsForMintick(double mintick)
+   {
+      if (mintick <= 0)
+         return (int)SymbolInfoInteger(Symbol(), SYMBOL_DIGITS);
+      int d = 0;
+      double x = mintick;
+      while (d < 16 && MathAbs(x - MathRound(x)) > 1e-8)
+      {
+         x *= 10.0;
+         d++;
+      }
+      return d;
+   }
+   // "#.#", "#.##", "##.###", ... — # after '.' sets DoubleToString precision
+   static bool TryApplyHashDecimalFormat(double value, string format, string &outResult)
+   {
+      int len = StringLen(format);
+      for (int dotPos = 0; dotPos < len; dotPos++)
+      {
+         if (StringGetCharacter(format, dotPos) != '.')
+            continue;
+         int leftHash = 0;
+         for (int i = dotPos - 1; i >= 0; i--)
+         {
+            if (StringGetCharacter(format, i) != '#')
+               break;
+            leftHash++;
+         }
+         if (leftHash == 0)
+            continue;
+         int rightHash = 0;
+         for (int i = dotPos + 1; i < len; i++)
+         {
+            if (StringGetCharacter(format, i) != '#')
+               break;
+            rightHash++;
+         }
+         if (rightHash == 0)
+            continue;
+         int tokStart = dotPos - leftHash;
+         int tokLen = leftHash + 1 + rightHash;
+         string num = DoubleToString(value, rightHash);
+         outResult = StringSubstr(format, 0, tokStart) + num + StringSubstr(format, tokStart + tokLen);
+         return true;
+      }
+      return false;
    }
 };
 
@@ -223,14 +307,14 @@ public:
             {
                int intValue = ((StrFormatIntValue*)values[i]).GetValue();
                string numberFormat = StringSubstr(res, pos + 1, end - pos - 1);
-               
-               res = StringSubstr(res, 0, pos) + FormatIntValue(intValue, numberFormat) + StringSubstr(res, end + 1);
+               res = StringSubstr(res, 0, pos) + FormatWithNumberPattern((double)intValue, numberFormat, true) + StringSubstr(res, end + 1);
             }
             break;
          case StrFormatValueType::Float:
             {
                double doubleValue = ((StrFormatDoubleValue*)values[i]).GetValue();
-               res = StringSubstr(res, 0, pos) + DoubleToString(doubleValue) + StringSubstr(res, end + 1);
+               string numberFormat = StringSubstr(res, pos + 1, end - pos - 1);
+               res = StringSubstr(res, 0, pos) + FormatWithNumberPattern(doubleValue, numberFormat, false) + StringSubstr(res, end + 1);
             }
             break;
          }
@@ -239,29 +323,39 @@ public:
       return res;
    }
 private:
-   string FormatIntValue(int intValue, string numberFormat)
+   // {index,number,#.#} / {0,number,#.##} — decimals = count of '#' after '.' in the hash pattern (same as Str::TryApplyHashDecimalFormat)
+   string FormatWithNumberPattern(double value, string numberFormat, bool sourceIsInt)
    {
       string tokens[];
       int count = StringSplit(numberFormat, ',', tokens);
-      if (count == 1 || tokens[1] != "number")
+      if (count < 3 || tokens[1] != "number")
       {
-          return IntegerToString(intValue);
+         if (sourceIsInt)
+            return IntegerToString((int)value);
+         return DoubleToString(value);
       }
-      int precision = GetPrecision(tokens[2]);
-      if (precision == 0)
+      int decimals = HashPatternDecimalPlaces(tokens[2]);
+      if (decimals < 0)
       {
-         return IntegerToString(intValue);
+         if (sourceIsInt)
+            return IntegerToString((int)value);
+         return DoubleToString(value);
       }
-      return DoubleToString(intValue, precision);
+      return DoubleToString(value, decimals);
    }
-   
-   int GetPrecision(string format)
+   int HashPatternDecimalPlaces(string pattern)
    {
-      int pointPos = StringFind(format, ".");
+      int pointPos = StringFind(pattern, ".");
       if (pointPos < 0)
-      {
          return -1;
+      int n = 0;
+      int len = StringLen(pattern);
+      for (int i = pointPos + 1; i < len; i++)
+      {
+         if (StringGetCharacter(pattern, i) != '#')
+            break;
+         n++;
       }
-      return StringLen(format) - pointPos;
+      return n;
    }
 };
