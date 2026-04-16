@@ -65,6 +65,24 @@ public:
       signaler.SendNotifications(id);
    }
    
+   static void CloseAll(Signaler* signaler, string comment, string alert_message, bool immediately = false, bool disable_alert = false)
+   {
+      if (disable_alert)
+      {
+         return;
+      }
+      string message = "Close all";
+      if (alert_message != NULL && StringLen(alert_message) > 0)
+      {
+         message = alert_message;
+      }
+      else if (comment != NULL && StringLen(comment) > 0)
+      {
+         message = comment;
+      }
+      signaler.SendNotifications(message);
+   }
+   
    static double Equity()
    {
       return 0;
@@ -76,6 +94,11 @@ public:
    }
    
    static int OpenTrades()
+   {
+      return 0;
+   }
+
+   static double PositionAvgPrice()
    {
       return 0;
    }
