@@ -23,6 +23,10 @@ public:
          int dec = DigitsForMintick(MintickFromPoint());
          return DoubleToString((double)value, dec);
       }
+      if (format == "volume")
+      {
+         return IntegerToString(value);
+      }
       if (format != "")
       {
          string hashFmt;
@@ -49,6 +53,10 @@ public:
       {
          int dec = DigitsForMintick(MintickFromPoint());
          return DoubleToString(value, dec);
+      }
+      if (format == "volume")
+      {
+         return DoubleToString(value, 0);
       }
       string valueStr = DoubleToString(value);
       if (format != "")
