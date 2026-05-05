@@ -1,6 +1,7 @@
 // Float matrix
-// v1.0
+// v1.2
 #include <PineScript/Matrix/IFloatMatrix.mqh>
+#include <PineScript/Array/FloatArray.mqh>
 
 class FloatMatrix : public IFloatMatrix
 {
@@ -41,5 +42,63 @@ public:
    void Set(int row, int col, double val)
    {
       values[row * columns + col] = val;
+   }
+
+   void AddRow(int row, ISimpleTypeArray<double>* array_id)
+   {
+      if (row == INT_MIN)
+      {
+         row = rows;
+      }
+      if (array_id == NULL || row < 0 || row > rows)
+      {
+         return;
+      }
+      int n = array_id.Size();
+      int newRows = rows + 1;
+      ArrayResize(values, newRows * columns);
+      for (int r = rows - 1; r >= row; --r)
+      {
+         for (int c = 0; c < columns; ++c)
+         {
+            values[(r + 1) * columns + c] = values[r * columns + c];
+         }
+      }
+      for (int c = 0; c < columns; ++c)
+      {
+         double val = (c < n) ? array_id.Get(c) : EMPTY_VALUE;
+         values[row * columns + c] = val;
+      }
+      rows = newRows;
+   }
+
+   virtual ISimpleTypeArray<double>* Mult(ISimpleTypeArray<double>* array) override
+   {
+      if (array == NULL)
+      {
+         return NULL;
+      }
+      FloatArray* result = new FloatArray(rows, EMPTY_VALUE);
+      for (int r = 0; r < rows; ++r)
+      {
+         double sum = 0.0;
+         bool ok = true;
+         for (int c = 0; c < columns; ++c)
+         {
+            double m = Get(r, c);
+            double v = (c < array.Size()) ? array.Get(c) : EMPTY_VALUE;
+            if (m == EMPTY_VALUE || v == EMPTY_VALUE)
+            {
+               ok = false;
+               break;
+            }
+            sum += m * v;
+         }
+         if (ok)
+         {
+            result.Set(r, sum);
+         }
+      }
+      return result;
    }
 };

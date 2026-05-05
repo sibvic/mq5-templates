@@ -1,5 +1,5 @@
 // Matrix
-// v1.1
+// v1.2
 
 #include <PineScript/Matrix/FloatMatrix.mqh>
 #include <PineScript/Matrix/TableMatrix.mqh>
@@ -32,5 +32,23 @@ public:
          arr.Set(c, _matrix.Get(row, c));
       }
       return arr;
+   }
+
+   static void AddRow(IFloatMatrix* _matrix, int row, ISimpleTypeArray<double>* array_id)
+   {
+      if (_matrix == NULL || array_id == NULL)
+      {
+         return;
+      }
+      _matrix.AddRow(row, array_id);
+   }
+
+   static ISimpleTypeArray<double>* Mult(IFloatMatrix* _matrix, ISimpleTypeArray<double>* array)
+   {
+      if (_matrix == NULL)
+      {
+         return NULL;
+      }
+      return _matrix.Mult(array);
    }
 };
