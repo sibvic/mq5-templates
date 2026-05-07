@@ -1,9 +1,10 @@
 // Matrix
 // v1.3
 
-#include <PineScript/Matrix/FloatMatrix.mqh>
+#include <PineScript/Matrix/SimpleTypeMatrix.mqh>
 #include <PineScript/Matrix/TableMatrix.mqh>
 #include <PineScript/Array/FloatArray.mqh>
+#include <PineScript/Array/IntArray.mqh>
 
 class Matrix
 {
@@ -25,25 +26,56 @@ public:
 
    static void Set(ITableMatrix* _matrix, int row, int col, Table* val) { if (_matrix == NULL) { return; } _matrix.Set(row, col, val); }
 
-   static FloatArray* Row(IFloatMatrix* _matrix, int row)
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
+   struct MatrixRowDispatch
    {
-      if (_matrix == NULL)
+      static ARRAY_IFACE* Invoke(MATRIX_TYPE matrix, ROW_INDEX_TYPE row);
+   };
+
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
+   static ARRAY_IFACE* Row(MATRIX_TYPE matrix, ROW_INDEX_TYPE row, ARRAY_IFACE* emptyPlaceholder)
+   {
+      if (matrix == NULL)
       {
-         return NULL;
+         return emptyPlaceholder;
       }
-      int rows = _matrix.Rows();
-      int cols = _matrix.Columns();
+      int rows = matrix.Rows();
       if (row < 0 || row >= rows)
       {
-         return NULL;
+         return emptyPlaceholder;
       }
-      FloatArray* arr = new FloatArray(cols, EMPTY_VALUE);
-      for (int c = 0; c < cols; ++c)
-      {
-         arr.Set(c, _matrix.Get(row, c));
-      }
-      return arr;
+      return MatrixRowDispatch<ARRAY_IFACE, MATRIX_TYPE, ROW_INDEX_TYPE>::Invoke(matrix, row);
    }
+
+   template<>
+   struct MatrixRowDispatch<ITArray<int>*, ISimpleTypeMatrix<int>*, int>
+   {
+      static ITArray<int>* Invoke(ISimpleTypeMatrix<int>* matrix, int row)
+      {
+         int cols = matrix.Columns();
+         IntArray* arr = new IntArray(cols, INT_MIN);
+         for (int c = 0; c < cols; ++c)
+         {
+            arr.Set(c, matrix.Get(row, c));
+         }
+         return arr;
+      }
+   };
+
+   template<>
+   struct MatrixRowDispatch<ISimpleTypeArray<double>*, ISimpleTypeMatrix<double>*, int>
+   {
+      static ISimpleTypeArray<double>* Invoke(ISimpleTypeMatrix<double>* matrix, int row)
+      {
+         int cols = matrix.Columns();
+         FloatArray* arr = new FloatArray(cols, EMPTY_VALUE);
+         for (int c = 0; c < cols; ++c)
+         {
+            arr.Set(c, matrix.Get(row, c));
+         }
+         return arr;
+      }
+   };
 
    static void AddRow(IFloatMatrix* _matrix, int row, ISimpleTypeArray<double>* array_id)
    {
