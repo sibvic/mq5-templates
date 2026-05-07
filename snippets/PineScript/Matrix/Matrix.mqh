@@ -1,5 +1,5 @@
 // Matrix
-// v1.2
+// v1.3
 
 #include <PineScript/Matrix/FloatMatrix.mqh>
 #include <PineScript/Matrix/TableMatrix.mqh>
@@ -8,10 +8,21 @@
 class Matrix
 {
 public:
-   static double Get(IFloatMatrix* _matrix, int row, int col) { if (_matrix == NULL) { return EMPTY_VALUE; } return _matrix.Get(row, col); }
+   template <typename RETURN_TYPE, typename MATRIX_TYPE, typename DUMMY_TYPE, typename DUMMY_TYPE2>
+   static RETURN_TYPE Get(MATRIX_TYPE matrix, int row, int col, RETURN_TYPE emptyValue)
+   {
+      if (matrix == NULL) { return emptyValue; }
+      return matrix.Get(row, col);
+   }
    static Table* Get(ITableMatrix* _matrix, int row, int col) { if (_matrix == NULL) { return NULL; } return _matrix.Get(row, col); }
-   
-   static void Set(IFloatMatrix* _matrix, int row, int col, double val) { if (_matrix == NULL) { return; } _matrix.Set(row, col, val); }
+
+   template <typename MATRIX_TYPE, typename DUMMY_TYPE, typename DUMMY_TYPE2, typename VALUE_TYPE>
+   static void Set(MATRIX_TYPE matrix, int row, int col, VALUE_TYPE value)
+   {
+      if (matrix == NULL) { return; }
+      matrix.Set(row, col, value);
+   }
+
    static void Set(ITableMatrix* _matrix, int row, int col, Table* val) { if (_matrix == NULL) { return; } _matrix.Set(row, col, val); }
 
    static FloatArray* Row(IFloatMatrix* _matrix, int row)
