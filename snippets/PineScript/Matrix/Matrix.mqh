@@ -77,13 +77,14 @@ public:
       }
    };
 
-   static void AddRow(IFloatMatrix* _matrix, int row, ISimpleTypeArray<double>* array_id)
+   template <typename MATRIX_TYPE, typename ROW_INDEX_TYPE, typename ARRAY_TYPE>
+   static void AddRow(MATRIX_TYPE matrix, ROW_INDEX_TYPE row, ARRAY_TYPE array_id)
    {
-      if (_matrix == NULL || array_id == NULL)
+      if (matrix == NULL || array_id == NULL)
       {
          return;
       }
-      _matrix.AddRow(row, array_id);
+      matrix.AddRow(row, array_id);
    }
 
    static ISimpleTypeArray<double>* Mult(IFloatMatrix* _matrix, ISimpleTypeArray<double>* array)
