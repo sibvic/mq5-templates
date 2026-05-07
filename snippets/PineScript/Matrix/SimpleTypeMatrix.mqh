@@ -150,6 +150,33 @@ public:
       rows = newRows;
    }
 
+   virtual ISimpleTypeArray<CLASS_TYPE>* RemoveRow(int row) override
+   {
+      if (row < 0 || row >= rows || columns <= 0)
+      {
+         return NULL;
+      }
+      SimpleTypeArray<CLASS_TYPE>* removed = new SimpleTypeArray<CLASS_TYPE>(columns, _defaultValue, _emptyValue);
+      for (int c = 0; c < columns; ++c)
+      {
+         removed.Set(c, values[row * columns + c]);
+      }
+      for (int r = row + 1; r < rows; ++r)
+      {
+         for (int c = 0; c < columns; ++c)
+         {
+            values[(r - 1) * columns + c] = values[r * columns + c];
+         }
+      }
+      rows--;
+      if (_defaultRows > 0)
+      {
+         _defaultRows--;
+      }
+      ArrayResize(values, rows * columns);
+      return removed;
+   }
+
    void Sort(bool ascending)
    {
       ArraySort(values);

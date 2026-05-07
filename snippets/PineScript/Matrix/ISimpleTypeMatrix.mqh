@@ -16,6 +16,7 @@ public:
    virtual void Set(int row, int col, CLASS_TYPE val) = 0;
    virtual ISimpleTypeMatrix<CLASS_TYPE>* Fill(CLASS_TYPE initialValue) = 0;
    virtual void AddRow(int row, ISimpleTypeArray<CLASS_TYPE>* array_id) = 0;
+   virtual ISimpleTypeArray<CLASS_TYPE>* RemoveRow(int row) = 0;
 };
 
 #endif

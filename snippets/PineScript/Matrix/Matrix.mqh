@@ -87,6 +87,45 @@ public:
       _matrix.AddRow(row, array_id);
    }
 
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
+   struct MatrixRemoveRowDispatch
+   {
+      static ARRAY_IFACE* Invoke(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row);
+   };
+
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
+   static ARRAY_IFACE* RemoveRow(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_IFACE* emptyPlaceholder)
+   {
+      if (_matrix == NULL)
+      {
+         return emptyPlaceholder;
+      }
+      int rowCount = _matrix.Rows();
+      if (row < 0 || row >= rowCount)
+      {
+         return emptyPlaceholder;
+      }
+      return MatrixRemoveRowDispatch<ARRAY_IFACE, MATRIX_TYPE, ROW_INDEX_TYPE>::Invoke(_matrix, row);
+   }
+
+   template<>
+   struct MatrixRemoveRowDispatch<ITArray<int>*, ISimpleTypeMatrix<int>*, int>
+   {
+      static ITArray<int>* Invoke(ISimpleTypeMatrix<int>* _matrix, int row)
+      {
+         return _matrix.RemoveRow(row);
+      }
+   };
+
+   template<>
+   struct MatrixRemoveRowDispatch<ISimpleTypeArray<double>*, ISimpleTypeMatrix<double>*, int>
+   {
+      static ISimpleTypeArray<double>* Invoke(ISimpleTypeMatrix<double>* _matrix, int row)
+      {
+         return _matrix.RemoveRow(row);
+      }
+   };
+
    static ISimpleTypeArray<int>* Mult(ISimpleTypeMatrix<int>* _matrix, ISimpleTypeArray<int>* array)
    {
       if (_matrix == NULL || array == NULL)
