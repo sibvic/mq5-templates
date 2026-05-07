@@ -101,6 +101,9 @@ public:
    int Rows() { return rows; }
    int Columns() { return columns; }
 
+   CLASS_TYPE MatrixDefaultFill() { return _defaultValue; }
+   CLASS_TYPE MatrixEmptySentinel() { return _emptyValue; }
+
    CLASS_TYPE Get(int row, int col)
    {
       if (row < 0 || col < 0 || row >= rows || col >= columns)
@@ -145,36 +148,6 @@ public:
          values[row * columns + c] = val;
       }
       rows = newRows;
-   }
-
-   virtual ISimpleTypeArray<CLASS_TYPE>* Mult(ISimpleTypeArray<CLASS_TYPE>* array) override
-   {
-      if (array == NULL)
-      {
-         return NULL;
-      }
-      SimpleTypeArray<CLASS_TYPE>* result = new SimpleTypeArray<CLASS_TYPE>(rows, _defaultValue, _emptyValue);
-      for (int r = 0; r < rows; ++r)
-      {
-         CLASS_TYPE sum = 0;
-         bool ok = true;
-         for (int c = 0; c < columns; ++c)
-         {
-            CLASS_TYPE m = Get(r, c);
-            CLASS_TYPE v = (c < array.Size()) ? array.Get(c) : _emptyValue;
-            if (m == _emptyValue || v == _emptyValue)
-            {
-               ok = false;
-               break;
-            }
-            sum += m * v;
-         }
-         if (ok)
-         {
-            result.Set(r, sum);
-         }
-      }
-      return result;
    }
 
    void Sort(bool ascending)
