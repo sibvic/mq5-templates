@@ -28,7 +28,7 @@ public:
       condition.Release();
       return result;
    }
-   static TIStream<int>* CreateCrossunder(TIStream<double> *left, IIntStream* right)
+   static TIStream<int>* CreateCrossunder(TIStream<double> *left, TIStream<int>* right)
    {
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
       TIStream<int>* condition = CreateCrossunder(left, rightWrapper);
@@ -43,7 +43,7 @@ public:
       condition.Release();
       return result;
    }
-   static TIStream<int>* CreateCrossover(IIntStream *left, IIntStream* right)
+   static TIStream<int>* CreateCrossover(TIStream<int> *left, TIStream<int>* right)
    {
       IntToFloatStreamWrapper* leftWrapper = new IntToFloatStreamWrapper(left);
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
@@ -52,7 +52,7 @@ public:
       rightWrapper.Release();
       return condition;
    }
-   static TIStream<int>* CreateCrossover(TIStream<double> *left, IIntStream* right)
+   static TIStream<int>* CreateCrossover(TIStream<double> *left, TIStream<int>* right)
    {
       IntToFloatStreamWrapper* rightWrapper = new IntToFloatStreamWrapper(right);
       TIStream<int>* condition = CreateCrossover(left, rightWrapper);

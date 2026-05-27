@@ -1,7 +1,6 @@
 // Vwap on stream v2.0
 
 #include <Streams/AOnStream.mqh>
-#include <Streams/Interfaces/IIntStream.mqh>
 #include <Streams/Interfaces/TIStream.mqh>
 #include <Streams/Interfaces/IDateTimeStream.mqh>
 #include <Streams/VolumeStream.mqh>
@@ -15,11 +14,11 @@
 
 class VwapStdev : public AOnStream
 {
-   IIntStream* volume;
+   TIStream<int>* volume;
    TIStream<int>* anchor;
    double stdev;
 public:
-   VwapStdev(TIStream<double> *source, IIntStream* volume, TIStream<int>* anchor, double stdev)
+   VwapStdev(TIStream<double> *source, TIStream<int>* volume, TIStream<int>* anchor, double stdev)
       :AOnStream(source)
    {
       this.volume = volume;
@@ -134,10 +133,10 @@ public:
 
 class VwapOnStream : public AOnStream
 {
-   IIntStream* _volume;
+   TIStream<int>* _volume;
    IDateTimeStream* _dates;
 public:
-   VwapOnStream(TIStream<double> *source, IIntStream* volume, IDateTimeStream* dates)
+   VwapOnStream(TIStream<double> *source, TIStream<int>* volume, IDateTimeStream* dates)
       :AOnStream(source)
    {
       _volume = volume;
@@ -213,7 +212,7 @@ public:
       return stream;
    }
    
-   static TIStream<double>* Create(TIStream<double> *source, IIntStream* volume, IDateTimeStream* dates)
+   static TIStream<double>* Create(TIStream<double> *source, TIStream<int>* volume, IDateTimeStream* dates)
    {
       return new VwapOnStream(source, volume, dates);
    }
