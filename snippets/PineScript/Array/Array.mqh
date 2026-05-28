@@ -2,6 +2,7 @@
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
+#include <PineScript/Array/StringArray.mqh>
 #include <PineScript/Array/FloatArray.mqh>
 #include <PineScript/Array/BoxArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
@@ -49,13 +50,13 @@ public:
    template <typename ARRAY_TYPE, typename DUMMY_TYPE1>
    static void Sort(ARRAY_TYPE array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
 
-   static ITArray<int> *SortIndices(IStringArray *arr, string order, void *reserved = NULL)
+   static ITArray<int> *SortIndices(ITArray<string> *arr, string order, void *reserved = NULL)
    {
       if (arr == NULL)
       {
          return new IntArray(0, 0);
       }
-      const int n = Array::Size<int, IStringArray *>(arr, INT_MIN);
+      const int n = Array::Size<int, ITArray<string> *>(arr, INT_MIN);
       ITArray<int> *result = new IntArray(0, 0);
       int idx[];
       ArrayResize(idx, n);
@@ -65,8 +66,8 @@ public:
       for (int i = 0; i < n; i++)
          for (int j = i + 1; j < n; j++)
          {
-            const string vi = Array::Get<string, IStringArray *, int>(arr, idx[i], "");
-            const string vj = Array::Get<string, IStringArray *, int>(arr, idx[j], "");
+            const string vi = Array::Get<string, ITArray<string> *, int>(arr, idx[i], "");
+            const string vj = Array::Get<string, ITArray<string> *, int>(arr, idx[j], "");
             const bool swap = asc ? (StringCompare(vi, vj) > 0) : (StringCompare(vi, vj) < 0);
             if (swap)
             {
