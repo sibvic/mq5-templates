@@ -37,7 +37,7 @@ public:
       return true;
    }
    
-   static bool GetValues(const int period, int count, double &val[], TIStream<double>* source, int loopback)
+   static bool GetValues(const int period, const int count, double &val[], TIStream<double>* source, int loopback)
    {
       for (int i = 0; i < count; ++i)
       {
@@ -51,7 +51,7 @@ public:
       return true;
    }
    
-   virtual bool GetValues(const int period, int count, double &val[])
+   virtual bool GetValues(const int period, const int count, double &val[])
    {
       return HighestHighStream::GetValues(period, count, val, _source, _loopback);
    }
