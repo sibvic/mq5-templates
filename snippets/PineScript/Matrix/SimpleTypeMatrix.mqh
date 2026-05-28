@@ -6,6 +6,12 @@
 
 #include <PineScript/Matrix/ISimpleTypeMatrix.mqh>
 
+int MatrixEmptyDefault(int) { return INT_MIN; }
+double MatrixEmptyDefault(double) { return EMPTY_VALUE; }
+uint MatrixEmptyDefault(uint) { return 0; }
+bool MatrixEmptyDefault(bool) { return false; }
+datetime MatrixEmptyDefault(datetime) { return 0; }
+
 template <typename CLASS_TYPE>
 class SimpleTypeMatrix : public ISimpleTypeMatrix<CLASS_TYPE>
 {
@@ -30,6 +36,18 @@ class SimpleTypeMatrix : public ISimpleTypeMatrix<CLASS_TYPE>
    }
 
 public:
+   SimpleTypeMatrix(int matrixRows, int matrixColumns)
+   {
+      _refs = 1;
+      _defaultValue = (CLASS_TYPE)0;
+      _emptyValue = MatrixEmptyDefault(_defaultValue);
+      _defaultRows = matrixRows == INT_MIN ? 0 : matrixRows;
+      _defaultColumns = matrixColumns == INT_MIN ? 0 : matrixColumns;
+      rows = _defaultRows;
+      columns = _defaultColumns;
+      Clear();
+   }
+
    SimpleTypeMatrix(int matrixRows, int matrixColumns, CLASS_TYPE defaultValue, CLASS_TYPE emptyValue)
    {
       _refs = 1;
@@ -69,6 +87,12 @@ public:
          values[i] = _defaultValue;
       }
       return &this;
+   }
+
+   ISimpleTypeArray<CLASS_TYPE>* Clear(CLASS_TYPE initialValue)
+   {
+      _defaultValue = initialValue;
+      return Clear();
    }
 
    ISimpleTypeArray<CLASS_TYPE>* Copy()
