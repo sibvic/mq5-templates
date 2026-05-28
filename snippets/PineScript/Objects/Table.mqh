@@ -1,4 +1,4 @@
-// Table v1.3
+// Table v1.4
 #include <Grid/Grid.mqh>
 #include <Grid/LabelCell.mqh>
 
@@ -330,6 +330,54 @@ public:
       }
       LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
       cell.SetBgColor(clr);
+   }
+   
+   static void ClearCell(Table* table, int startColumn, int startRow, int endColumn, int endRow)
+   {
+      if (table == NULL)
+      {
+         return;
+      }
+      table.ClearCell(startColumn, startRow, endColumn, endRow);
+   }
+   void ClearCell(int startColumn, int startRow, int endColumn, int endRow)
+   {
+      if (endColumn == EMPTY_VALUE)
+      {
+         endColumn = startColumn;
+      }
+      if (endRow == EMPTY_VALUE)
+      {
+         endRow = startRow;
+      }
+      bool needRedraw = false;
+      for (int row = startRow; row <= endRow; ++row)
+      {
+         Row* gridRow = _grid.GetRow(row);
+         if (gridRow == NULL)
+         {
+            continue;
+         }
+         for (int column = startColumn; column <= endColumn; ++column)
+         {
+            LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
+            if (cell == NULL)
+            {
+               continue;
+            }
+            if (cell.SetText(""))
+            {
+               needRedraw = true;
+            }
+            cell.SetColor(Red);
+            cell.SetFontSize(10);
+            cell.SetTextHAlign("cental");
+         }
+      }
+      if (needRedraw)
+      {
+         Redraw();
+      }
    }
    
    void Redraw()
