@@ -1,3 +1,5 @@
+#ifndef PriceType_IMPL
+#define PriceType_IMPL
 enum PriceType
 {
    PriceClose = PRICE_CLOSE, // Close
@@ -12,3 +14,4 @@ enum PriceType
    PriceTrendBiased, // Trend biased
    PriceVolume, // Volume
 };
+#endif
