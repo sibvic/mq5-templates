@@ -3,7 +3,6 @@
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
 #include <PineScript/Array/FloatArray.mqh>
-#include <PineScript/Array/StringArray.mqh>
 #include <PineScript/Array/BoxArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/CustomTypeArray.mqh>
