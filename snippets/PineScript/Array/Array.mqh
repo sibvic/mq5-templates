@@ -49,122 +49,98 @@ public:
    template <typename ARRAY_TYPE, typename DUMMY_TYPE1>
    static void Sort(ARRAY_TYPE array, string order) { if (array == NULL) { return; } array.Sort(order == "ascending"); }
 
-   template<typename R, typename A, typename O>
-   struct SortIndicesDispatch
+   static ITArray<int> *SortIndices(IStringArray *arr, string order, void *reserved = NULL)
    {
-      static R *Invoke(A *arr, O order, void *reserved);
-   };
-
-   template<typename R, typename A, typename O>
-   static R *SortIndices(A *arr, O order, void *reserved)
-   {
-      return SortIndicesDispatch<R, A, O>::Invoke(arr, order, reserved);
+      if (arr == NULL)
+      {
+         return new IntArray(0, 0);
+      }
+      const int n = Array::Size<int, IStringArray *>(arr, INT_MIN);
+      ITArray<int> *result = new IntArray(0, 0);
+      int idx[];
+      ArrayResize(idx, n);
+      for (int i = 0; i < n; i++)
+         idx[i] = i;
+      const bool asc = (order != "descending");
+      for (int i = 0; i < n; i++)
+         for (int j = i + 1; j < n; j++)
+         {
+            const string vi = Array::Get<string, IStringArray *, int>(arr, idx[i], "");
+            const string vj = Array::Get<string, IStringArray *, int>(arr, idx[j], "");
+            const bool swap = asc ? (StringCompare(vi, vj) > 0) : (StringCompare(vi, vj) < 0);
+            if (swap)
+            {
+               const int t = idx[i];
+               idx[i] = idx[j];
+               idx[j] = t;
+            }
+         }
+      for (int i = 0; i < n; i++)
+         Array::Push<ITArray<int> *, int>(result, idx[i]);
+      return result;
    }
 
-   template<>
-   struct SortIndicesDispatch<ITArray<int> *, IStringArray *, string>
+   static ITArray<int> *SortIndices(ITArray<int> *arr, string order, void *reserved = NULL)
    {
-      static ITArray<int> *Invoke(IStringArray *arr, string order, void *)
+      if (arr == NULL)
       {
-         if (arr == NULL)
-         {
-            return new IntArray(0, 0);
-         }
-         const int n = Array::Size<int, IStringArray *>(arr, INT_MIN);
-         ITArray<int> *result = new IntArray(0, 0);
-         int idx[];
-         ArrayResize(idx, n);
-         for (int i = 0; i < n; i++)
-            idx[i] = i;
-         const bool asc = (order != "descending");
-         for (int i = 0; i < n; i++)
-            for (int j = i + 1; j < n; j++)
-            {
-               const string vi = Array::Get<string, IStringArray *, int>(arr, idx[i], "");
-               const string vj = Array::Get<string, IStringArray *, int>(arr, idx[j], "");
-               const bool swap = asc ? (StringCompare(vi, vj) > 0) : (StringCompare(vi, vj) < 0);
-               if (swap)
-               {
-                  const int t = idx[i];
-                  idx[i] = idx[j];
-                  idx[j] = t;
-               }
-            }
-         for (int i = 0; i < n; i++)
-            Array::Push<ITArray<int> *, int>(result, idx[i]);
-         return result;
+         return new IntArray(0, 0);
       }
-   };
+      const int n = Array::Size<int, ITArray<int> *>(arr, INT_MIN);
+      ITArray<int> *result = new IntArray(0, 0);
+      int idx[];
+      ArrayResize(idx, n);
+      for (int i = 0; i < n; i++)
+         idx[i] = i;
+      const bool asc = (order != "descending");
+      for (int i = 0; i < n; i++)
+         for (int j = i + 1; j < n; j++)
+         {
+            const int vi = Array::Get<int, ITArray<int> *, int>(arr, idx[i], INT_MIN);
+            const int vj = Array::Get<int, ITArray<int> *, int>(arr, idx[j], INT_MIN);
+            const bool swap = asc ? (vi > vj) : (vi < vj);
+            if (swap)
+            {
+               const int t = idx[i];
+               idx[i] = idx[j];
+               idx[j] = t;
+            }
+         }
+      for (int i = 0; i < n; i++)
+         Array::Push<ITArray<int> *, int>(result, idx[i]);
+      return result;
+   }
 
-   template<>
-   struct SortIndicesDispatch<ITArray<int> *, ITArray<int> *, string>
+   static ITArray<int> *SortIndices(ISimpleTypeArray<double> *arr, string order, void *reserved = NULL)
    {
-      static ITArray<int> *Invoke(ITArray<int> *arr, string order, void *)
+      if (arr == NULL)
       {
-         if (arr == NULL)
-         {
-            return new IntArray(0, 0);
-         }
-         const int n = Array::Size<int, ITArray<int> *>(arr, INT_MIN);
-         ITArray<int> *result = new IntArray(0, 0);
-         int idx[];
-         ArrayResize(idx, n);
-         for (int i = 0; i < n; i++)
-            idx[i] = i;
-         const bool asc = (order != "descending");
-         for (int i = 0; i < n; i++)
-            for (int j = i + 1; j < n; j++)
-            {
-               const int vi = Array::Get<int, ITArray<int> *, int>(arr, idx[i], INT_MIN);
-               const int vj = Array::Get<int, ITArray<int> *, int>(arr, idx[j], INT_MIN);
-               const bool swap = asc ? (vi > vj) : (vi < vj);
-               if (swap)
-               {
-                  const int t = idx[i];
-                  idx[i] = idx[j];
-                  idx[j] = t;
-               }
-            }
-         for (int i = 0; i < n; i++)
-            Array::Push<ITArray<int> *, int>(result, idx[i]);
-         return result;
+         return new IntArray(0, 0);
       }
-   };
-
-   template<>
-   struct SortIndicesDispatch<ITArray<int> *, ISimpleTypeArray<double> *, string>
-   {
-      static ITArray<int> *Invoke(ISimpleTypeArray<double> *arr, string order, void *)
-      {
-         if (arr == NULL)
+      const int n = Array::Size<int, ISimpleTypeArray<double> *>(arr, INT_MIN);
+      ITArray<int> *result = new IntArray(0, 0);
+      int idx[];
+      ArrayResize(idx, n);
+      for (int i = 0; i < n; i++)
+         idx[i] = i;
+      const bool asc = (order != "descending");
+      for (int i = 0; i < n; i++)
+         for (int j = i + 1; j < n; j++)
          {
-            return new IntArray(0, 0);
-         }
-         const int n = Array::Size<int, ISimpleTypeArray<double> *>(arr, INT_MIN);
-         ITArray<int> *result = new IntArray(0, 0);
-         int idx[];
-         ArrayResize(idx, n);
-         for (int i = 0; i < n; i++)
-            idx[i] = i;
-         const bool asc = (order != "descending");
-         for (int i = 0; i < n; i++)
-            for (int j = i + 1; j < n; j++)
+            const double vi = Array::Get<double, ISimpleTypeArray<double> *, int>(arr, idx[i], EMPTY_VALUE);
+            const double vj = Array::Get<double, ISimpleTypeArray<double> *, int>(arr, idx[j], EMPTY_VALUE);
+            const bool swap = asc ? (vi > vj) : (vi < vj);
+            if (swap)
             {
-               const double vi = Array::Get<double, ISimpleTypeArray<double> *, int>(arr, idx[i], EMPTY_VALUE);
-               const double vj = Array::Get<double, ISimpleTypeArray<double> *, int>(arr, idx[j], EMPTY_VALUE);
-               const bool swap = asc ? (vi > vj) : (vi < vj);
-               if (swap)
-               {
-                  const int t = idx[i];
-                  idx[i] = idx[j];
-                  idx[j] = t;
-               }
+               const int t = idx[i];
+               idx[i] = idx[j];
+               idx[j] = t;
             }
-         for (int i = 0; i < n; i++)
-            Array::Push<ITArray<int> *, int>(result, idx[i]);
-         return result;
-      }
-   };
+         }
+      for (int i = 0; i < n; i++)
+         Array::Push<ITArray<int> *, int>(result, idx[i]);
+      return result;
+   }
    
    template <typename ARRAY_TYPE, typename VALUE_TYPE>
    static void Unshift(ARRAY_TYPE array, VALUE_TYPE value) { if (array == NULL) { return; } array.Unshift(value); }
