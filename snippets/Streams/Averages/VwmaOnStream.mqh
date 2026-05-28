@@ -1,6 +1,6 @@
 #include <Streams/AOnStream.mqh>
 #include <Streams/SimplePriceStream.mqh>
-#include <Enums/PriceType.mqh>
+#include <enums/PriceType.mqh>
 // VwmaOnStream v3.0
 class VwmaOnStream : public AOnStream
 {
