@@ -26,14 +26,43 @@ public:
 
    static void Set(ITableMatrix* _matrix, int row, int col, Table* val) { if (_matrix == NULL) { return; } _matrix.Set(row, col, val); }
 
-   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
-   struct MatrixRowDispatch
+   class MatrixRowDispatchImpl
    {
-      static ARRAY_IFACE* Invoke(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row);
+   public:
+      static ITArray<int>* Invoke(ISimpleTypeMatrix<int>* _matrix, int row)
+      {
+         int cols = _matrix.Columns();
+         IntArray* arr = new IntArray(cols, INT_MIN);
+         for (int c = 0; c < cols; ++c)
+         {
+            arr.Set(c, _matrix.Get(row, c));
+         }
+         return arr;
+      }
+
+      static ISimpleTypeArray<double>* Invoke(ISimpleTypeMatrix<double>* _matrix, int row)
+      {
+         int cols = _matrix.Columns();
+         FloatArray* arr = new FloatArray(cols, EMPTY_VALUE);
+         for (int c = 0; c < cols; ++c)
+         {
+            arr.Set(c, _matrix.Get(row, c));
+         }
+         return arr;
+      }
    };
 
    template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
-   static ARRAY_IFACE* Row(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_IFACE* emptyPlaceholder)
+   struct MatrixRowDispatch
+   {
+      static ARRAY_IFACE Invoke(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row)
+      {
+         return MatrixRowDispatchImpl::Invoke(_matrix, row);
+      }
+   };
+
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
+   static ARRAY_IFACE Row(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_IFACE emptyPlaceholder)
    {
       if (_matrix == NULL)
       {
@@ -47,36 +76,6 @@ public:
       return MatrixRowDispatch<ARRAY_IFACE, MATRIX_TYPE, ROW_INDEX_TYPE>::Invoke(_matrix, row);
    }
 
-   template<>
-   struct MatrixRowDispatch<ITArray<int>*, ISimpleTypeMatrix<int>*, int>
-   {
-      static ITArray<int>* Invoke(ISimpleTypeMatrix<int>* _matrix, int row)
-      {
-         int cols = _matrix.Columns();
-         IntArray* arr = new IntArray(cols, INT_MIN);
-         for (int c = 0; c < cols; ++c)
-         {
-            arr.Set(c, _matrix.Get(row, c));
-         }
-         return arr;
-      }
-   };
-
-   template<>
-   struct MatrixRowDispatch<ISimpleTypeArray<double>*, ISimpleTypeMatrix<double>*, int>
-   {
-      static ISimpleTypeArray<double>* Invoke(ISimpleTypeMatrix<double>* _matrix, int row)
-      {
-         int cols = _matrix.Columns();
-         FloatArray* arr = new FloatArray(cols, EMPTY_VALUE);
-         for (int c = 0; c < cols; ++c)
-         {
-            arr.Set(c, _matrix.Get(row, c));
-         }
-         return arr;
-      }
-   };
-
    template <typename MATRIX_TYPE, typename ROW_INDEX_TYPE, typename ARRAY_TYPE>
    static void AddRow(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_TYPE array_id)
    {
@@ -87,14 +86,31 @@ public:
       _matrix.AddRow(row, array_id);
    }
 
-   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
-   struct MatrixRemoveRowDispatch
+   class MatrixRemoveRowDispatchImpl
    {
-      static ARRAY_IFACE* Invoke(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row);
+   public:
+      static ITArray<int>* Invoke(ISimpleTypeMatrix<int>* _matrix, int row)
+      {
+         return _matrix.RemoveRow(row);
+      }
+
+      static ISimpleTypeArray<double>* Invoke(ISimpleTypeMatrix<double>* _matrix, int row)
+      {
+         return _matrix.RemoveRow(row);
+      }
    };
 
    template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
-   static ARRAY_IFACE* RemoveRow(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_IFACE* emptyPlaceholder)
+   struct MatrixRemoveRowDispatch
+   {
+      static ARRAY_IFACE Invoke(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row)
+      {
+         return MatrixRemoveRowDispatchImpl::Invoke(_matrix, row);
+      }
+   };
+
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename ROW_INDEX_TYPE>
+   static ARRAY_IFACE RemoveRow(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_IFACE emptyPlaceholder)
    {
       if (_matrix == NULL)
       {
@@ -107,24 +123,6 @@ public:
       }
       return MatrixRemoveRowDispatch<ARRAY_IFACE, MATRIX_TYPE, ROW_INDEX_TYPE>::Invoke(_matrix, row);
    }
-
-   template<>
-   struct MatrixRemoveRowDispatch<ITArray<int>*, ISimpleTypeMatrix<int>*, int>
-   {
-      static ITArray<int>* Invoke(ISimpleTypeMatrix<int>* _matrix, int row)
-      {
-         return _matrix.RemoveRow(row);
-      }
-   };
-
-   template<>
-   struct MatrixRemoveRowDispatch<ISimpleTypeArray<double>*, ISimpleTypeMatrix<double>*, int>
-   {
-      static ISimpleTypeArray<double>* Invoke(ISimpleTypeMatrix<double>* _matrix, int row)
-      {
-         return _matrix.RemoveRow(row);
-      }
-   };
 
    static ISimpleTypeArray<int>* Mult(ISimpleTypeMatrix<int>* _matrix, ISimpleTypeArray<int>* array)
    {

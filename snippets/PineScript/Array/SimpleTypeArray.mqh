@@ -43,7 +43,7 @@ public:
    {
       return to - from + 1;
    }
-   virtual ITArray<CLASS_TYPE>* Push(CLASS_TYPE value)
+   virtual ISimpleTypeArray<CLASS_TYPE>* Push(CLASS_TYPE value)
    {
       //do nothing
       return &this;
@@ -192,7 +192,7 @@ public:
       return ArraySize(_array);
    }
 
-   ITArray<CLASS_TYPE>* Push(CLASS_TYPE value)
+   ISimpleTypeArray<CLASS_TYPE>* Push(CLASS_TYPE value)
    {
       int size = ArraySize(_array);
       ArrayResize(_array, size + 1);

@@ -65,8 +65,8 @@ public:
       Clear();
    }
 
-   void AddRef() { _refs++; }
-   int Release()
+   virtual void AddRef() override { _refs++; }
+   virtual int Release() override
    {
       int refs = --_refs;
       if (refs == 0)
@@ -76,7 +76,7 @@ public:
       return refs;
    }
 
-   ISimpleTypeArray<CLASS_TYPE>* Clear()
+   virtual ISimpleTypeMatrix<CLASS_TYPE>* Clear() override
    {
       rows = _defaultRows;
       columns = _defaultColumns;
@@ -89,29 +89,13 @@ public:
       return &this;
    }
 
-   ISimpleTypeArray<CLASS_TYPE>* Clear(CLASS_TYPE initialValue)
+   virtual ISimpleTypeMatrix<CLASS_TYPE>* Clear(CLASS_TYPE initialValue) override
    {
       _defaultValue = initialValue;
       return Clear();
    }
 
-   ISimpleTypeArray<CLASS_TYPE>* Copy()
-   {
-      SimpleTypeMatrix* clone = new SimpleTypeMatrix(_defaultRows, _defaultColumns, _defaultValue, _emptyValue);
-      clone.rows = rows;
-      clone.columns = columns;
-      clone._defaultRows = _defaultRows;
-      clone._defaultColumns = _defaultColumns;
-      int sz = ArraySize(values);
-      ArrayResize(clone.values, sz);
-      for (int i = 0; i < sz; ++i)
-      {
-         clone.values[i] = values[i];
-      }
-      return clone;
-   }
-
-   ISimpleTypeMatrix<CLASS_TYPE>* Fill(CLASS_TYPE initialValue)
+   virtual ISimpleTypeMatrix<CLASS_TYPE>* Fill(CLASS_TYPE initialValue) override
    {
       _defaultValue = initialValue;
       int sz = ArraySize(values);
@@ -122,13 +106,13 @@ public:
       return &this;
    }
 
-   int Rows() { return rows; }
-   int Columns() { return columns; }
+   virtual int Rows() override { return rows; }
+   virtual int Columns() override { return columns; }
 
    CLASS_TYPE MatrixDefaultFill() { return _defaultValue; }
    CLASS_TYPE MatrixEmptySentinel() { return _emptyValue; }
 
-   CLASS_TYPE Get(int row, int col)
+   virtual CLASS_TYPE Get(int row, int col) override
    {
       if (row < 0 || col < 0 || row >= rows || col >= columns)
       {
@@ -137,7 +121,7 @@ public:
       return values[row * columns + col];
    }
 
-   void Set(int row, int col, CLASS_TYPE val)
+   virtual void Set(int row, int col, CLASS_TYPE val) override
    {
       if (row < 0 || col < 0 || row >= rows || col >= columns)
       {
@@ -146,7 +130,7 @@ public:
       values[row * columns + col] = val;
    }
 
-   void AddRow(int row, ISimpleTypeArray<CLASS_TYPE>* array_id)
+   virtual void AddRow(int row, ISimpleTypeArray<CLASS_TYPE>* array_id) override
    {
       if (row == INT_MIN)
       {
@@ -227,7 +211,7 @@ public:
       return ArraySize(values);
    }
 
-   ITArray<CLASS_TYPE>* Push(CLASS_TYPE value)
+   ISimpleTypeMatrix<CLASS_TYPE>* Push(CLASS_TYPE value)
    {
       int sz = ArraySize(values);
       if (columns <= 0 && sz == 0)
@@ -388,11 +372,6 @@ public:
          ssum += MathPow(value, 2);
       }
       return MathSqrt((ssum * sz - sum * sum) / (sz * (sz - 1)));
-   }
-
-   ISimpleTypeArray<CLASS_TYPE>* Slice(int from, int to)
-   {
-      return new SimpleTypeArraySlice<CLASS_TYPE>(&this, from, to, _emptyValue);
    }
 };
 
