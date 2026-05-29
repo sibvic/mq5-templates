@@ -134,7 +134,9 @@ public:
    }
    static int Year(datetime time)
    {
-      return TimeYear(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.year;
    }
    static int Year(datetime time, string timezone)
    {
@@ -144,7 +146,9 @@ public:
    }
    static int Month(datetime time)
    {
-      return TimeMonth(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.mon;
    }
    static int Month(datetime time, string timezone)
    {
@@ -154,7 +158,9 @@ public:
    }
    static int DayOfMonth(datetime time)
    {
-      return TimeDay(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.day;
    }
    static int DayOfMonth(datetime time, string timezone)
    {
@@ -164,7 +170,9 @@ public:
    }
    static int DayOfWeek(datetime time)
    {
-      return TimeDayOfWeek(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.day_of_week;
    }
    static int DayOfWeek(datetime time, string timezone)
    {
@@ -174,7 +182,9 @@ public:
    }
    static int Hour(datetime time)
    {
-      return TimeHour(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.hour;
    }
    static int Hour(datetime time, string timezone)
    {
@@ -184,7 +194,9 @@ public:
    }
    static int Minute(datetime time)
    {
-      return TimeMinute(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.min;
    }
    static int Minute(datetime time, string timezone)
    {
@@ -194,7 +206,9 @@ public:
    }
    static int Second(datetime time)
    {
-      return TimeSecond(time);
+      MqlDateTime dt;
+      TimeToStruct(time, dt);
+      return dt.sec;
    }
    static int Second(datetime time, string timezone)
    {
