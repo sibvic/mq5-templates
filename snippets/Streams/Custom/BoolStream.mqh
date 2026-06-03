@@ -11,6 +11,20 @@ class BoolStream : public TAStream<bool>
    int _stream[];
    int _emptyValue;
 public:
+   static int GetValue(BoolStream* stream, const int period)
+   {
+      if (stream == NULL)
+      {
+         return -1;
+      }
+      int val[1];
+      if (!stream.GetValues(period, 1, val))
+      {
+         return -1;
+      }
+      return val[0];
+   }
+
    BoolStream(const string symbol, const ENUM_TIMEFRAMES timeframe, int emptyValue = -1)
    {
       _emptyValue = emptyValue;

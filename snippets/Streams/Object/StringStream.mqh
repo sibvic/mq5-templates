@@ -12,6 +12,20 @@ class StringStream : public AStringStream
    string _stream[];
    string _emptyValue;
 public:
+   static string GetValue(StringStream* stream, const int period)
+   {
+      if (stream == NULL)
+      {
+         return NULL;
+      }
+      string val[1];
+      if (!stream.GetValues(period, 1, val))
+      {
+         return NULL;
+      }
+      return val[0];
+   }
+
    StringStream(const string symbol, const ENUM_TIMEFRAMES timeframe, string emptyValue = NULL)
    {
       _symbol = symbol;
