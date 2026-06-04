@@ -200,3 +200,52 @@ public:
 };
 
 #endif
+
+class DynamicRSIOnStream
+{
+   RSIStream* impl;
+   TIStream<double>* _source;
+   int _length;
+   int _references;
+public:
+   DynamicRSIOnStream(TIStream<double> *source)
+   {
+      impl = NULL;
+      _source = source;
+      _length = 0;
+      _references = 1;
+   }
+   ~DynamicRSIOnStream()
+   {
+      ReleaseImpl();
+   }
+   void AddRef()
+   {
+      ++_references;
+   }
+   void Release()
+   {
+      --_references;
+      if (_references == 0)
+         delete &this;
+   }
+   bool GetValues(const int period, const int length, const int count, double &val[])
+   {
+      if (_length != length)
+      {
+         ReleaseImpl();
+         _length = length;
+         impl = new RSIStream(_source, _length);
+      }
+      return impl.GetValues(period, count, val);
+   }
+private:
+   void ReleaseImpl()
+   {
+      if (impl != NULL)
+      {
+         impl.Release();
+         impl = NULL;
+      }
+   }
+};
