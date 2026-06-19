@@ -52,7 +52,7 @@ template <typename T1, typename T2>
 double SafeDivide(T1 left, T2 right)
 {
    if (!BothParametersDefined(left, right) || right == 0) { return EMPTY_VALUE; }
-   return left / right;
+   return left / (double)right;
 }
 
 template <typename T1, typename T2>
