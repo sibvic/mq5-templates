@@ -92,13 +92,15 @@ public:
    
    bool SetBgColor(uint clr)
    {
+      int transp = GetTranparency(clr);
       clr = GetColorOnly(clr);
-      if (_bgColor == clr)
+      bool withBackground = transp <= 50;
+      if (_bgColor == clr && _withBackground == withBackground)
       {
          return false;
       }
       _bgColor = clr;
-      _withBackground = true;
+      _withBackground = withBackground;
       return true;
    }
 
