@@ -1,5 +1,5 @@
 // Matrix
-// v1.4
+// v1.5
 
 #include <PineScript/Matrix/SimpleTypeMatrix.mqh>
 #include <PineScript/Matrix/TableMatrix.mqh>
@@ -194,6 +194,44 @@ public:
          if (ok)
          {
             result.Set(r, sum);
+         }
+      }
+      return result;
+   }
+
+   static int SubmatrixResolveToIndex(int to, int size)
+   {
+      if (to == INT_MIN || to == 0)
+      {
+         return size;
+      }
+      return to;
+   }
+
+   template <typename CLASS_TYPE>
+   static ISimpleTypeMatrix<CLASS_TYPE>* Submatrix(ISimpleTypeMatrix<CLASS_TYPE>* _matrix, int from_row, int to_row, int from_column, int to_column)
+   {
+      if (_matrix == NULL)
+      {
+         return NULL;
+      }
+      int rowCount = _matrix.Rows();
+      int colCount = _matrix.Columns();
+      to_row = MathMin(SubmatrixResolveToIndex(to_row, rowCount), rowCount);
+      to_column = MathMin(SubmatrixResolveToIndex(to_column, colCount), colCount);
+      if (from_row < 0 || from_column < 0 || from_row >= to_row || from_column >= to_column)
+      {
+         return NULL;
+      }
+      SimpleTypeMatrix<CLASS_TYPE>* sm = (SimpleTypeMatrix<CLASS_TYPE>*)_matrix;
+      int newRows = to_row - from_row;
+      int newCols = to_column - from_column;
+      SimpleTypeMatrix<CLASS_TYPE>* result = new SimpleTypeMatrix<CLASS_TYPE>(newRows, newCols, sm.MatrixDefaultFill(), sm.MatrixEmptySentinel());
+      for (int r = 0; r < newRows; ++r)
+      {
+         for (int c = 0; c < newCols; ++c)
+         {
+            result.Set(r, c, _matrix.Get(from_row + r, from_column + c));
          }
       }
       return result;
