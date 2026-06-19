@@ -26,6 +26,13 @@ public:
 
    static void Set(ITableMatrix* _matrix, int row, int col, Table* val) { if (_matrix == NULL) { return; } _matrix.Set(row, col, val); }
 
+   template <typename MATRIX_TYPE>
+   static int Rows(MATRIX_TYPE _matrix)
+   {
+      if (_matrix == NULL) { return INT_MIN; }
+      return _matrix.Rows();
+   }
+
    class MatrixRowDispatchImpl
    {
    public:
