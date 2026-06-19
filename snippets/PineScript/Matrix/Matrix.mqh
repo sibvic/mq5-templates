@@ -1,5 +1,5 @@
 // Matrix
-// v1.5
+// v1.6
 
 #include <PineScript/Matrix/SimpleTypeMatrix.mqh>
 #include <PineScript/Matrix/TableMatrix.mqh>
@@ -194,6 +194,38 @@ public:
          if (ok)
          {
             result.Set(r, sum);
+         }
+      }
+      return result;
+   }
+
+   template <typename CLASS_TYPE>
+   static ISimpleTypeMatrix<CLASS_TYPE>* Diff(ISimpleTypeMatrix<CLASS_TYPE>* _matrix1, ISimpleTypeMatrix<CLASS_TYPE>* _matrix2)
+   {
+      if (_matrix1 == NULL || _matrix2 == NULL)
+      {
+         return NULL;
+      }
+      int rowCount = _matrix1.Rows();
+      int colCount = _matrix1.Columns();
+      if (_matrix2.Rows() != rowCount || _matrix2.Columns() != colCount)
+      {
+         return NULL;
+      }
+      SimpleTypeMatrix<CLASS_TYPE>* sm1 = (SimpleTypeMatrix<CLASS_TYPE>*)_matrix1;
+      CLASS_TYPE emptySentinel = sm1.MatrixEmptySentinel();
+      SimpleTypeMatrix<CLASS_TYPE>* result = new SimpleTypeMatrix<CLASS_TYPE>(rowCount, colCount, sm1.MatrixDefaultFill(), emptySentinel);
+      for (int r = 0; r < rowCount; ++r)
+      {
+         for (int c = 0; c < colCount; ++c)
+         {
+            CLASS_TYPE v1 = _matrix1.Get(r, c);
+            CLASS_TYPE v2 = _matrix2.Get(r, c);
+            if (v1 == emptySentinel || v2 == emptySentinel)
+            {
+               continue;
+            }
+            result.Set(r, c, v1 - v2);
          }
       }
       return result;
