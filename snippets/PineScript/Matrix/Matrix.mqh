@@ -86,7 +86,7 @@ public:
    template <typename MATRIX_TYPE, typename ROW_INDEX_TYPE, typename ARRAY_TYPE>
    static void AddRow(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_TYPE array_id)
    {
-      if (_matrix == NULL || array_id == NULL)
+      if (_matrix == NULL)
       {
          return;
       }

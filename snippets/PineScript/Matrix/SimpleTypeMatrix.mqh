@@ -136,11 +136,26 @@ public:
       {
          row = rows;
       }
-      if (array_id == NULL || row < 0 || row > rows || columns <= 0)
+      if (row < 0 || row > rows)
       {
          return;
       }
-      int n = array_id.Size();
+      int n = (array_id != NULL) ? array_id.Size() : 0;
+      if (columns <= 0)
+      {
+         if (rows > 0)
+         {
+            return;
+         }
+         if (array_id != NULL && n > 0)
+         {
+            columns = n;
+         }
+         else
+         {
+            columns = 1;
+         }
+      }
       int newRows = rows + 1;
       ArrayResize(values, newRows * columns);
       for (int r = rows - 1; r >= row; --r)
@@ -152,7 +167,7 @@ public:
       }
       for (int c = 0; c < columns; ++c)
       {
-         CLASS_TYPE val = (c < n) ? array_id.Get(c) : _emptyValue;
+         CLASS_TYPE val = (array_id != NULL && c < n) ? array_id.Get(c) : _emptyValue;
          values[row * columns + c] = val;
       }
       rows = newRows;
