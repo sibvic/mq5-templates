@@ -8,6 +8,7 @@ class TableManager
    static Table* tables[];
 public:
    static void Clear(bool forced = false);
+   static void Delete(Table* table);
    static void Add(Table* table);
    static void Redraw();
    static Table* Create(string prefix, string tableIndex, string position, int columns, int rows);
@@ -41,6 +42,29 @@ void TableManager::Clear(bool forced = false)
       {
          tables[movedIndex] = tables[i];
          ++movedIndex;
+      }
+   }
+   ArrayResize(tables, movedIndex);
+}
+
+void TableManager::Delete(Table* table)
+{
+   if (table == NULL)
+   {
+      return;
+   }
+   ObjectsDeleteAll(0, table.GetId());
+   int movedIndex = 0;
+   for (int i = 0; i < ArraySize(TableManager::tables); ++i)
+   {
+      if (tables[i] != table)
+      {
+         tables[movedIndex] = tables[i];
+         ++movedIndex;
+      }
+      else
+      {
+         delete tables[i];
       }
    }
    ArrayResize(tables, movedIndex);
