@@ -21,9 +21,17 @@ class LabelCell : public ACell
    int _height;
    int _linesHeights[];
    int _linesWidths[];
+   bool _mergeSkip;
+   int _mergeTillColumn;
+   int _mergeTillRow;
+   int _drawHeight;
 public:
    LabelCell(const string id, const string text, ENUM_BASE_CORNER corner, int fontSize, uint clr, int windowNumber)
    { 
+      _mergeSkip = false;
+      _mergeTillColumn = -1;
+      _mergeTillRow = -1;
+      _drawHeight = 0;
       _withBackground = false;
       _textHAlign = "cental";
       _corner = corner;
@@ -57,6 +65,7 @@ public:
 
    virtual void Draw(int x, int y, int width)
    {
+      int height = _drawHeight > 0 ? _drawHeight : _height;
       if (_withBackground)
       {
          if (ObjectFind(0, _id + "rect") == -1 && !ObjectCreate(0, _id + "rect", OBJ_RECTANGLE_LABEL, 0, 0, 0))
@@ -67,13 +76,18 @@ public:
          ObjectSetInteger(0, _id + "rect", OBJPROP_YDISTANCE, y);
          ObjectSetInteger(0, _id + "rect", OBJPROP_BGCOLOR, _bgColor);
          ObjectSetInteger(0, _id + "rect", OBJPROP_XSIZE, width);
-         ObjectSetInteger(0, _id + "rect", OBJPROP_YSIZE, _height);
+         ObjectSetInteger(0, _id + "rect", OBJPROP_YSIZE, height);
          ObjectSetInteger(0, _id + "rect", OBJPROP_COLOR, _color);
          ObjectSetInteger(0, _id + "rect", OBJPROP_CORNER, _corner);
          ObjectSetInteger(0, _id + "rect", OBJPROP_BACK, true);
       }
       string lines[];
       int linesCount = StringSplit(_text, '\n', lines);
+      int textY = y;
+      if (height > _height)
+      {
+         textY += (height - _height) / 2;
+      }
       for (int i = 0; i < linesCount; ++i)
       {
          int lineX = x;
@@ -85,10 +99,28 @@ public:
          {
             lineX += width - _linesWidths[i];
          }
-         ObjectMakeLabel(_id + "line" + i, lineX, y, lines[i], _color, _corner, _windowNumber, "Arial", _fontSize); 
-         y += _linesHeights[i];
+         ObjectMakeLabel(_id + "line" + i, lineX, textY, lines[i], _color, _corner, _windowNumber, "Arial", _fontSize); 
+         textY += _linesHeights[i];
       }
    }
+   
+   virtual bool IsMergeSkipped() { return _mergeSkip; }
+   virtual int GetMergeTillColumn() { return _mergeTillColumn; }
+   virtual int GetMergeTillRow() { return _mergeTillRow; }
+   virtual void SetMergeSkip(bool skip) { _mergeSkip = skip; }
+   virtual void SetMergeSpan(int tillColumn, int tillRow)
+   {
+      _mergeTillColumn = tillColumn;
+      _mergeTillRow = tillRow;
+      _mergeSkip = false;
+   }
+   virtual void ClearMergeSpan()
+   {
+      _mergeTillColumn = -1;
+      _mergeTillRow = -1;
+   }
+   virtual void SetDrawHeight(int height) { _drawHeight = height; }
+   virtual int GetDrawHeight() { return _drawHeight; }
    
    bool SetBgColor(uint clr)
    {

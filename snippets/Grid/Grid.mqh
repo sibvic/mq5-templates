@@ -44,12 +44,28 @@ public:
    void Draw(int x, int y)
    {
       RowSize* widths = MeasureColumns();
+      int rowHeight = widths.GetMaxHeight();
       int count = ArraySize(_rows);
       for (int i = 0; i < count; ++i)
       {
-         int w, h;
+         int columnsCount = _rows[i].GetColumnsCount();
+         for (int j = 0; j < columnsCount; ++j)
+         {
+            ICell* cell = _rows[i].GetCell(j);
+            if (cell == NULL || cell.IsMergeSkipped())
+            {
+               continue;
+            }
+            int tillRow = cell.GetMergeTillRow();
+            int drawHeight = 0;
+            if (tillRow >= i)
+            {
+               drawHeight = rowHeight * (tillRow - i + 1);
+            }
+            cell.SetDrawHeight(drawHeight);
+         }
          _rows[i].Draw(x, y, widths);
-         y += widths.GetMaxHeight();
+         y += rowHeight;
       }
       delete widths;
    }

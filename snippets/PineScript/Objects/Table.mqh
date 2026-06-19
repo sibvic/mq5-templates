@@ -422,7 +422,48 @@ public:
    
    static void MergeCells(Table* table, int startColumn, int startRow, int endColumn, int endRow)
    {
-      //TODO: implement
+      if (table == NULL)
+      {
+         return;
+      }
+      table.MergeCells(startColumn, startRow, endColumn, endRow);
+   }
+   void MergeCells(int startColumn, int startRow, int endColumn, int endRow)
+   {
+      if (endColumn == EMPTY_VALUE)
+      {
+         endColumn = startColumn;
+      }
+      if (endRow == EMPTY_VALUE)
+      {
+         endRow = startRow;
+      }
+      for (int row = startRow; row <= endRow; ++row)
+      {
+         Row* gridRow = _grid.GetRow(row);
+         if (gridRow == NULL)
+         {
+            continue;
+         }
+         for (int column = startColumn; column <= endColumn; ++column)
+         {
+            LabelCell* cell = (LabelCell*)gridRow.GetCell(column);
+            if (cell == NULL)
+            {
+               continue;
+            }
+            if (column != startColumn || row != startRow)
+            {
+               cell.SetMergeSkip(true);
+               cell.ClearMergeSpan();
+            }
+            else
+            {
+               cell.SetMergeSpan(endColumn, endRow);
+            }
+         }
+      }
+      Redraw();
    }
 private:
    int GetFontSize(string size)
