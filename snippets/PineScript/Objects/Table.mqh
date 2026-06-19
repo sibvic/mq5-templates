@@ -481,7 +481,7 @@ private:
       {
          RowSize* rowSizes = new RowSize();
          _grid.GetRow(i).Measure(rowSizes);
-         height = MathMax(height, rowSizes.GetMaxHeight());
+         height += rowSizes.GetMaxHeight();
          delete rowSizes;
       }
       return height;
