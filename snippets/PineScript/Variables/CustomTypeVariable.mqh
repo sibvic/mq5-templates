@@ -15,7 +15,8 @@ class CustomTypeVariable
    {
       if (_value == NULL)
          return;
-      _destructor.Free(_value);
+      if (_destructor != NULL)
+         _destructor.Free(_value);
       T* p = _value;
       int refs = p.Release();
       _value = NULL;
@@ -23,7 +24,8 @@ class CustomTypeVariable
       {
          if (_lastValues[0] != NULL)
          {
-            _destructor.Free(_lastValues[0]);
+            if (_destructor != NULL)
+               _destructor.Free(_lastValues[0]);
             _lastValues[0].Release();
             _lastValues[0] = NULL;
          }
@@ -43,12 +45,14 @@ public:
    {
       if (_value != NULL)
       {
-         _destructor.Free(_value);
+         if (_destructor != NULL)
+            _destructor.Free(_value);
          _value.Release();
       }
       if (_lastValues[0] != NULL)
       {
-         _destructor.Free(_lastValues[0]);
+         if (_destructor != NULL)
+            _destructor.Free(_lastValues[0]);
          _lastValues[0].Release();
       }
    }
