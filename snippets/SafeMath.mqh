@@ -17,6 +17,19 @@ double SafePlus(T1 left, T2 right)
    if (!BothParametersDefined(left, right)) { return EMPTY_VALUE; }
    return left + right;
 }
+string SafePlus(string left, string right)
+{
+   string res = "";
+   if (left != NULL)
+   {
+      res = left;
+   }
+   if (right != NULL)
+   {
+      res += right;
+   }
+   return res;
+}
 int SafePlus(int left, int right)
 {
    if (!BothParametersDefined(left, right)) { return INT_MIN; }
