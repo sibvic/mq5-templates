@@ -19,6 +19,20 @@ public:
       _emptyValue = emptyValue;
    }
 
+   static T GetValue(TStream<T>* stream, const int period, T emptyValue = NULL)
+   {
+      if (stream == NULL)
+      {
+         return emptyValue;
+      }
+      T val;
+      if (!stream.GetValue(period, val))
+      {
+         return emptyValue;
+      }
+      return val;
+   }
+
    void Init()
    {
       for (int i = 0; i < ArraySize(_stream); ++i)
@@ -41,6 +55,18 @@ public:
       }
       EnsureStreamHasProperSize(totalBars);
       _stream[period] = value;
+   }
+
+   bool GetValue(const int period, T &val)
+   {
+      int totalBars = Size();
+      if (period < 0 || totalBars <= period)
+      {
+         return false;
+      }
+      EnsureStreamHasProperSize(totalBars);
+      val = _stream[period];
+      return _stream[period] != _emptyValue;
    }
 
    virtual bool GetValues(const int period, const int count, T &val[])
