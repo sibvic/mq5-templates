@@ -289,4 +289,116 @@ public:
       }
       return result;
    }
+
+   static bool MatrixInvGaussJordan(double &a[], double &inv[], int n)
+   {
+      const double pivotEpsilon = 1e-14;
+      ArrayResize(inv, n * n);
+      for (int i = 0; i < n; ++i)
+      {
+         for (int j = 0; j < n; ++j)
+         {
+            inv[i * n + j] = (i == j) ? 1.0 : 0.0;
+         }
+      }
+      for (int col = 0; col < n; ++col)
+      {
+         int pivotRow = col;
+         double maxVal = MathAbs(a[col * n + col]);
+         for (int r = col + 1; r < n; ++r)
+         {
+            double v = MathAbs(a[r * n + col]);
+            if (v > maxVal)
+            {
+               maxVal = v;
+               pivotRow = r;
+            }
+         }
+         if (maxVal < pivotEpsilon)
+         {
+            return false;
+         }
+         if (pivotRow != col)
+         {
+            for (int c = 0; c < n; ++c)
+            {
+               double tmp = a[col * n + c];
+               a[col * n + c] = a[pivotRow * n + c];
+               a[pivotRow * n + c] = tmp;
+               tmp = inv[col * n + c];
+               inv[col * n + c] = inv[pivotRow * n + c];
+               inv[pivotRow * n + c] = tmp;
+            }
+         }
+         double pivot = a[col * n + col];
+         for (int c = 0; c < n; ++c)
+         {
+            a[col * n + c] /= pivot;
+            inv[col * n + c] /= pivot;
+         }
+         for (int r = 0; r < n; ++r)
+         {
+            if (r == col)
+            {
+               continue;
+            }
+            double factor = a[r * n + col];
+            if (factor == 0.0)
+            {
+               continue;
+            }
+            for (int c = 0; c < n; ++c)
+            {
+               a[r * n + c] -= factor * a[col * n + c];
+               inv[r * n + c] -= factor * inv[col * n + c];
+            }
+         }
+      }
+      return true;
+   }
+
+   template <typename CLASS_TYPE>
+   static ISimpleTypeMatrix<CLASS_TYPE>* Inv(ISimpleTypeMatrix<CLASS_TYPE>* _matrix)
+   {
+      if (_matrix == NULL)
+      {
+         return NULL;
+      }
+      int n = _matrix.Rows();
+      if (n != _matrix.Columns() || n <= 0)
+      {
+         return NULL;
+      }
+      SimpleTypeMatrix<CLASS_TYPE>* sm = (SimpleTypeMatrix<CLASS_TYPE>*)_matrix;
+      CLASS_TYPE emptySentinel = sm.MatrixEmptySentinel();
+      double a[];
+      ArrayResize(a, n * n);
+      for (int r = 0; r < n; ++r)
+      {
+         for (int c = 0; c < n; ++c)
+         {
+            CLASS_TYPE v = _matrix.Get(r, c);
+            if (v == emptySentinel)
+            {
+               return NULL;
+            }
+            a[r * n + c] = (double)v;
+         }
+      }
+      double inv[];
+      SimpleTypeMatrix<CLASS_TYPE>* result = new SimpleTypeMatrix<CLASS_TYPE>(n, n, sm.MatrixDefaultFill(), emptySentinel);
+      if (!MatrixInvGaussJordan(a, inv, n))
+      {
+         result.Fill(emptySentinel);
+         return result;
+      }
+      for (int r = 0; r < n; ++r)
+      {
+         for (int c = 0; c < n; ++c)
+         {
+            result.Set(r, c, (CLASS_TYPE)inv[r * n + c]);
+         }
+      }
+      return result;
+   }
 };
