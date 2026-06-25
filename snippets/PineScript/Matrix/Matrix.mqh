@@ -268,4 +268,25 @@ public:
       }
       return result;
    }
+
+   template <typename CLASS_TYPE>
+   static ISimpleTypeMatrix<CLASS_TYPE>* Transpose(ISimpleTypeMatrix<CLASS_TYPE>* _matrix)
+   {
+      if (_matrix == NULL)
+      {
+         return NULL;
+      }
+      int rowCount = _matrix.Rows();
+      int colCount = _matrix.Columns();
+      SimpleTypeMatrix<CLASS_TYPE>* sm = (SimpleTypeMatrix<CLASS_TYPE>*)_matrix;
+      SimpleTypeMatrix<CLASS_TYPE>* result = new SimpleTypeMatrix<CLASS_TYPE>(colCount, rowCount, sm.MatrixDefaultFill(), sm.MatrixEmptySentinel());
+      for (int r = 0; r < rowCount; ++r)
+      {
+         for (int c = 0; c < colCount; ++c)
+         {
+            result.Set(c, r, _matrix.Get(r, c));
+         }
+      }
+      return result;
+   }
 };
