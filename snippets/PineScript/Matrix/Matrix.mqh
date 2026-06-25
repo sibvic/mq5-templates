@@ -1,5 +1,5 @@
 // Matrix
-// v1.6
+// v1.7
 
 #include <PineScript/Matrix/SimpleTypeMatrix.mqh>
 #include <PineScript/Matrix/TableMatrix.mqh>
@@ -194,6 +194,50 @@ public:
          if (ok)
          {
             result.Set(r, sum);
+         }
+      }
+      return result;
+   }
+
+   template <typename CLASS_TYPE>
+   static ISimpleTypeMatrix<CLASS_TYPE>* Mult(ISimpleTypeMatrix<CLASS_TYPE>* _matrix1, ISimpleTypeMatrix<CLASS_TYPE>* _matrix2)
+   {
+      if (_matrix1 == NULL || _matrix2 == NULL)
+      {
+         return NULL;
+      }
+      int rowCount = _matrix1.Rows();
+      int colCount = _matrix1.Columns();
+      int rowCount2 = _matrix2.Rows();
+      int colCount2 = _matrix2.Columns();
+      if (colCount != rowCount2)
+      {
+         return NULL;
+      }
+      SimpleTypeMatrix<CLASS_TYPE>* sm1 = (SimpleTypeMatrix<CLASS_TYPE>*)_matrix1;
+      CLASS_TYPE emptySentinel = sm1.MatrixEmptySentinel();
+      SimpleTypeMatrix<CLASS_TYPE>* result = new SimpleTypeMatrix<CLASS_TYPE>(rowCount, colCount2, sm1.MatrixDefaultFill(), emptySentinel);
+      for (int r = 0; r < rowCount; ++r)
+      {
+         for (int c = 0; c < colCount2; ++c)
+         {
+            CLASS_TYPE sum = (CLASS_TYPE)0;
+            bool ok = true;
+            for (int k = 0; k < colCount; ++k)
+            {
+               CLASS_TYPE v1 = _matrix1.Get(r, k);
+               CLASS_TYPE v2 = _matrix2.Get(k, c);
+               if (v1 == emptySentinel || v2 == emptySentinel)
+               {
+                  ok = false;
+                  break;
+               }
+               sum += v1 * v2;
+            }
+            if (ok)
+            {
+               result.Set(r, c, sum);
+            }
          }
       }
       return result;
