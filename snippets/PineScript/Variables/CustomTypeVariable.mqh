@@ -73,6 +73,10 @@ public:
    }
    void Set(T* value)
    {
+      if (value == _value)
+      {
+         return;
+      }
       _isInitialized = true;
       ReleaseCurrentWithLastPreservation();
       _value = value;
