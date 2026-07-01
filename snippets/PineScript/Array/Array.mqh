@@ -164,6 +164,18 @@ public:
    template <typename ARRAY_TYPE, typename DUMMY_TYPE, typename VALUE_TYPE>
    static void Set(ARRAY_TYPE array, int index, VALUE_TYPE value) { if (array == NULL) { return; } array.Set(index, value); }
 
+   template <typename ARRAY_TYPE, typename VALUE_TYPE, typename DUMMY_TYPE1, typename DUMMY_TYPE2>
+   static void Fill(ARRAY_TYPE array, VALUE_TYPE value, int index_from, int index_to)
+   {
+      if (array == NULL) { return; }
+      int to = index_to;
+      if (to == INT_MIN) { to = array.Size() - 1; }
+      for (int i = index_from; i <= to; ++i)
+      {
+         array.Set(i, value);
+      }
+   }
+
    template <typename RETURN_TYPE, typename ARRAY_TYPE, typename DUMMY_TYPE>
    static RETURN_TYPE Remove(ARRAY_TYPE array, int index, RETURN_TYPE emptyValue) { if (array == NULL) { return emptyValue; } return array.Remove(index); }
 
