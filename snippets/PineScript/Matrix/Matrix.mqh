@@ -83,6 +83,47 @@ public:
       return MatrixRowDispatch<ARRAY_IFACE, MATRIX_TYPE, ROW_INDEX_TYPE>::Invoke(_matrix, row);
    }
 
+   class MatrixColDispatchImpl
+   {
+   public:
+      template <typename T>
+      static ISimpleTypeArray<T>* Invoke(ISimpleTypeMatrix<T>* _matrix, int column)
+      {
+         SimpleTypeMatrix<T>* sm = (SimpleTypeMatrix<T>*)_matrix;
+         int rowCount = sm.Rows();
+         SimpleTypeArray<T>* arr = new SimpleTypeArray<T>(rowCount, sm.MatrixDefaultFill(), sm.MatrixEmptySentinel());
+         for (int r = 0; r < rowCount; ++r)
+         {
+            arr.Set(r, _matrix.Get(r, column));
+         }
+         return arr;
+      }
+   };
+
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename COLUMN_INDEX_TYPE>
+   struct MatrixColDispatch
+   {
+      static ARRAY_IFACE Invoke(MATRIX_TYPE _matrix, COLUMN_INDEX_TYPE column)
+      {
+         return MatrixColDispatchImpl::Invoke(_matrix, column);
+      }
+   };
+
+   template <typename ARRAY_IFACE, typename MATRIX_TYPE, typename COLUMN_INDEX_TYPE>
+   static ARRAY_IFACE Col(MATRIX_TYPE _matrix, COLUMN_INDEX_TYPE column, ARRAY_IFACE emptyPlaceholder)
+   {
+      if (_matrix == NULL)
+      {
+         return emptyPlaceholder;
+      }
+      int colCount = _matrix.Columns();
+      if (column < 0 || column >= colCount)
+      {
+         return emptyPlaceholder;
+      }
+      return MatrixColDispatch<ARRAY_IFACE, MATRIX_TYPE, COLUMN_INDEX_TYPE>::Invoke(_matrix, column);
+   }
+
    template <typename MATRIX_TYPE, typename ROW_INDEX_TYPE, typename ARRAY_TYPE>
    static void AddRow(MATRIX_TYPE _matrix, ROW_INDEX_TYPE row, ARRAY_TYPE array_id)
    {
