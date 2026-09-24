@@ -94,6 +94,26 @@ public:
       StringReplace(source, target, replaceWith);
       return source;
    }
+   static string Replace(string source, string target, string replaceWith, int occurrence)
+   {
+      int targetLen = StringLen(target);
+      if (occurrence < 0 || targetLen == 0)
+      {
+         return source;
+      }
+      int pos = -1;
+      int searchFrom = 0;
+      for (int i = 0; i <= occurrence; ++i)
+      {
+         pos = StringFind(source, target, searchFrom);
+         if (pos < 0)
+         {
+            return source;
+         }
+         searchFrom = pos + 1;
+      }
+      return StringSubstr(source, 0, pos) + replaceWith + StringSubstr(source, pos + targetLen);
+   }
    static bool Contains(string source, string str)
    {
       return StringFind(source, str) != -1;
