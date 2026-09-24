@@ -7,7 +7,7 @@
 #include <Streams/Custom/BoolToFloatStreamWrapper.mqh>
 #include <Streams/Custom/DateTimeToFloatStreamWrapper.mqh>
 
-//ChangeStream v2.1
+//ChangeStream v2.2
 class ChangeStream : public AOnStream
 {
    int _period;
@@ -61,6 +61,21 @@ public:
          return false;
       }
       val = (int)tmp;
+      return true;
+   }
+
+   virtual bool GetValues(const int period, const int count, double &val[])
+   {
+      int size = Size();
+      for (int i = 0; i < count; ++i)
+      {
+         double v;
+         if (!GetSeriesValue(size - 1 - period + i, v))
+         {
+            return false;
+         }
+         val[i] = v;
+      }
       return true;
    }
 
