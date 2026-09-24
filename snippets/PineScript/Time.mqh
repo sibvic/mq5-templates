@@ -262,6 +262,17 @@ public:
       return (current_time.hour * 60 + current_time.min) * 60 + current_time.sec;
    }
    
+   static int ParseTime(const string time)
+   {
+      string error = "";
+      int result = ParseTime(time, error);
+      if (StringLen(error) > 0)
+      {
+         Print(error);
+      }
+      return result;
+   }
+
    static int ParseTime(const string time, string &error)
    {
       string items[];
