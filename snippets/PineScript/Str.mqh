@@ -1,5 +1,7 @@
 // str.* functions from Pine Script
-// v1.1
+// v1.2
+
+#include <PineScript/Array/StringArray.mqh>
 
 class Str
 {
@@ -125,6 +127,39 @@ public:
    static int Length(string str)
    {
       return StringLen(str);
+   }
+   // Empty separator yields one element per character. Empty pieces are kept ("a,,b" -> "a", "", "b").
+   static ITArray<string>* Split(string source, string separator)
+   {
+      StringArray* result = new StringArray(0, "");
+      int sepLen = StringLen(separator);
+      int sourceLen = StringLen(source);
+      if (sepLen == 0)
+      {
+         if (sourceLen == 0)
+         {
+            result.Push("");
+            return result;
+         }
+         for (int i = 0; i < sourceLen; ++i)
+         {
+            result.Push(StringSubstr(source, i, 1));
+         }
+         return result;
+      }
+      int start = 0;
+      while (true)
+      {
+         int pos = StringFind(source, separator, start);
+         if (pos < 0)
+         {
+            result.Push(start >= sourceLen ? "" : StringSubstr(source, start, sourceLen - start));
+            break;
+         }
+         result.Push(pos == start ? "" : StringSubstr(source, start, pos - start));
+         start = pos + sepLen;
+      }
+      return result;
    }
 
 private:
