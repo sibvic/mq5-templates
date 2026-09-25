@@ -1,5 +1,5 @@
 // syminfo.* functions from Pine Script
-// v1.0
+// v1.1
 
 class SymInfo
 {
@@ -15,5 +15,10 @@ public:
    static string Ticker()
    {
       return _Symbol;
+   }
+
+   static string Timezone()
+   {
+      return "";
    }
 };
