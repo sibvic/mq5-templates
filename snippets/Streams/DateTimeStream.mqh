@@ -1,6 +1,8 @@
 #include <Streams/Abstract/ADateTimeStream.mqh>
+#include <Conditions/NoCondition.mqh>
+#include <Conditions/TimeSessionCondition.mqh>
 
-// Date/time stream v1.0
+// Date/time stream v1.2
 
 #ifndef DateTimeStream_IMP
 #define DateTimeStream_IMP
@@ -9,23 +11,46 @@ class DateTimeStream : public ADateTimeStream
 {
    string _symbol;
    ENUM_TIMEFRAMES _timeframe;
+   ENUM_TIMEFRAMES _chartTimeframe;
+   bool _extended;
+   ICondition* _timeFilter;
 public:
    DateTimeStream(const string symbol, ENUM_TIMEFRAMES timeframe)
    {
+      _extended = false;
+      _timeFilter = new NoCondition();
       _symbol = symbol;
       _timeframe = timeframe;
    }
    DateTimeStream(const string symbol, string resolution)
    {
+      _extended = false;
+      _timeFilter = new NoCondition();
       _symbol = symbol;
       _timeframe = GetTimeframe(resolution);
    }
+   DateTimeStream(const string symbol, ENUM_TIMEFRAMES timeframe, string targetTimeframe, string session, string timezone)
+   {
+      _extended = true;
+      _timeFilter = new TimeSessionCondition(session);
+      _symbol = symbol;
+      _chartTimeframe = timeframe;
+      _timeframe = GetTimeframe(targetTimeframe);
+   }
    ~DateTimeStream()
    {
+      if (_timeFilter != NULL)
+      {
+         _timeFilter.Release();
+      }
    }
 
    bool GetSeriesValues(const int period, const int count, datetime &val[])
    {
+      if (_extended)
+      {
+         return GetValues(Size() - period - 1, count, val);
+      }
       int size = Size();
       if (period >= size - count)
       {
@@ -39,27 +64,59 @@ public:
    }
    bool GetValues(const int period, const int count, datetime &val[])
    {
-      int size = iBars(_Symbol, _Period);
-      int oldPos = size - period - 1;
-      if (oldPos + count - 1 >= size)
+      int size = _extended ? iBars(_symbol, _chartTimeframe) : iBars(_Symbol, _Period);
+      if (!_extended)
       {
-         return false;  
-      }
-      for (int i = 0; i < count; ++i)
-      {
-         datetime barTime = iTime(_Symbol, _Period, oldPos + i);
-         int position = iBarShift(_symbol, _timeframe, barTime);
-         if (position == -1)
+         int oldPos = size - period - 1;
+         if (oldPos + count - 1 >= size)
          {
             return false;
          }
-         val[i] = iTime(_symbol, _timeframe, position);
+         for (int i = 0; i < count; ++i)
+         {
+            datetime barTime = iTime(_Symbol, _Period, oldPos + i);
+            int position = iBarShift(_symbol, _timeframe, barTime);
+            if (position == -1)
+            {
+               return false;
+            }
+            val[i] = iTime(_symbol, _timeframe, position);
+         }
+         return true;
+      }
+
+      for (int i = 0; i < count; ++i)
+      {
+         int oldPos = size - period - 1 + i;
+         if (oldPos < 0 || oldPos >= size)
+         {
+            val[i] = NULL;
+            continue;
+         }
+         datetime barTime = iTime(_symbol, _chartTimeframe, oldPos);
+         int position = iBarShift(_symbol, _timeframe, barTime);
+         if (position < 0)
+         {
+            val[i] = NULL;
+            continue;
+         }
+         datetime t = iTime(_symbol, _timeframe, position);
+         if (!_timeFilter.IsPass(0, t))
+         {
+            val[i] = NULL;
+            continue;
+         }
+         val[i] = t;
       }
       return true;
    }
    
    int Size()
    {
+      if (_extended)
+      {
+         return iBars(_symbol, _chartTimeframe);
+      }
       return iBars(_Symbol, _Period);
    }
 private:
