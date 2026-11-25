@@ -1,7 +1,7 @@
 #include <Grid/Row.mqh>
 #include <Grid/RowSize.mqh>
 
-// Grid v2.2
+// Grid v2.3
 
 #ifndef Grid_IMP
 #define Grid_IMP
@@ -44,8 +44,13 @@ public:
    void Draw(int x, int y)
    {
       RowSize* widths = MeasureColumns();
-      int rowHeight = widths.GetMaxHeight();
       int count = ArraySize(_rows);
+      int rowHeights[];
+      ArrayResize(rowHeights, count);
+      for (int i = 0; i < count; ++i)
+      {
+         rowHeights[i] = MeasureRowHeight(i);
+      }
       for (int i = 0; i < count; ++i)
       {
          int columnsCount = _rows[i].GetColumnsCount();
@@ -60,12 +65,20 @@ public:
             int drawHeight = 0;
             if (tillRow >= i)
             {
-               drawHeight = rowHeight * (tillRow - i + 1);
+               int end = tillRow;
+               if (end >= count)
+               {
+                  end = count - 1;
+               }
+               for (int r = i; r <= end; ++r)
+               {
+                  drawHeight += rowHeights[r];
+               }
             }
             cell.SetDrawHeight(drawHeight);
          }
          _rows[i].Draw(x, y, widths);
-         y += rowHeight;
+         y += rowHeights[i];
       }
       delete widths;
    }
@@ -89,12 +102,24 @@ public:
 
    int GetHeight()
    {
-      RowSize* sizes = MeasureColumns();
-      int height = sizes.GetMaxHeight() * ArraySize(_rows);
-      delete sizes;
+      int height = 0;
+      int count = ArraySize(_rows);
+      for (int i = 0; i < count; ++i)
+      {
+         height += MeasureRowHeight(i);
+      }
       return height;
    }
 private:
+   int MeasureRowHeight(const int index)
+   {
+      RowSize* sizes = new RowSize();
+      _rows[index].Measure(sizes);
+      int height = sizes.GetMaxHeight();
+      delete sizes;
+      return height;
+   }
+
    RowSize* MeasureColumns()
    {
       RowSize* widths = new RowSize();
