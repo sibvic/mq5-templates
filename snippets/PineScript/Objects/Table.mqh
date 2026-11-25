@@ -1,4 +1,4 @@
-// Table v1.4
+// Table v1.5
 #include <Grid/Grid.mqh>
 #include <Grid/LabelCell.mqh>
 
@@ -520,20 +520,7 @@ private:
    }
    int GetGridWidth()
    {
-      int width = 0;
-      for (int i = 0; i < _rows; ++i)
-      {
-         RowSize* rowSizes = new RowSize();
-         _grid.GetRow(i).Measure(rowSizes);
-         int rowWidth = 0;
-         for (int ii = 0; ii < _columns; ++ii)
-         {
-            rowWidth += rowSizes.GetWidth(ii);
-         }
-         delete rowSizes;
-         width = MathMax(width, rowWidth);
-      }
-      return width;
+      return _grid.GetWidth();
    }
    int GetScreenHeight()
    {
@@ -541,14 +528,6 @@ private:
    }
    int GetGridHeight()
    {
-      int height = 0;
-      for (int i = 0; i < _rows; ++i)
-      {
-         RowSize* rowSizes = new RowSize();
-         _grid.GetRow(i).Measure(rowSizes);
-         height += rowSizes.GetMaxHeight();
-         delete rowSizes;
-      }
-      return height;
+      return _grid.GetHeight();
    }
 };

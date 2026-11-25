@@ -1,4 +1,4 @@
-//Row size v1.0
+//Row size v1.1
 
 class RowSize
 {
@@ -28,5 +28,16 @@ public:
    int GetMaxHeight()
    {
       return _maxHeight;
+   }
+
+   int GetTotalWidth()
+   {
+      int width = 0;
+      int count = ArraySize(_widths);
+      for (int i = 0; i < count; ++i)
+      {
+         width += _widths[i];
+      }
+      return width;
    }
 };

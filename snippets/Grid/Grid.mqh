@@ -1,7 +1,7 @@
 #include <Grid/Row.mqh>
 #include <Grid/RowSize.mqh>
 
-// Grid v2.1
+// Grid v2.2
 
 #ifndef Grid_IMP
 #define Grid_IMP
@@ -77,6 +77,22 @@ public:
       {
          _rows[i].HandleButtonClicks();
       }
+   }
+
+   int GetWidth()
+   {
+      RowSize* sizes = MeasureColumns();
+      int width = sizes.GetTotalWidth();
+      delete sizes;
+      return width;
+   }
+
+   int GetHeight()
+   {
+      RowSize* sizes = MeasureColumns();
+      int height = sizes.GetMaxHeight() * ArraySize(_rows);
+      delete sizes;
+      return height;
    }
 private:
    RowSize* MeasureColumns()
