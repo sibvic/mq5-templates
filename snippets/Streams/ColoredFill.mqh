@@ -113,7 +113,7 @@ public:
    
    void AddColor(uint clr)
    {
-      int transp = GetTranparency(clr);
+      int transp = GetTransparency(clr);
       if (transp == 100)
       {
          return;
@@ -136,7 +136,7 @@ public:
    
    void Set(int period, double value1, double value2, uint clr = INT_MAX)
    {
-      int transp = GetTranparency(clr);
+      int transp = GetTransparency(clr);
       if (clr == INT_MAX || value1 == EMPTY_VALUE || value2 == EMPTY_VALUE || transp == 100)
       {
          p1[period] = 0;

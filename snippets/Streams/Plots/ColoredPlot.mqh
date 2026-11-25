@@ -19,7 +19,7 @@ public:
    
    void AddColor(uint clr)
    {
-      int transp = GetTranparency(clr);
+      int transp = GetTransparency(clr);
       if (transp == 100)
       {
          return;
@@ -66,7 +66,7 @@ public:
    
    double Set(int pos, double value, uint clr)
    {
-      int transp = GetTranparency(clr);
+      int transp = GetTransparency(clr);
       buffer[pos] = value;
       values[pos] = value;
       colors[pos] = FindColorIndex(clr);
@@ -115,7 +115,7 @@ private:
    }
    int FindColorIndex(uint clr)
    {
-      int transp = GetTranparency(clr);
+      int transp = GetTransparency(clr);
       if (transp == 100)
       {
          return -1;

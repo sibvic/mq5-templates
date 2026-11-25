@@ -3,7 +3,7 @@
 #define ColorG(clr) (((clr) & 0x0000FF00) >> 8)
 #define ColorB(clr) (((clr) & 0x00FF0000) >> 16)
 #define GetColorOnly(clr) (clr & 0xFFFFFF)
-#define GetTranparency(clr) (int)MathRound(((clr & 0xFF000000) >> 24) / 2.55)
+#define GetTransparency(clr) (int)MathRound(((clr & 0xFF000000) >> 24) / 2.55)
 #define AddTransparency(clr, transp) (clr + ((uint)(transp * 2.55) << 24))
 
 bool NumberToBool(double number)
