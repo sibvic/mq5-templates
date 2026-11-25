@@ -74,7 +74,7 @@ public:
 
    void Redraw()
    {
-      int transp = GetTranparency(_clr);
+      int transp = GetTransparency(_clr);
       if (_line1 == NULL || _line2 == NULL || transp == 100)
       {
          return;

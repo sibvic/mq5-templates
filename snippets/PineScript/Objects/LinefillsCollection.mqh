@@ -26,7 +26,10 @@ public:
    {
       for (int i = 0; i < ArraySize(_linefills); ++i)
       {
-         delete _linefills[i];
+         if (_linefills[i] != NULL)
+         {
+            _linefills[i].Release();
+         }
       }
       ArrayResize(_linefills, 0);
    }
@@ -107,8 +110,10 @@ public:
       {
          return;
       }
-      _all.RemoveLabel(linefill);
-      LinefillsCollection* collection = FindCollection(linefill.GetCollectionId());
+      string collectionId = linefill.GetCollectionId();
+      EnsureAll();
+      _all.DeleteLabel(linefill);
+      LinefillsCollection* collection = FindCollection(collectionId);
       if (collection == NULL)
       {
          return;
@@ -131,7 +136,9 @@ public:
          AddCollection(collection);
          LineFill* linefill = new LineFill(line1, line2, clr, linefillId, linefillId, ChartWindowOnDropped());
          collection.Add(linefill);
+         EnsureAll();
          _all.Add(linefill);
+         linefill.Release();
          return linefill;
       }
       return collection.Get(0);
@@ -173,8 +180,12 @@ private:
    }
    void DeleteLabel(LineFill* linefill)
    {
+      if (FindIndex(linefill) == -1)
+      {
+         return;
+      }
       RemoveLabel(linefill);
-      delete linefill;
+      linefill.Release();
    }
    void Add(LineFill* linefill)
    {
@@ -183,6 +194,10 @@ private:
       int size = ArraySize(_linefills);
       ArrayResize(_linefills, size + 1);
       _linefills[size] = linefill;
+      if (linefill != NULL)
+      {
+         linefill.AddRef();
+      }
    }
 
    void RedrawLabels()
@@ -191,6 +206,14 @@ private:
       for (int i = 0; i < size; ++i)
       {
          _linefills[i].Redraw();
+      }
+   }
+
+   static void EnsureAll()
+   {
+      if (_all == NULL)
+      {
+         _all = new LinefillsCollection("");
       }
    }
 
