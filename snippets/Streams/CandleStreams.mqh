@@ -1,4 +1,6 @@
-// Candles stream v.1.0
+// Candles stream v.1.1
+#include <PineScriptUtils.mqh>
+
 class CandleStreams
 {
    double OpenStream[];
@@ -31,11 +33,16 @@ public:
       ColorIndex[index] = 0;
    }
    
-   void AddColor(color clr)
+   void AddColor(uint clr)
    {
+      int transp = GetTransparency(clr);
+      if (transp == 100)
+      {
+         return;
+      }
       int size = ArraySize(colors);
       ArrayResize(colors, size + 1);
-      colors[size] = clr;
+      colors[size] = (color)GetColorOnly(clr);
    }
 
    int RegisterStreams(const int id)
@@ -54,10 +61,16 @@ public:
       return id + 5;
    }
    
-   void Set(const int index, const double open, const double high, const double low, const double close, color clr)
+   void Set(const int index, const double open, const double high, const double low, const double close, uint clr)
    {
-      if (clr == (color)EMPTY_VALUE)
+      if (clr == (uint)EMPTY_VALUE)
       {
+         return;
+      }
+      int transp = GetTransparency(clr);
+      if (transp == 100)
+      {
+         Clear(index);
          return;
       }
       OpenStream[index] = open;
@@ -71,12 +84,13 @@ public:
    {
    }
 private:
-   int FindColor(color clr)
+   int FindColor(uint clr)
    {
+      color searchingColor = (color)GetColorOnly(clr);
       int size = ArraySize(colors);
       for (int i = 0; i < size; ++i)
       {
-         if (colors[i] == clr)
+         if (colors[i] == searchingColor)
          {
             return i;
          }
