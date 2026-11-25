@@ -20,6 +20,10 @@ timeframe.* functions
 
 Extended mathematical functions
 
+## Display
+
+display.* bit flags (`Display::All`, `Display::Pane`, `Display::DataWindow`, `Display::PriceScale`, `Display::StatusLine`, `Display::None`)
+
 ## PlotShpae
 
 PS-like plotshape()
