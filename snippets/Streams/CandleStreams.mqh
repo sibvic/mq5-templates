@@ -1,4 +1,4 @@
-// Candles stream v.1.1
+// Candles stream v.1.2
 #include <PineScriptUtils.mqh>
 
 class CandleStreams
@@ -95,6 +95,38 @@ private:
             return i;
          }
       }
-      return 0;
+      if (size < 64)
+      {
+         ArrayResize(colors, size + 1);
+         colors[size] = searchingColor;
+         PlotIndexSetInteger(streamIndex, PLOT_COLOR_INDEXES, size + 1);
+         PlotIndexSetInteger(streamIndex, PLOT_LINE_COLOR, size, searchingColor);
+         return size;
+      }
+      int best = 0;
+      int bestDistance = 1000000000;
+      for (int i = 0; i < size; ++i)
+      {
+         int distance = ColorDistance(colors[i], searchingColor);
+         if (distance < bestDistance)
+         {
+            bestDistance = distance;
+            best = i;
+         }
+      }
+      return best;
+   }
+
+   int ColorDistance(color left, color right)
+   {
+      int dr = Channel(left, 0) - Channel(right, 0);
+      int dg = Channel(left, 8) - Channel(right, 8);
+      int db = Channel(left, 16) - Channel(right, 16);
+      return dr * dr + dg * dg + db * db;
+   }
+
+   int Channel(color clr, int shift)
+   {
+      return (int)(((uint)clr >> shift) & 0xFF);
    }
 };
