@@ -4,6 +4,7 @@
 #include <PineScript/Array/IntArray.mqh>
 #include <PineScript/Array/StringArray.mqh>
 #include <PineScript/Array/FloatArray.mqh>
+#include <PineScript/Array/BoolArray.mqh>
 #include <PineScript/Array/BoxArray.mqh>
 #include <PineScript/Array/LineFillArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
