@@ -1,4 +1,4 @@
-// Collection of boxes v1.2
+// Collection of boxes v1.3
 
 #ifndef BoxesCollection_IMPL
 #define BoxesCollection_IMPL
@@ -22,7 +22,7 @@ class BoxesCollection
    static BoxesCollection* _collections[];
    static BoxesCollection* _all;
    static int _max;
-   static IObjectDestructor<Box*>* _destructor;
+   static BoxObjectDestructor _destructor;
 public:
    BoxesCollection(string id)
    {
@@ -36,7 +36,7 @@ public:
    
    static IObjectDestructor<Box*>* GetDestructor()
    {
-      return _destructor;
+      return GetPointer(_destructor);
    }
    
    void ClearItems()
@@ -258,6 +258,6 @@ private:
 };
 BoxesCollection* BoxesCollection::_collections[];
 BoxesCollection* BoxesCollection::_all;
-IObjectDestructor<Box*>* BoxesCollection::_destructor = new BoxObjectDestructor();
+BoxObjectDestructor BoxesCollection::_destructor;
 int BoxesCollection::_max = 50;
 #endif

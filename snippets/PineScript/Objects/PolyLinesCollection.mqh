@@ -1,4 +1,4 @@
-// Collection of polylines v1.0
+// Collection of polylines v1.1
 
 #ifndef PolyLinesCollection_IMPL
 #define PolyLinesCollection_IMPL
@@ -26,11 +26,11 @@ class PolyLinesCollection
    static PolyLinesCollection* _all;
    static int _max;
    static uint _nextId;
-   static IObjectDestructor<Polyline*>* _destructor;
+   static PolylineObjectDestructor _destructor;
 public:
    static IObjectDestructor<Polyline*>* GetDestructor()
    {
-      return _destructor;
+      return GetPointer(_destructor);
    }
    
    static Polyline* Get(Polyline* PolyLine, int index)
@@ -243,7 +243,7 @@ private:
 };
 PolyLinesCollection* PolyLinesCollection::_collections[];
 PolyLinesCollection* PolyLinesCollection::_all;
-IObjectDestructor<Polyline*>* PolyLinesCollection::_destructor = new PolylineObjectDestructor();
+PolylineObjectDestructor PolyLinesCollection::_destructor;
 int PolyLinesCollection::_max = 50;
 uint PolyLinesCollection::_nextId = 0;
 #endif

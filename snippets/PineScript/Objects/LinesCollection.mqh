@@ -1,4 +1,4 @@
-// Collection of lines v1.3
+// Collection of lines v1.4
 
 #ifndef LinesCollection_IMPL
 #define LinesCollection_IMPL
@@ -22,11 +22,11 @@ class LinesCollection
    static LinesCollection* _collections[];
    static LinesCollection* _all;
    static int _max;
-   static IObjectDestructor<Line*>* _destructor;
+   static LineObjectDestructor _destructor;
 public:
    static IObjectDestructor<Line*>* GetDestructor()
    {
-      return _destructor;
+      return GetPointer(_destructor);
    }
 
    static Line* Get(Line* line, int index)
@@ -273,6 +273,6 @@ private:
 };
 LinesCollection* LinesCollection::_collections[];
 LinesCollection* LinesCollection::_all;
-IObjectDestructor<Line*>* LinesCollection::_destructor = new LineObjectDestructor();
+LineObjectDestructor LinesCollection::_destructor;
 int LinesCollection::_max = 50;
 #endif

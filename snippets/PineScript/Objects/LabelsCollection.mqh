@@ -1,4 +1,4 @@
-// Collection of labels v1.2
+// Collection of labels v1.3
 
 #ifndef LabelsCollection_IMPL
 #define LabelsCollection_IMPL
@@ -22,7 +22,7 @@ class LabelsCollection
    static LabelsCollection* _collections[];
    static LabelsCollection* _all;
    static int _maxLabels;
-   static IObjectDestructor<Label*>* _destructor;
+   static LabelObjectDestructor _destructor;
 public:
    LabelsCollection(string id)
    {
@@ -36,7 +36,7 @@ public:
 
    static IObjectDestructor<Label*>* GetDestructor()
    {
-      return _destructor;
+      return GetPointer(_destructor);
    }
    
    void ClearLabels()
@@ -162,6 +162,7 @@ public:
       }
       collection.Add(label);
       _all.Add(label);
+      label.Release();
       int allLabelsCount = _all.Count();
       if (allLabelsCount > _maxLabels)
       {
@@ -261,6 +262,6 @@ private:
 };
 LabelsCollection* LabelsCollection::_collections[];
 LabelsCollection* LabelsCollection::_all;
-IObjectDestructor<Label*>* LabelsCollection::_destructor = new LabelObjectDestructor();
+LabelObjectDestructor LabelsCollection::_destructor;
 int LabelsCollection::_maxLabels = 50;
 #endif
