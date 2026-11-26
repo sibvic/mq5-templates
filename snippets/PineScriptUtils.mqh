@@ -1,4 +1,4 @@
-#define ColorRGB(red, green, blue, transp) (uint)((red) + ((green) << 8) + ((blue) << 16) + ((uint)(transp * 2.55) << 24))
+#define ColorRGB(red, green, blue, transp) (uint)((uint)(red) + ((uint)(green) << 8) + ((uint)(blue) << 16) + ((uint)(transp * 2.55) << 24))
 #define ColorR(clr) ((clr) & 0x000000FF)
 #define ColorG(clr) (((clr) & 0x0000FF00) >> 8)
 #define ColorB(clr) (((clr) & 0x00FF0000) >> 16)
