@@ -40,6 +40,13 @@ public:
       _timeframe = (ENUM_TIMEFRAMES)_Period;
       this.globalLabel = globalLabel;
    }
+   ~Label()
+   {
+      if (ObjectFind(0, _labelId) >= 0)
+      {
+         ObjectDelete(0, _labelId);
+      }
+   }
    void AddRef()
    {
       _refs++;

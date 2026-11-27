@@ -22,7 +22,7 @@ class LabelsCollection
    static LabelsCollection* _collections[];
    static LabelsCollection* _all;
    static int _maxLabels;
-   static LabelObjectDestructor _destructor;
+   static LabelObjectDestructor* _destructor;
 public:
    LabelsCollection(string id)
    {
@@ -36,7 +36,11 @@ public:
 
    static IObjectDestructor<Label*>* GetDestructor()
    {
-      return GetPointer(_destructor);
+      if (_destructor == NULL)
+      {
+         _destructor = new LabelObjectDestructor();
+      }
+      return _destructor;
    }
    
    void ClearLabels()
@@ -106,9 +110,12 @@ public:
          delete _collections[i];
       }
       ArrayResize(_collections, 0);
-      if (_all == NULL && !full)
+      if (_all == NULL)
       {
-         _all = new LabelsCollection("");
+         if (!full)
+         {
+            _all = new LabelsCollection("");
+         }
       }
       else
       {
@@ -119,17 +126,23 @@ public:
             _all = NULL;
          }
       }
+      if (full && _destructor != NULL)
+      {
+         delete _destructor;
+         _destructor = NULL;
+      }
    }
 
    static void Delete(Label* label)
    {
-      if (label == NULL)
+      if (label == NULL || _all == NULL)
       {
          return;
       }
+      string collectionId = label.GetCollectionId();
       _all.DeleteLabel(label);
-      LabelsCollection* collection = FindCollection(label.GetCollectionId());
-      if (collection == NULL)
+      LabelsCollection* collection = FindCollection(collectionId);
+      if (collection == NULL || collection == _all)
       {
          return;
       }
@@ -262,6 +275,6 @@ private:
 };
 LabelsCollection* LabelsCollection::_collections[];
 LabelsCollection* LabelsCollection::_all;
-LabelObjectDestructor LabelsCollection::_destructor;
+LabelObjectDestructor* LabelsCollection::_destructor = NULL;
 int LabelsCollection::_maxLabels = 50;
 #endif

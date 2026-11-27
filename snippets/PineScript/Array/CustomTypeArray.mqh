@@ -242,6 +242,10 @@ public:
       {
          return;
       }
+      if (_array[index] == value)
+      {
+         return;
+      }
       if (_array[index] != NULL)
       {
          _array[index].Release();

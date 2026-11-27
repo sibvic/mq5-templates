@@ -22,11 +22,15 @@ class LinesCollection
    static LinesCollection* _collections[];
    static LinesCollection* _all;
    static int _max;
-   static LineObjectDestructor _destructor;
+   static LineObjectDestructor* _destructor;
 public:
    static IObjectDestructor<Line*>* GetDestructor()
    {
-      return GetPointer(_destructor);
+      if (_destructor == NULL)
+      {
+         _destructor = new LineObjectDestructor();
+      }
+      return _destructor;
    }
 
    static Line* Get(Line* line, int index)
@@ -66,20 +70,23 @@ public:
          delete _collections[i];
       }
       ArrayResize(_collections, 0);
+      if (full && _destructor != NULL)
+      {
+         delete _destructor;
+         _destructor = NULL;
+      }
    }
 
    static void Delete(Line* line)
    {
-      if (line == NULL)
+      if (line == NULL || _all == NULL)
       {
          return;
       }
-      if (!_all.DeleteItem(line))
-      {
-         return;
-      }
-      LinesCollection* collection = FindCollection(line.GetCollectionId());
-      if (collection == NULL)
+      string collectionId = line.GetCollectionId();
+      _all.DeleteItem(line);
+      LinesCollection* collection = FindCollection(collectionId);
+      if (collection == NULL || collection == _all)
       {
          return;
       }
@@ -273,6 +280,6 @@ private:
 };
 LinesCollection* LinesCollection::_collections[];
 LinesCollection* LinesCollection::_all;
-LineObjectDestructor LinesCollection::_destructor;
+LineObjectDestructor* LinesCollection::_destructor = NULL;
 int LinesCollection::_max = 50;
 #endif

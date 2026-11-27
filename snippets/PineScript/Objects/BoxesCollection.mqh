@@ -22,7 +22,7 @@ class BoxesCollection
    static BoxesCollection* _collections[];
    static BoxesCollection* _all;
    static int _max;
-   static BoxObjectDestructor _destructor;
+   static BoxObjectDestructor* _destructor;
 public:
    BoxesCollection(string id)
    {
@@ -36,7 +36,11 @@ public:
    
    static IObjectDestructor<Box*>* GetDestructor()
    {
-      return GetPointer(_destructor);
+      if (_destructor == NULL)
+      {
+         _destructor = new BoxObjectDestructor();
+      }
+      return _destructor;
    }
    
    void ClearItems()
@@ -106,9 +110,12 @@ public:
          delete _collections[i];
       }
       ArrayResize(_collections, 0);
-      if (_all == NULL && !full)
+      if (_all == NULL)
       {
-         _all = new BoxesCollection("");
+         if (!full)
+         {
+            _all = new BoxesCollection("");
+         }
       }
       else
       {
@@ -119,17 +126,23 @@ public:
             _all = NULL;
          }
       }
+      if (full && _destructor != NULL)
+      {
+         delete _destructor;
+         _destructor = NULL;
+      }
    }
 
    static void Delete(Box* box)
    {
-      if (box == NULL)
+      if (box == NULL || _all == NULL)
       {
          return;
       }
+      string collectionId = box.GetCollectionId();
       _all.DeleteItem(box);
-      BoxesCollection* collection = FindCollection(box.GetCollectionId());
-      if (collection == NULL)
+      BoxesCollection* collection = FindCollection(collectionId);
+      if (collection == NULL || collection == _all)
       {
          return;
       }
@@ -138,6 +151,10 @@ public:
 
    static Box* Create(string id, int left, double top, int right, double bottom, datetime dateId, bool global = false)
    {
+      if (_all == NULL)
+      {
+         Clear();
+      }
       ResetLastError();
       dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - left - 1);
       MqlDateTime date;
@@ -258,6 +275,6 @@ private:
 };
 BoxesCollection* BoxesCollection::_collections[];
 BoxesCollection* BoxesCollection::_all;
-BoxObjectDestructor BoxesCollection::_destructor;
+BoxObjectDestructor* BoxesCollection::_destructor = NULL;
 int BoxesCollection::_max = 50;
 #endif

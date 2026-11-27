@@ -26,11 +26,15 @@ class PolyLinesCollection
    static PolyLinesCollection* _all;
    static int _max;
    static uint _nextId;
-   static PolylineObjectDestructor _destructor;
+   static PolylineObjectDestructor* _destructor;
 public:
    static IObjectDestructor<Polyline*>* GetDestructor()
    {
-      return GetPointer(_destructor);
+      if (_destructor == NULL)
+      {
+         _destructor = new PolylineObjectDestructor();
+      }
+      return _destructor;
    }
    
    static Polyline* Get(Polyline* PolyLine, int index)
@@ -70,20 +74,23 @@ public:
          delete _collections[i];
       }
       ArrayResize(_collections, 0);
+      if (full && _destructor != NULL)
+      {
+         delete _destructor;
+         _destructor = NULL;
+      }
    }
 
    static void Delete(Polyline* PolyLine)
    {
-      if (PolyLine == NULL)
+      if (PolyLine == NULL || _all == NULL)
       {
          return;
       }
-      if (!_all.DeleteItem(PolyLine))
-      {
-         return;
-      }
-      PolyLinesCollection* collection = FindCollection(PolyLine.GetCollectionId());
-      if (collection == NULL)
+      string collectionId = PolyLine.GetCollectionId();
+      _all.DeleteItem(PolyLine);
+      PolyLinesCollection* collection = FindCollection(collectionId);
+      if (collection == NULL || collection == _all)
       {
          return;
       }
@@ -92,6 +99,10 @@ public:
 
    static Polyline* Create(string id, ICustomTypeArray<ChartPoint*>* points, datetime dateId)
    {
+      if (_all == NULL)
+      {
+         Clear();
+      }
       ResetLastError();
       dateId = iTime(_Symbol, _Period, iBars(_Symbol, _Period) - 1);
       MqlDateTime date;
@@ -243,7 +254,7 @@ private:
 };
 PolyLinesCollection* PolyLinesCollection::_collections[];
 PolyLinesCollection* PolyLinesCollection::_all;
-PolylineObjectDestructor PolyLinesCollection::_destructor;
+PolylineObjectDestructor* PolyLinesCollection::_destructor = NULL;
 int PolyLinesCollection::_max = 50;
 uint PolyLinesCollection::_nextId = 0;
 #endif
