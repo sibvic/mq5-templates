@@ -177,10 +177,10 @@ double SafeMathAbs(T value)
 }
 
 template <typename T>
-double SafeMathRound(T value)
+int SafeMathRound(T value)
 {
-   if (!ParameterDefined(value)) { return EMPTY_VALUE; }
-   return MathRound(value);
+   if (!ParameterDefined(value)) { return INT_MIN; }
+   return (int)MathRound(value);
 }
 
 template <typename T>

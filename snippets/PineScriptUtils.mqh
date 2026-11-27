@@ -4,7 +4,9 @@
 #define ColorB(clr) (((clr) & 0x00FF0000) >> 16)
 #define GetColorOnly(clr) (clr & 0xFFFFFF)
 #define GetTransparency(clr) (int)MathRound(((clr & 0xFF000000) >> 24) / 2.55)
-#define AddTransparency(clr, transp) (clr + ((uint)(transp * 2.55) << 24))
+// Truncating transp*2.55 for white at transparency 50 is 0x7FFFFFFF, which is the na color sentinel.
+#define AddTransparencyRaw(clr, transp) ((uint)(clr) + ((uint)((transp) * 2.55) << 24))
+#define AddTransparency(clr, transp) (AddTransparencyRaw(clr, transp) == (uint)INT_MAX ? (uint)0x80FFFFFF : AddTransparencyRaw(clr, transp))
 
 bool NumberToBool(double number)
 {

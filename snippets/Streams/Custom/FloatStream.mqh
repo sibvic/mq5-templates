@@ -2,7 +2,8 @@
 #define FloatStream_IMPL
 
 #include <Streams/Abstract/AFloatStream.mqh>
-// Float stream v2.1
+#include <Streams/ChartPrice.mqh>
+// Float stream v2.2
 
 class FloatStream : public AFloatStream
 {
@@ -25,6 +26,11 @@ public:
 
    virtual int Size()
    {
+      int chartBars = ChartPrice::Size(_symbol, _timeframe);
+      if (chartBars > 0)
+      {
+         return chartBars;
+      }
       return Bars(_symbol, _timeframe);
    }
 

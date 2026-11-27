@@ -1,4 +1,5 @@
-// AStream v1.1
+// AStream v1.2
+#include <Streams/ChartPrice.mqh>
 #include <Streams/AStreamBase.mqh>
 class AStream : public AStreamBase
 {
@@ -25,12 +26,17 @@ public:
 
    virtual int Size()
    {
+      int chartBars = ChartPrice::Size(_symbol, _timeframe);
+      if (chartBars > 0)
+      {
+         return chartBars;
+      }
       return iBars(_symbol, _timeframe);
    }
    
    virtual bool GetValues(const int period, const int count, double &val[])
    {
-      int bars = iBars(_symbol, _timeframe);
+      int bars = Size();
       int oldIndex = bars - period - 1;
       return GetSeriesValues(oldIndex, count, val);
    }

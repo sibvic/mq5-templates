@@ -1,4 +1,4 @@
-// Line object v1.9
+// Line object v1.10
 
 class Line
 {
@@ -29,6 +29,7 @@ public:
       _y2 = y2;
       _id = id;
       _clr = Blue;
+      _width = 1;
       _timeframe = (ENUM_TIMEFRAMES)_Period;
       _window = window;
       _collectionId = collectionId;
@@ -208,33 +209,36 @@ public:
       int totalBars = iBars(_Symbol, _timeframe);
       datetime x1 = GetTime(_x1, totalBars);
       datetime x2 = GetTime(_x2, totalBars);
-      if (ObjectFind(0, _id) == -1 && ObjectCreate(0, _id, OBJ_TREND, 0, x1, _y1, x2, _y2))
+      if (ObjectFind(0, _id) == -1 && !ObjectCreate(0, _id, OBJ_TREND, 0, x1, _y1, x2, _y2))
       {
-         ObjectSetInteger(0, _id, OBJPROP_COLOR, _clr);
-         ObjectSetInteger(0, _id, OBJPROP_STYLE, GetStyleMQL());
-         ObjectSetInteger(0, _id, OBJPROP_WIDTH, _width);
-         if (_extend == "right")
-         {
-            ObjectSetInteger(0, _id, OBJPROP_RAY, true);
-            ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, true);
-         }
-         else if (_extend == "left")
-         {
-            ObjectSetInteger(0, _id, OBJPROP_RAY, true);
-            ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, true);
-         }
-         else if (_extend == "both")
-         {
-            ObjectSetInteger(0, _id, OBJPROP_RAY, true);
-            ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, true);
-            ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, true);
-         }
-         else if (_extend == "none")
-         {
-            ObjectSetInteger(0, _id, OBJPROP_RAY, false);
-            ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, false);
-            ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, false);
-         }
+         return;
+      }
+      // Pine transparency lives in the high byte. MQL5 uses that byte as object alpha, so the
+      // line is invisible; MQL4 ignores it. Apply the RGB color on every redraw.
+      ObjectSetInteger(0, _id, OBJPROP_COLOR, (color)(_clr & 0xFFFFFF));
+      ObjectSetInteger(0, _id, OBJPROP_STYLE, GetStyleMQL());
+      ObjectSetInteger(0, _id, OBJPROP_WIDTH, _width);
+      if (_extend == "right")
+      {
+         ObjectSetInteger(0, _id, OBJPROP_RAY, true);
+         ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, true);
+      }
+      else if (_extend == "left")
+      {
+         ObjectSetInteger(0, _id, OBJPROP_RAY, true);
+         ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, true);
+      }
+      else if (_extend == "both")
+      {
+         ObjectSetInteger(0, _id, OBJPROP_RAY, true);
+         ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, true);
+         ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, true);
+      }
+      else if (_extend == "none")
+      {
+         ObjectSetInteger(0, _id, OBJPROP_RAY, false);
+         ObjectSetInteger(0, _id, OBJPROP_RAY_RIGHT, false);
+         ObjectSetInteger(0, _id, OBJPROP_RAY_LEFT, false);
       }
       ObjectSetDouble(0, _id, OBJPROP_PRICE, 0, _y1);
       ObjectSetDouble(0, _id, OBJPROP_PRICE, 1, _y2);

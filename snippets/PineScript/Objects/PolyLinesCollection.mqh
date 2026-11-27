@@ -3,7 +3,7 @@
 #ifndef PolyLinesCollection_IMPL
 #define PolyLinesCollection_IMPL
 
-#include <PineScript/Objects/PolyLine.mqh>
+#include <PineScript/Objects/Polyline.mqh>
 #include <PineScript/Array/CustomTypeArray.mqh>
 #include <PineScript/Array/Array.mqh>
 #include <PineScript/Objects/ChartPoint.mqh>

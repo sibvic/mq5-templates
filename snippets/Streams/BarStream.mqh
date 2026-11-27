@@ -1,6 +1,7 @@
-// Bar stream v2.1
+// Bar stream v2.2
 
 #include <Streams/IBarStream.mqh>
+#include <Streams/ChartPrice.mqh>
 
 #ifndef BarStream_IMP
 #define BarStream_IMP
@@ -49,6 +50,11 @@ public:
 
    virtual bool GetOpen(const int period, double &open)
    {
+      double high, low, close;
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -62,6 +68,11 @@ public:
 
    virtual bool GetHigh(const int period, double &high)
    {
+      double open, low, close;
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -75,6 +86,11 @@ public:
 
    virtual bool GetLow(const int period, double &low)
    {
+      double open, high, close;
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -88,6 +104,11 @@ public:
 
    virtual bool GetClose(const int period, double &close)
    {
+      double open, high, low;
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -101,6 +122,10 @@ public:
 
    virtual bool GetValues(const int period, double &open, double &high, double &low, double &close)
    {
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -117,6 +142,11 @@ public:
 
    virtual bool GetHighLow(const int period, double &high, double &low)
    {
+      double open, close;
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -131,6 +161,11 @@ public:
 
    virtual bool GetOpenClose(const int period, double& open, double& close)
    {
+      double high, low;
+      if (ChartPrice::Matches(_symbol, _timeframe))
+      {
+         return ChartPrice::Get(period, open, high, low, close);
+      }
       int size = Size();
       int oldPos = size - period - 1;
       if (size <= oldPos || oldPos < 0)
@@ -145,6 +180,11 @@ public:
 
    virtual int Size()
    {
+      int chartBars = ChartPrice::Size(_symbol, _timeframe);
+      if (chartBars > 0)
+      {
+         return chartBars;
+      }
       return iBars(_symbol, _timeframe);
    }
 
@@ -158,7 +198,18 @@ public:
       }
       for (int i = 0; i < count; ++i)
       {
-         val[i] = iClose(_symbol, _timeframe, oldPos + i);
+         if (ChartPrice::Matches(_symbol, _timeframe))
+         {
+            double open, high, low;
+            if (!ChartPrice::Get(period - i, open, high, low, val[i]))
+            {
+               return false;
+            }
+         }
+         else
+         {
+            val[i] = iClose(_symbol, _timeframe, oldPos + i);
+         }
       }
       return true;
    }
@@ -172,7 +223,18 @@ public:
       }
       for (int i = 0; i < count; ++i)
       {
-         val[i] = iClose(_symbol, _timeframe, oldPos + i);
+         if (ChartPrice::Matches(_symbol, _timeframe))
+         {
+            double open, high, low;
+            if (!ChartPrice::GetSeries(oldPos + i, open, high, low, val[i]))
+            {
+               return false;
+            }
+         }
+         else
+         {
+            val[i] = iClose(_symbol, _timeframe, oldPos + i);
+         }
       }
       return true;
    }
