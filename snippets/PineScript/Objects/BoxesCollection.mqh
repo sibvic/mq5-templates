@@ -139,6 +139,11 @@ public:
       {
          return;
       }
+      // Pointer compare only. A box that is already gone must not be touched.
+      if (_all.FindIndex(box) < 0)
+      {
+         return;
+      }
       string collectionId = box.GetCollectionId();
       _all.DeleteItem(box);
       BoxesCollection* collection = FindCollection(collectionId);

@@ -87,8 +87,16 @@ public:
       {
          return;
       }
+      // Pointer compare only. A polyline that is already gone must not be touched.
+      if (_all.FindIndex(PolyLine) < 0)
+      {
+         return;
+      }
       string collectionId = PolyLine.GetCollectionId();
-      _all.DeleteItem(PolyLine);
+      if (!_all.DeleteItem(PolyLine))
+      {
+         return;
+      }
       PolyLinesCollection* collection = FindCollection(collectionId);
       if (collection == NULL || collection == _all)
       {

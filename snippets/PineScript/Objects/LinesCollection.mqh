@@ -83,8 +83,16 @@ public:
       {
          return;
       }
+      // Pointer compare only. A line that is already gone must not be touched.
+      if (_all.FindIndex(line) < 0)
+      {
+         return;
+      }
       string collectionId = line.GetCollectionId();
-      _all.DeleteItem(line);
+      if (!_all.DeleteItem(line))
+      {
+         return;
+      }
       LinesCollection* collection = FindCollection(collectionId);
       if (collection == NULL || collection == _all)
       {
