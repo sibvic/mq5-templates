@@ -2,6 +2,9 @@
 #include <Streams/AOnStream.mqh>
 #include <Streams/StreamBuffer.mqh>
 
+#ifndef CustomStream_IMP
+#define CustomStream_IMP
+
 class CustomStream : public AStreamBase
 {
    StreamBuffer _data;
@@ -52,3 +55,5 @@ public:
       return GetSeriesValues(oldIndex, count, val);
    }
 };
+
+#endif
