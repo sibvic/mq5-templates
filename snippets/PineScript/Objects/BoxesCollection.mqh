@@ -145,7 +145,10 @@ public:
          return;
       }
       string collectionId = box.GetCollectionId();
-      _all.DeleteItem(box);
+      if (!_all.DeleteItem(box))
+      {
+         return;
+      }
       BoxesCollection* collection = FindCollection(collectionId);
       if (collection == NULL || collection == _all)
       {
@@ -224,12 +227,12 @@ private:
       return -1;
    }
 
-   void DeleteItem(Box* box)
+   bool DeleteItem(Box* box)
    {
       int index = FindIndex(box);
       if (index == -1)
       {
-         return;
+         return false;
       }
       int size = ArraySize(_array);
       for (int i = index + 1; i < size; ++i)
@@ -238,6 +241,7 @@ private:
       }
       ArrayResize(_array, size - 1);
       box.Release();
+      return true;
    }
    
    void Add(Box* box)

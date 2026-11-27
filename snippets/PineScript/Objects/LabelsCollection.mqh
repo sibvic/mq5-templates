@@ -145,7 +145,10 @@ public:
          return;
       }
       string collectionId = label.GetCollectionId();
-      _all.DeleteLabel(label);
+      if (!_all.DeleteLabel(label))
+      {
+         return;
+      }
       LabelsCollection* collection = FindCollection(collectionId);
       if (collection == NULL || collection == _all)
       {
@@ -222,12 +225,12 @@ private:
       }
       return -1;
    }
-   void DeleteLabel(Label* label)
+   bool DeleteLabel(Label* label)
    {
       int index = FindIndex(label);
       if (index == -1)
       {
-         return;
+         return false;
       }
       int size = ArraySize(_labels);
       for (int i = index + 1; i < size; ++i)
@@ -236,6 +239,7 @@ private:
       }
       ArrayResize(_labels, size - 1);
       label.Release();
+      return true;
    }
    void Add(Label* label)
    {
