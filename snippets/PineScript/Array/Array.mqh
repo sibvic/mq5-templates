@@ -1,4 +1,4 @@
-// Array v1.10
+// Array v1.11
 #include <PineScript/Array/IArray.mqh>
 #include <PineScript/Array/LineArray.mqh>
 #include <PineScript/Array/IntArray.mqh>
@@ -364,6 +364,7 @@ public:
    static string Join(ITArray<string>* array, string concat)
    {
       string res = "";
+      bool started = false;
       for (int i = 0; i < array.Size(); ++i)
       {
          string val = array.Get(i);
@@ -371,11 +372,12 @@ public:
          {
             continue;
          }
-         if (i > 0)
+         if (started)
          {
             res += concat;
          }
-         res += array.Get(i);
+         started = true;
+         res += val;
       }
       return res;
    }
