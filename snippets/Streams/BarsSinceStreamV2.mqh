@@ -5,7 +5,44 @@
 #include <Streams/Interfaces/TIStream.mqh>
 
 // Counts number of bars since last condition.
-// v3.0
+// v3.1
+
+class BarsSinceBoolCondition : public TAStream<int>
+{
+   TIStream<bool>* _source;
+public:
+   BarsSinceBoolCondition(TIStream<bool>* source)
+   {
+      _source = source;
+      _source.AddRef();
+   }
+   ~BarsSinceBoolCondition()
+   {
+      _source.Release();
+   }
+   virtual int Size()
+   {
+      return _source.Size();
+   }
+   virtual bool GetValues(const int period, const int count, int &val[])
+   {
+      bool raw[];
+      ArrayResize(raw, count);
+      if (!_source.GetValues(period, count, raw))
+      {
+         return false;
+      }
+      for (int i = 0; i < count; ++i)
+      {
+         val[i] = raw[i] ? 1 : 0;
+      }
+      return true;
+   }
+   virtual bool GetSeriesValues(const int period, const int count, int &val[])
+   {
+      return GetValues(Size() - period - 1, count, val);
+   }
+};
 
 class BarsSinceStreamV2 : public TAStream<int>
 {
@@ -16,6 +53,11 @@ public:
    {
       _condition = condition;
       _condition.AddRef();
+   }
+
+   BarsSinceStreamV2(TIStream<bool>* condition)
+   {
+      _condition = new BarsSinceBoolCondition(condition);
    }
 
    ~BarsSinceStreamV2()

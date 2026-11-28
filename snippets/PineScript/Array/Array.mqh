@@ -360,5 +360,24 @@ public:
    }
    static double Variance(ISimpleTypeArray<int>* array, bool biased) { return Variance<int>(array, biased, INT_MIN); }
    static double Variance(ISimpleTypeArray<double>* array, bool biased) { return Variance<double>(array, biased, EMPTY_VALUE); }
+
+   static string Join(ITArray<string>* array, string concat)
+   {
+      string res = "";
+      for (int i = 0; i < array.Size(); ++i)
+      {
+         string val = array.Get(i);
+         if (val == NULL)
+         {
+            continue;
+         }
+         if (i > 0)
+         {
+            res += concat;
+         }
+         res += array.Get(i);
+      }
+      return res;
+   }
 };
 

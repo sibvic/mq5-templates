@@ -1,6 +1,7 @@
 #include <Streams/AOnStream.mqh>
+#include <Streams/Custom/IntToFloatStreamWrapper.mqh>
 
-// Sum on stream v2.0
+// Sum on stream v2.1
 
 class SumOnStream : public AOnStream
 {
@@ -47,6 +48,7 @@ class DynamicSumOnStream
 {
    SumOnStream* impl;
    TIStream<double>* _source;
+   IntToFloatStreamWrapper* _intWrapper;
    int _length;
    int _references;
 public:
@@ -54,12 +56,26 @@ public:
    {
       impl = NULL;
       _source = source;
+      _intWrapper = NULL;
+      _length = 0;
+      _references = 1;
+   }
+   DynamicSumOnStream(TIStream<int> *source)
+   {
+      impl = NULL;
+      _intWrapper = new IntToFloatStreamWrapper(source);
+      _source = _intWrapper;
       _length = 0;
       _references = 1;
    }
    ~DynamicSumOnStream()
    {
       ReleaseImpl();
+      if (_intWrapper != NULL)
+      {
+         _intWrapper.Release();
+         _intWrapper = NULL;
+      }
    }
    void AddRef()
    {
